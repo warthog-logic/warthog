@@ -35,6 +35,8 @@ package org.warthog.generic.formulas
  */
 case class Equiv[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends BinaryOperator[L](Formula.EQUIV, arg1, arg2) {
 
+  override def toString = "(" + arg1 + " <=> " + arg2  + ")"
+
   override def booleanFlatten = {
     val ff1 = arg1.booleanFlatten
     val ff2 = arg2.booleanFlatten
@@ -45,4 +47,6 @@ case class Equiv[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends Binary
     case Some(p) => p
     case None    => Equiv(arg1.syntacticalRewrite(subs), arg2.syntacticalRewrite(subs))
   }
+
+  def priority = 10
 }

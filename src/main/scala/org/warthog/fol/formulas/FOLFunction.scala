@@ -25,6 +25,8 @@
 
 package org.warthog.fol.formulas
 
+import org.warthog.generic.formulas.Formula
+
 /**
  * FOL function application
  * @param symbol the function symbol
@@ -35,7 +37,7 @@ package org.warthog.fol.formulas
  */
 case class FOLFunction(symbol: FunctionSymbol, args: FOLTerm*) extends FOLTerm {
 
-  override def toString = symbol + "(" + (args.mkString(",")) + ")"
+  override def toString = if (args.size == 0) symbol.toString else symbol + "(" + (args.mkString(",")) + ")"
 
   def vars = if (args.size > 0) args.map(_.vars).reduce(_ union _).distinct else List()
 

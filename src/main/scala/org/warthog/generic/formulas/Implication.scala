@@ -34,10 +34,15 @@ package org.warthog.generic.formulas
  * Date:   25.01.12
  */
 case class Implication[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends BinaryOperator[L](Formula.IMPL, arg1, arg2) {
+
+  override def toString = "(" + arg1 + " => " + arg2  + ")"
+
   override def booleanFlatten = Or(Not(arg1.booleanFlatten), arg2.booleanFlatten)
 
   def syntacticalRewrite[T <: L](subs: Map[Formula[T], Formula[T]]) = subs.get(this) match {
     case Some(p) => p
     case None    => Implication(arg1.syntacticalRewrite(subs), arg2.syntacticalRewrite(subs))
   }
+
+  def priority = 20
 }

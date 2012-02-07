@@ -35,6 +35,8 @@ package org.warthog.generic.formulas
  */
 case class Xor[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends BinaryOperator[L](Formula.XOR, arg1, arg2) {
 
+  override def toString = "(" + arg1 + " <~> " + arg2  + ")"
+
   override def booleanFlatten = {
     val ff1 = arg1.booleanFlatten
     val ff2 = arg2.booleanFlatten
@@ -46,4 +48,5 @@ case class Xor[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends BinaryOp
     case None    => Xor(arg1.syntacticalRewrite(subs), arg2.syntacticalRewrite(subs))
   }
 
+  def priority = 10
 }

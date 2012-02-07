@@ -48,4 +48,6 @@ trait Atom[-L <: Logic] extends Formula[L] {
   }
 
   def isNNF = true
+
+  def priority = 100
 }

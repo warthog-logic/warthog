@@ -133,6 +133,12 @@ abstract class Formula[-L <: Logic] extends Term[PL] {
    * @return `true` if the formula is in NNF, `false` otherwise
    */
   def isNNF: Boolean
+
+  /**
+   * Return the priority of this formula (for pretty printing)
+   * @return the prioirty of the formula
+   */
+  def priority: Int
 }
 
 /**

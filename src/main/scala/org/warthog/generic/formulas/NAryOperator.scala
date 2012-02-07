@@ -35,8 +35,6 @@ package org.warthog.generic.formulas
  */
 abstract class NAryOperator[-L <: Logic](val op: String, val args: Formula[L]*) extends Formula[L] {
 
-  override def toString = "(" + (args mkString (" " + op + " ")) + ")"
-
   override def equals(a: Any) = a match {
     case n: NAryOperator[L] => n.op == op && args.length == n.args.length &&
       (0 until args.length).forall(i => args(i) == n.args(i))

@@ -34,7 +34,7 @@ package org.warthog.generic.formulas
  */
 class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
 
-  override def toString = Formula.NOT + arg
+  override def toString = "~" + (if (arg.isLiteral) arg else "(" + arg + ")")
 
   override def equals(t: Any): Boolean = t match {
     case Not(form) => arg.equals(form)
@@ -71,6 +71,8 @@ class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
     case a: Atom[L] => true
     case _          => false
   }
+
+  def priority = 60
 }
 
 /**

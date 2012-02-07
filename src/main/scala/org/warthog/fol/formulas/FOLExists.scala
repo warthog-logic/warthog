@@ -37,6 +37,8 @@ import org.warthog.generic.formulas.{Formula, Quantifier}
  */
 case class FOLExists(v: FOLVariable, form: Formula[FOL]) extends Quantifier[FOL](Formula.EXISTS, v, form) {
 
+  override def toString = "?[%s]: %s".format(v, form)
+
   override def booleanFlatten = FOLExists(v, form.booleanFlatten)
 
   def getNNF(phase: Boolean) =

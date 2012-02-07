@@ -36,8 +36,6 @@ package org.warthog.generic.formulas
  */
 abstract class Quantifier[-L <: QuantifiedLogic](val quant: String, val x: Variable[L#VariableLogic], val arg: Formula[L]) extends Formula[L] {
 
-  override def toString = quant + "(%s)[%s]".format(x, arg)
-
   def atoms = arg.atoms
 
   def vars = (x :: arg.vars).distinct
@@ -56,6 +54,8 @@ abstract class Quantifier[-L <: QuantifiedLogic](val quant: String, val x: Varia
   def numOfNodes = 1 + arg.numOfNodes
 
   def isNNF = arg.isNNF
+
+  def priority = 50
 }
 
 object Quantifier {

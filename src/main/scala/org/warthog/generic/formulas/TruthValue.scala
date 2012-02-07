@@ -53,6 +53,8 @@ abstract case class TruthValue[-L <: Logic](tv: String) extends Formula[L] {
   }
 
   def isNNF = true
+
+  def priority = 100
 }
 
 /**

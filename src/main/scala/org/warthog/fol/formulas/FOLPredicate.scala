@@ -25,7 +25,7 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{Atom, Formula, Variable}
+import org.warthog.generic.formulas.{Atom, Formula}
 
 /**
  * FOL predicate application
@@ -37,7 +37,13 @@ import org.warthog.generic.formulas.{Atom, Formula, Variable}
  */
 case class FOLPredicate(symbol: PredicateSymbol, args: FOLTerm*) extends Formula[FOL] with Atom[FOL] {
 
-  override def toString = symbol + "(" + (args.mkString(",")) + ")"
+  override def toString =
+    if (args.size == 0)
+      symbol.toString
+    else if (args.size == 2 && symbol.name.size == 1 && "<>=".contains(symbol.name))
+      args(0) + " " + symbol + " " + args(1)
+    else
+      symbol + "(" + (args.mkString(",")) + ")"
 
   def atoms = List(this.asInstanceOf[Atom[FOL]])
 

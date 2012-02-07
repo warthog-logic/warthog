@@ -39,6 +39,8 @@ package org.warthog.generic.formulas
  */
 class Or[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.OR, NAryOperator.compactify(Formula.OR, fs: _*): _*) {
 
+  override def toString = "(" + args.mkString(" | ") + ")"
+
   override def equals(t: Any) = {
     t match {
       case a: Or[L] => super.equals(t)
@@ -54,6 +56,8 @@ class Or[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.OR, NAryO
   }
 
   def getNNF(phase: Boolean) = if (phase) Or(args.map(_.getNNF(true)): _*) else Formula.deMorgan(this)
+
+  def priority = 30
 }
 
 /**

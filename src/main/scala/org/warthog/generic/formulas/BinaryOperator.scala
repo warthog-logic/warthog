@@ -36,8 +36,6 @@ package org.warthog.generic.formulas
  */
 abstract class BinaryOperator[-L <: Logic](val op: String, val f1: Formula[L], val f2: Formula[L]) extends Formula[L] {
 
-  override def toString = "(" + f1 + " " + op + " " + f2 + ")"
-
   override def equals(a: Any) = a match {
     case n: BinaryOperator[L] => n.op == op && n.f1 == f1 && n.f2 == f2
     case _                    => false
