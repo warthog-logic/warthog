@@ -43,6 +43,11 @@ trait PLSimplifications extends RemoveBooleanConstants[PL]
 
 class PLFormula(override val f: Formula[PL]) extends PLTransformations with PLSimplifications {
 
+  /**
+   * pretty print a formula
+   * @param prettyPrinter the pretty printer to use
+   * @return the pretty printed formula
+   */
   def pp(implicit prettyPrinter: PrettyPrinter[PL]) = prettyPrinter.print(f)
 
   /**

@@ -23,19 +23,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl
+package org.warthog.pl.printer
 
-import org.warthog.pl.printer.UTF8Printer
 import org.warthog.generic.formulas.Formula
+import org.warthog.pl.formulas.{PLAtom, PL}
+import org.warthog.generic.printer.{UTF8Printer => SuperPrinter}
 
 /**
- * Package object for propositional logic
+ * UTF-8 printer for propositional logic
  *
  * Author: zengler
- * Date:   25.01.12
+ * Date:   19.01.12
  */
-package object formulas {
-  implicit def pl2RichFormula(f: Formula[PL]) = new PLFormula(f)
-
-  implicit val prettyPrinter = UTF8Printer
+object UTF8Printer extends SuperPrinter[PL] {
+  override def print[T <: PL](f: Formula[T]) = f match {
+    case PLAtom(n)     => SuperPrinter.prettyPrintName(n)
+    case p: Formula[T] => super.print(p)
+  }
 }

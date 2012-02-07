@@ -27,6 +27,7 @@ package org.warthog.fol.formulas
 
 import org.warthog.fol.transformations.{Matrix, PNF, Skolemization, Substitution}
 import org.warthog.generic.formulas._
+import org.warthog.generic.printer.PrettyPrinter
 
 /**
  * Rich formula for first order logic
@@ -37,6 +38,13 @@ import org.warthog.generic.formulas._
 trait FOLTransformations extends Substitution with PNF with Matrix with Skolemization
 
 class FOLFormula(override val f: Formula[FOL]) extends FOLTransformations {
+
+  /**
+   * pretty print a formula
+   * @param prettyPrinter the pretty printer to use
+   * @return the pretty printed formula
+   */
+  def pp(implicit prettyPrinter: PrettyPrinter[FOL]) = prettyPrinter.print(f)
 
   /**
    * Get the list of function symbols in `f`

@@ -26,6 +26,7 @@
 package org.warthog.fol
 
 import org.warthog.generic.formulas.Formula
+import printer.UTF8Printer
 
 /**
  * Package object for first order logic
@@ -35,4 +36,6 @@ import org.warthog.generic.formulas.Formula
  */
 package object formulas {
   implicit def fol2RichFormula(f: Formula[FOL]) = new FOLFormula(f)
+
+  implicit val prettyPrinter = UTF8Printer
 }
