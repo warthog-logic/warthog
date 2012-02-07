@@ -18,6 +18,7 @@ initialCommands in console := """
     import org.warthog.pl.formulas._
     import org.warthog.fol.formulas._
     import org.warthog.pl.parsers._
+    import org.warthog.fol.parsers.tptp._
 """
 
 //scalacOptions ++= Seq("-unchecked", "-deprecation")
