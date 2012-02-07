@@ -14,9 +14,10 @@ resolvers += "snapshots" at "http://scala-tools.org/repo-snapshots"
 scalaVersion := "2.9.1"
 
 initialCommands in console := """
-    import org.warthog.generic._
-    import pl._
-    import fol._
+    import org.warthog.generic.formulas._
+    import org.warthog.pl.formulas._
+    import org.warthog.fol.formulas._
+    import org.warthog.pl.parsers._
 """
 
 //scalacOptions ++= Seq("-unchecked", "-deprecation")
