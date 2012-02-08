@@ -42,35 +42,35 @@ class TPTPPL(fm: String) {
 
 class PLParser extends RegexParsers with PackratParsers with RunParser {
   override type Elem = Char
-  lazy val variable: Parser[Formula[PL]] = """([A-Za-z0-9]+)""".r ^^ (PLAtom(_))
-  lazy val const: Parser[Formula[PL]] = ("$true" | "$false") ^^ {
+  lazy val variable: PackratParser[Formula[PL]] = """([A-Za-z0-9]+)""".r ^^ (PLAtom(_))
+  lazy val const: PackratParser[Formula[PL]] = ("$true" | "$false") ^^ {
     case "$true" => Verum();
     case "$false" => Falsum()
   }
-  lazy val literal: Parser[Formula[PL]] = ("~" ~ simp | simp) ^^ {
+  lazy val literal: PackratParser[Formula[PL]] = ("~" ~ simp | simp) ^^ {
     case "~" ~ (n: Formula[PL]) => -n;
     case n: Formula[PL] => n
   }
-  lazy val conj: Parser[Formula[PL]] = rep1sep(literal, "&") ^^ {
+  lazy val conj: PackratParser[Formula[PL]] = rep1sep(literal, "&") ^^ {
     _.reduceLeft(And(_, _))
   }
-  lazy val disj: Parser[Formula[PL]] = rep1sep(conj, "|") ^^ {
+  lazy val disj: PackratParser[Formula[PL]] = rep1sep(conj, "|") ^^ {
     _.reduceLeft(Or(_, _))
   }
-  lazy val simp: Parser[Formula[PL]] = variable ||| const ||| ("(" ~ expr ~ ")" ^^ {
+  lazy val simp: PackratParser[Formula[PL]] = variable ||| const ||| ("(" ~ expr ~ ")" ^^ {
     case "(" ~ e ~ ")" => e
   })
-  lazy val impl: Parser[Formula[PL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
+  lazy val impl: PackratParser[Formula[PL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
     case (e0: Formula[PL]) ~ "=>" ~ (e1: Formula[PL]) => Implication(e0, e1)
     case (e0: Formula[PL]) ~ "<=" ~ (e1: Formula[PL]) => Implication(e1, e0)
     case d: Formula[PL]                               => d
   }
-  lazy val equiv: Parser[Formula[PL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
+  lazy val equiv: PackratParser[Formula[PL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
     case (e0: Formula[PL]) ~ "<=>" ~ (e1: Formula[PL]) => Equiv(e0, e1)
     case (e0: Formula[PL]) ~ "<~>" ~ (e1: Formula[PL]) => Xor(e0, e1)
     case d: Formula[PL]                                => d
   }
-  lazy val expr: Parser[Formula[PL]] = equiv
+  lazy val expr: PackratParser[Formula[PL]] = equiv
 
   type RootType = Formula[PL]
 

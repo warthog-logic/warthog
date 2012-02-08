@@ -48,46 +48,46 @@ class TPTPfofParser extends RegexParsers with PackratParsers with RunParser {
 
   def infixPred: Parser[String] = """[=<>]""".r
 
-  def definedProp: Parser[Formula[FOL]] = ("$true" | "$false") ^^ {
+  def definedProp: PackratParser[Formula[FOL]] = ("$true" | "$false") ^^ {
     case "$true"  => Verum()
     case "$false" => Falsum()
   }
 
-  def variable: Parser[FOLVariable] = """[A-Z][A-Za-z0-9_]*""".r ^^ (FOLVariable(_))
+  def variable: PackratParser[FOLVariable] = """[A-Z][A-Za-z0-9_]*""".r ^^ (FOLVariable(_))
 
   def termName: Parser[String] = """[a-z][A-Za-z0-9_]*""".r
 
-  def number: Parser[FOLTerm] = """[0-9]+(.[0-9]+)?""".r ^^ { case x: String => FOLFunction(BigDecimal(x).toString()) }
+  def number: PackratParser[FOLTerm] = """[0-9]+(.[0-9]+)?""".r ^^ { case x: String => FOLFunction(BigDecimal(x).toString()) }
 
-  def term: Parser[FOLTerm] = variable ||| number |||
+  def term: PackratParser[FOLTerm] = variable ||| number |||
     termName ~ opt("(" ~> rep1sep(term, ",") <~ ")") ^^ { case functor ~ Some(terms) => FOLFunction(functor, terms: _*)
                                                           case functor ~ _           => FOLFunction(functor) }
 
-  def predicate: Parser[FOLPredicate] =
+  def predicate: PackratParser[FOLPredicate] =
     term ~ infixPred ~ term                          ^^ { case tm1 ~ inf ~ tm2       => FOLPredicate(inf, tm1, tm2)} |
     termName ~ opt("(" ~> rep1sep(term, ",") <~ ")") ^^ { case functor ~ Some(terms) => FOLPredicate(functor, terms: _*)
                                                           case functor ~ _           => FOLPredicate(functor) }
 
-  def variableList: Parser[List[FOLVariable]] = "[" ~> rep1sep(variable, ",") <~ "]" ^^ (_.asInstanceOf[List[FOLVariable]])
+  def variableList: PackratParser[List[FOLVariable]] = "[" ~> rep1sep(variable, ",") <~ "]" ^^ (_.asInstanceOf[List[FOLVariable]])
 
-  def quantifier: Parser[String] = allQuant | exQuant
+  def quantifier: PackratParser[String] = allQuant | exQuant
 
-  def quantifiedFormula: Parser[Formula[FOL]] = quantifier ~ variableList ~ ":" ~ formula ^^ {
+  def quantifiedFormula: PackratParser[Formula[FOL]] = quantifier ~ variableList ~ ":" ~ formula ^^ {
     case `allQuant` ~ variables ~ ":" ~ fm => FOLForAll(Set(variables: _*), fm)
     case `exQuant` ~ variables ~ ":" ~ fm  => FOLExists(Set(variables: _*), fm)
   }
 
-  lazy val literal:  Parser[Formula[FOL]] = ("~" ~ simp | simp)                                    ^^ { case "~"~(n: Formula[FOL]) => -n; case n: Formula[FOL] => n  }
-  lazy val conj:     Parser[Formula[FOL]] = rep1sep(literal, "&")                                  ^^ { _.reduceLeft(And(_, _)) }
-  lazy val disj:     Parser[Formula[FOL]] = rep1sep(conj, "|")                                     ^^ { _.reduceLeft(Or(_, _)) }
-  lazy val simp:     Parser[Formula[FOL]] = predicate ||| definedProp ||| quantifiedFormula ||| ("(" ~ formula ~ ")"               ^^ { case "("~e~")" => e })
-  lazy val impl:     Parser[Formula[FOL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj)   ^^ { case (e0: Formula[FOL])~"=>"~(e1:Formula[FOL]) => Implication(e0,e1)
+  lazy val literal:  PackratParser[Formula[FOL]] = ("~" ~ simp | simp)                                    ^^ { case "~"~(n: Formula[FOL]) => -n; case n: Formula[FOL] => n  }
+  lazy val conj:     PackratParser[Formula[FOL]] = rep1sep(literal, "&")                                  ^^ { _.reduceLeft(And(_, _)) }
+  lazy val disj:     PackratParser[Formula[FOL]] = rep1sep(conj, "|")                                     ^^ { _.reduceLeft(Or(_, _)) }
+  lazy val simp:     PackratParser[Formula[FOL]] = predicate ||| definedProp ||| quantifiedFormula ||| ("(" ~ formula ~ ")"               ^^ { case "("~e~")" => e })
+  lazy val impl:     PackratParser[Formula[FOL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj)   ^^ { case (e0: Formula[FOL])~"=>"~(e1:Formula[FOL]) => Implication(e0,e1)
   case (e0:Formula[FOL])~"<="~(e1:Formula[FOL]) => Implication(e1,e0)
   case d: Formula[FOL] => d}
-  lazy val equiv:    Parser[Formula[FOL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ { case (e0: Formula[FOL]) ~ "<=>" ~ (e1: Formula[FOL]) => Equiv(e0,e1)
+  lazy val equiv:    PackratParser[Formula[FOL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ { case (e0: Formula[FOL]) ~ "<=>" ~ (e1: Formula[FOL]) => Equiv(e0,e1)
   case (e0: Formula[FOL]) ~ "<~>" ~ (e1: Formula[FOL]) => Xor(e0,e1)
   case d: Formula[FOL] => d }
-  lazy val formula:     Parser[Formula[FOL]] = equiv
+  lazy val formula:     PackratParser[Formula[FOL]] = equiv
 
   type RootType = Formula[FOL]
 
