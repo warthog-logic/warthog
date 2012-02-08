@@ -11,6 +11,8 @@ libraryDependencies ++= Seq(
 
 resolvers += "snapshots" at "http://scala-tools.org/repo-snapshots"
 
+resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
+
 scalaVersion := "2.9.1"
 
 initialCommands in console := """
