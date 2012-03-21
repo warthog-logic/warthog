@@ -33,7 +33,7 @@ public class JPicosat {
     private static final String DIR = "/solvers/picosat";
     private CPicosat INSTANCE;
 
-    private interface CPicosat extends Library {
+    public interface CPicosat extends Library {
         void picosat_init();
 
         void picosat_reset();
@@ -100,7 +100,7 @@ public class JPicosat {
         return INSTANCE.picosat_add(lit);
     }
 
-    /*
+
     public void test() {
         picosat_init();
 
@@ -130,5 +130,5 @@ public class JPicosat {
         JPicosat jps=new JPicosat();
         jps.test();
     }
-    */
+
 }

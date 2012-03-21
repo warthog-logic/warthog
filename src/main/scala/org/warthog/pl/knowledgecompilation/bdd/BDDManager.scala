@@ -28,6 +28,7 @@ package org.warthog.pl.knowledgecompilation.bdd
 import java.io.PrintStream
 import org.warthog.pl.formulas.{PL, PLAtom}
 import org.warthog.generic.formulas._
+import scala.collection.mutable.{ HashMap => MutableHashMap }
 
 /**
  * BDD Manager for ROBDDs with complemented edges
@@ -255,12 +256,16 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
    * @param out the output stream to print to
    */
   def printDot(m: Int, out: PrintStream = System.out) {
+    val edgeSeen = MutableHashMap[(Int, Int), Boolean]()
     def edge(a: Int, b: Int, comp: Boolean, left: Boolean) = {
-      val es = if (left) "solid" else "dotted"
-      if (comp)
-        "  %d -> %d [arrowtail=dot,arrowhead=normal,style=%s];".format(a, b, es)
-      else
-        "  %d -> %d [style=%s];".format(a, b, es)
+      if (!edgeSeen.isDefinedAt((a, b))) {
+        edgeSeen.update((a, b), true)
+        val es = if (left) "solid" else "dotted"
+        if (comp)
+          "  %d -> %d [arrowtail=dot,arrowhead=normal,style=%s];".format(a, b, es)
+        else
+          "  %d -> %d [style=%s];".format(a, b, es)
+      } else ""
     }
 
     /* assumption: a>=0 */
