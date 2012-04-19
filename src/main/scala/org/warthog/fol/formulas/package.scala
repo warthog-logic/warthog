@@ -27,15 +27,20 @@ package org.warthog.fol
 
 import org.warthog.generic.formulas.Formula
 import printer.UTF8Printer
+import unification.Unification
 
 /**
  * Package object for first order logic
  *
- * Author: zengler
+ * Author: zengler, kuebler
  * Date:   25.01.12
  */
 package object formulas {
   implicit def fol2RichFormula(f: Formula[FOL]) = new FOLFormula(f)
+  implicit def foltermUnifiable(f: FOLTerm) = new {
+    def unifiableWith: FOLTerm => Boolean = Unification.unifyable(f, _)
+    def mgu: FOLTerm => Map[FOLVariable, FOLTerm] = Unification.unify(f, _)
+  }
 
   implicit val prettyPrinter = UTF8Printer
 }

@@ -28,11 +28,12 @@ package org.warthog.fol.formulas
 import org.warthog.fol.transformations.{Matrix, PNF, Skolemization, Substitution}
 import org.warthog.generic.formulas._
 import org.warthog.generic.printer.PrettyPrinter
+import org.warthog.fol.unification.Unification
 
 /**
  * Rich formula for first order logic
  *
- * Author: zengler
+ * Author: zengler, kuebler
  * Date:   18.01.12
  */
 trait FOLTransformations extends Substitution with PNF with Matrix with Skolemization
@@ -75,4 +76,8 @@ class FOLFormula(override val f: Formula[FOL]) extends FOLTransformations {
     case q: FOLPredicate        => List[PredicateSymbol](q.symbol)
     case _                      => List[PredicateSymbol]()
   }
+
+  def unifiableWith: Formula[FOL] => Boolean = Unification.unifyable(f, _)
+
+  def mgu: Formula[FOL] => Map[FOLVariable, FOLTerm] = Unification.unify(f, _)
 }
