@@ -41,6 +41,8 @@ class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
     case _         => false
   }
 
+  override def hashCode() = arg.## ^ 1
+
   def atoms = arg.atoms
 
   def vars = arg.vars

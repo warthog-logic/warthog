@@ -48,6 +48,8 @@ class And[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.AND, NAr
     }
   }
 
+  override def hashCode() = args.foldLeft(-1)(_ & _.##)
+
   override def booleanFlatten = And(args.map(_.booleanFlatten): _*)
 
   def syntacticalRewrite[T <: L](subs: Map[Formula[T], Formula[T]]) = subs.get(this) match {

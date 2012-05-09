@@ -48,6 +48,8 @@ class Or[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.OR, NAryO
     }
   }
 
+  override def hashCode() = args.foldLeft(0)(_ | _.##)
+
   override def booleanFlatten = Or(args.map(_.booleanFlatten): _*)
 
   def syntacticalRewrite[T <: L](subs: Map[Formula[T], Formula[T]]) = subs.get(this) match {
