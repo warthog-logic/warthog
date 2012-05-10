@@ -25,10 +25,10 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.fol.transformations.{Matrix, PNF, Skolemization, Substitution}
 import org.warthog.generic.formulas._
 import org.warthog.generic.printer.PrettyPrinter
 import org.warthog.fol.unification.Unification
+import org.warthog.fol.transformations._
 
 /**
  * Rich formula for first order logic
@@ -36,7 +36,7 @@ import org.warthog.fol.unification.Unification
  * Author: zengler, kuebler
  * Date:   18.01.12
  */
-trait FOLTransformations extends Substitution with PNF with Matrix with Skolemization
+trait FOLTransformations extends Substitution with PNF with Matrix with Skolemization with QuantifierClosures
 
 class FOLFormula(override val f: Formula[FOL]) extends FOLTransformations {
 
