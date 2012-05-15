@@ -25,9 +25,10 @@
 
 package org.warthog.pl.decisionprocedures.dpll
 
+import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.io.CNFUtil
-import org.warthog.pl.formulas.{PLAtom, PL}
+import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause => Clause}
 
 /**
  * A basic implementation of the DP and DPLL procedures
@@ -35,7 +36,6 @@ import org.warthog.pl.formulas.{PLAtom, PL}
  * Author: zengler
  * Date:   09.05.12
  */
-
 object DPLL {
 
   /**
@@ -43,17 +43,17 @@ object DPLL {
    * @param f a PL formula
    * @return `true` if the clauseset is satisfiable, `false` otherwise
    */
-  def dp(f: Formula[PL]): Boolean = dpRec(CNFUtil.toList(f))
+  def dp(f: Formula[PL]): Boolean = dpRec(CNFUtil.toCNF(f))
 
   /**
    * The main recursive DP algorithm
    * @param clauses a list of clauses
    * @return `true` if the clauseset is satisfiable, `false` otherwise
    */
-  private def dpRec(clauses: List[List[Formula[PL]]]): Boolean = {
+  private def dpRec(clauses: List[Clause]): Boolean = {
     if (clauses.isEmpty)
       true
-    else if (clauses.contains(Nil))
+    else if (clauses.find(_.size == 0) != None)
       false
     else {
       var temp = oneLiteralRule(clauses)
@@ -70,14 +70,14 @@ object DPLL {
    * @param clauses a list of clauses
    * @return a list of clauses with one unit literal eliminated
    */
-  private def oneLiteralRule(clauses: List[List[Formula[PL]]]): Option[List[List[Formula[PL]]]] = {
+  private def oneLiteralRule(clauses: List[Clause]): Option[List[Clause]] = {
     val unitClause = clauses.find(_.size == 1)
     if (unitClause == None)
       None
     else {
-      val unitLit = unitClause.get.head
+      val unitLit = unitClause.get.literals.head
       val newClauses = clauses.filterNot(_.contains(unitLit)) // delete clauses with the unitLit
-      Some(newClauses.map(l => l.filterNot(e => e == -unitLit)))
+      Some(newClauses.map(l => l.delete(unitLit.negate).asInstanceOf[Clause]))
     }
   }
 
@@ -86,10 +86,11 @@ object DPLL {
    * @param clauses a list of clauses
    * @return a list of clauses with pure literals eliminated
    */
-  private def affirmativeNegatigeRule(clauses: List[List[Formula[PL]]]): List[List[Formula[PL]]] = {
-    val (pos, neg) = clauses.flatten.partition(_.isInstanceOf[PLAtom])
-    val pure = neg.map(-_).filterNot(pos.contains).map(-_).union(pos.filterNot(neg.map(-_).contains))
-    clauses.filter(_.intersect(pure).isEmpty)
+  private def affirmativeNegatigeRule(clauses: List[Clause]): List[Clause] = {
+    val pos = clauses.map(_.consequence).flatten
+    val neg = clauses.map(_.premise).flatten
+    val pure = neg.map(_.negate).filterNot(pos.contains).map(_.negate).union(pos.filterNot(neg.map(_.negate).contains))
+    clauses.filter(_.literals.intersect(pure).isEmpty)
   }
 
   /**
@@ -97,8 +98,8 @@ object DPLL {
    * @param clauses a list of clauses
    * @return a list of clauses where one variable is eliminated by resolution (the one with the smallest blowup)
    */
-  private def resolutionRule(clauses: List[List[Formula[PL]]]): List[List[Formula[PL]]] = {
-    val vars = clauses.flatten.map(_.vars).flatten.distinct.asInstanceOf[List[PLAtom]]
+  private def resolutionRule(clauses: List[Clause]): List[Clause] = {
+    val vars = clauses.foldLeft(List[PLLiteral]())((l, e) => l ++ e.literals).distinct
     if (vars.isEmpty)
       clauses
     else {
@@ -113,22 +114,17 @@ object DPLL {
    * @param clauses a list of clauses
    * @return the set of clauses with p eliminated
    */
-  private def resolveOn(p: PLAtom, clauses: List[List[Formula[PL]]]): List[List[Formula[PL]]] = {
-    def isTrivial(clause: List[Formula[PL]]): Boolean = {
-      val (pos, neg) = clause.partition(_.isInstanceOf[PLAtom])
-      !pos.intersect(neg.map(-_)).isEmpty
-    }
-
+  private def resolveOn(p: PLLiteral, clauses: List[Clause]): List[Clause] = {
     val (pos, notpos) = clauses.partition(_.contains(p))
-    val (neg, other) = notpos.partition(_.contains(-p))
-    val _pos = pos.map(_.filterNot(_ == p))
-    val _neg = neg.map(_.filterNot(_ == -p))
+    val (neg, other) = notpos.partition(_.contains(p.negate))
+    val _pos = pos.map(_.delete(p))
+    val _neg = neg.map(_.delete(p.negate))
     var resolvents =
       for {
         c1 <- _pos
         c2 <- _neg
-      } yield (c1 ++ (c2)).distinct
-    resolvents = resolvents.filterNot(isTrivial)
+      } yield (c1 union c2).asInstanceOf[Clause]
+    resolvents = resolvents.filterNot(_.isTautology)
     other ++ resolvents
   }
 
@@ -138,9 +134,9 @@ object DPLL {
    * @param clauses a list of clauses
    * @return the maximal blowup
    */
-  private def resolutionBlowup(p: PLAtom, clauses: List[List[Formula[PL]]]): Int = {
+  private def resolutionBlowup(p: PLLiteral, clauses: List[Clause]): Int = {
     val m = clauses.filter(_.contains(p)).size
-    val n = clauses.filter(_.contains(-p)).size
+    val n = clauses.filter(_.contains(p.negate)).size
     m * n - m - n
   }
 }
