@@ -26,7 +26,7 @@
 package org.warthog.pl.datastructures.cnf
 
 import org.warthog.pl.formulas.PL
-import org.warthog.generic.datastructures.cnf.MutableClause
+import org.warthog.generic.datastructures.cnf.{ClauseLike, MutableClause}
 
 /**
  * Representation of a mutable propositional clause
@@ -34,7 +34,7 @@ import org.warthog.generic.datastructures.cnf.MutableClause
  * Author: zengler
  * Date:   10.05.12
  */
-class MutablePLClause(ls: List[PLLiteral]) extends MutableClause[PL, PLLiteral](ls) with PLClauseLike[PLLiteral] {
+class MutablePLClause(ls: List[PLLiteral]) extends MutableClause[PL, PLLiteral](ls) {
   def this() {
     this(Nil)
   }
@@ -43,7 +43,7 @@ class MutablePLClause(ls: List[PLLiteral]) extends MutableClause[PL, PLLiteral](
     this(lits.toList)
   }
 
-  def this(c: PLClauseLike[PLLiteral]) {
+  def this(c: ClauseLike[PL, PLLiteral]) {
     this(c.literals)
   }
 }

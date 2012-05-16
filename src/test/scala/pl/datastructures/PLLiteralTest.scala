@@ -40,7 +40,7 @@ class PLLiteralTest extends Specification {
 
   "Literal x" should {
     "be formula x" in {
-      PLLiteral("x").toFormula must be equalTo "x".pl
+      PLLiteral("x".pl).toFormula must be equalTo "x".pl
     }
   }
 
@@ -52,19 +52,19 @@ class PLLiteralTest extends Specification {
 
   "Literal x negated" should {
     "be literal ~x" in {
-      PLLiteral("x").negate must be equalTo PLLiteral("x", false)
+      PLLiteral("x".pl).negate must be equalTo PLLiteral("x", false)
     }
   }
 
   "Literal ~x negated" should {
     "be literal x" in {
-      PLLiteral("x", false).negate must be equalTo PLLiteral("x")
+      PLLiteral("x", false).negate must be equalTo PLLiteral("x".pl)
     }
   }
 
   "x as literal" should {
     "be literal x" in {
-      PLLiteral("x".pl) must be equalTo PLLiteral("x")
+      PLLiteral("x".pl) must be equalTo PLLiteral("x", true)
     }
   }
 

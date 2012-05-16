@@ -38,7 +38,7 @@ import org.warthog.pl.datastructures.cnf.{PLLiteral, MutablePLClause => Clause}
 
 class MutablePLClauseTest extends Specification {
 
-  val (x, y, z, nw) = (PLLiteral("x"), PLLiteral("y"), PLLiteral("z"), PLLiteral("w", false))
+  val (x, y, z, nw) = (PLLiteral("x", true), PLLiteral("y", true), PLLiteral("z", true), PLLiteral("w", false))
   val c1 = new Clause(x, y, z)
   val c2 = new Clause(y, x, z)
   val c3 = new Clause(x, y)

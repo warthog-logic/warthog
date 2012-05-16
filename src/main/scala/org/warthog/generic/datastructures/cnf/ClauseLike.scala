@@ -25,7 +25,8 @@
 
 package org.warthog.generic.datastructures.cnf
 
-import org.warthog.generic.formulas.{Logic, Formula}
+import org.warthog.fol.formulas.FOL
+import org.warthog.generic.formulas.{Or, Falsum, Logic, Formula}
 
 /**
  * Trait for a clause
@@ -89,7 +90,13 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
    * A formula representation of the clause
    * @return a formula respresentation in propositional logic
    */
-  def toFormula: Formula[L]
+  def toFormula: Formula[L] =
+    if (isEmpty)
+      new Falsum
+    else if (isUnit)
+      literals(0).toFormula
+    else
+      Or(literals.map(_.toFormula): _*)
 
   /**
    * The size of the clause
@@ -113,7 +120,14 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
    * Is this clause a tautology?
    * @return `true` if the clause is a tautology, `false` otherwise
    */
-  def isTautology: Boolean
+  def isTautology: Boolean = {
+    val (pos, neg) = literals.partition(_.phase)
+    for (p <- pos) {
+      if (neg.contains(p.negate))
+        return true
+    }
+    false
+  }
 
   /**
    * Does this clause contain a certain literal
@@ -126,12 +140,12 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
    * Return the premise of the clause as a list of literals
    * @return the premise of the clause
    */
-  def premise: List[T]
+  def premise = literals.filter(!_.phase).toList
 
   /**
    * Return the consequence of the clause as a list of literals
    * @return the consequence of the clause
    */
-  def consequence: List[T]
+  def consequence = literals.filter(_.phase).toList
 
 }

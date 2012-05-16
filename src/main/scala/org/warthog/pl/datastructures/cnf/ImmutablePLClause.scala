@@ -26,15 +26,15 @@
 package org.warthog.pl.datastructures.cnf
 
 import org.warthog.pl.formulas.PL
-import org.warthog.generic.datastructures.cnf.ImmutableClause
+import org.warthog.generic.datastructures.cnf.{ClauseLike, ImmutableClause}
 
 /**
- * Representation of a immutable propositional clause
+ * Representation of an immutable propositional clause
  *
  * Author: zengler
  * Date:   14.05.12
  */
-class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiteral](ls) with PLClauseLike[PLLiteral] {
+class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiteral](ls) {
   def this() {
     this(Nil)
   }
@@ -43,7 +43,7 @@ class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiter
     this(lits.toList)
   }
 
-  def this(c: PLClauseLike[PLLiteral]) {
+  def this(c: ClauseLike[PL, PLLiteral]) {
     this(c.literals)
   }
 
