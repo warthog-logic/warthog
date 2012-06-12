@@ -50,6 +50,8 @@ public class JPicosat {
     }
 
     public JPicosat(String libdir) throws Exception {
+        if (libdir == null || libdir == "")
+            libdir="lib";
         StringBuilder pref = new StringBuilder(libdir + DIR);
 
         if (Platform.isMac())
