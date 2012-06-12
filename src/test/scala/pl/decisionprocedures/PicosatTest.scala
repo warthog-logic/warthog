@@ -120,4 +120,17 @@ class PicosatTest extends Specification {
       rv0 must be equalTo (1)
     }
   }
+  "the empty formula" should {
+    "return true uppon sat checking" in {
+      var model: Formula[PL] = null
+      sat(ps) {
+        s => {
+          s.add(Verum())
+          rv0 = s.sat(Infinity)
+          model = s.getModel()
+        }
+      }
+      model must be equalTo(Verum())
+    }
+  }
 }
