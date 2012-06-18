@@ -16,6 +16,8 @@ resolvers ++= Seq(
 
 scalaVersion := "2.9.1"
 
+parallelExecution in Test := false
+
 initialCommands in console := """
     import org.warthog.generic.formulas._
     import org.warthog.pl.formulas._
