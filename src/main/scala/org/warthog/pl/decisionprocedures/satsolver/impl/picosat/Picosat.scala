@@ -162,4 +162,40 @@ class Picosat extends Solver {
         ).toSeq)
     }
   }
+  
+  /**
+   * Enables extracting cores or proof traces. This method has to be called right after the 'init' method.
+   *
+   * @return non-zero if code for generating traces is including and zero if traces can not be generated.
+   */
+  def enable_trace_generation: Int = jps.picosat_enable_trace_generation()
+
+  /**
+   * Returns the number of variables added.
+   *
+   * @return number of added variables
+   */
+  def variables: Int = jps.picosat_variables()
+
+  /**
+   * Returns the number of original added clauses.
+   *
+   * @return number of original added clauses
+   */
+  def added_original_clauses: Int = jps.picosat_added_original_clauses()
+
+  /**
+   * Determines whether the i'th added original clause is in the unsat core.
+   *
+   * @param cls clause to check
+   * @return non-zero if given clause is in core, otherwise zero
+   */
+  def coreclause(cls: Int): Int = jps.picosat_coreclause(cls)
+
+  /**
+   * Returns the number of all clauses which are in the unsatisfiable core.
+   *
+   * @return a list of integers of all clauses of the unsat core
+   */
+  def getCoreclauses: List[Int] = (0 until added_original_clauses).filter(coreclause(_) != 0).toList
 }

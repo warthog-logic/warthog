@@ -38,20 +38,33 @@ public class JPicosat {
 
         void picosat_reset();
 
-        int picosat_sat(int to);
+        /**
+         * Enables extracting cores or proof traces. This method has to be called right after the 'picosat_init' method.
+         *
+         * @return non-zero if code for generating traces is including and zero if traces can not be generated.
+         */
+        int picosat_enable_trace_generation();
 
-        int picosat_variables();
+        int picosat_variables();                /* p cnf <m> n */
+
+        int picosat_added_original_clauses();   /* p cnf m <n> */
+
+        int picosat_sat(int to);
 
         int picosat_deref(int int_lit);
 
+        /**
+         * Determines whether the i'th added original clause is in the unsat core.
+         *
+         * @param cls clause to check
+         * @return non-zero if given clause is in core, otherwise zero
+         */
         int picosat_coreclause(int cls);
 
         int picosat_add(int lit);
     }
 
     public JPicosat(String libdir) throws Exception {
-        if (libdir == null || libdir == "")
-            libdir="lib";
         StringBuilder pref = new StringBuilder(libdir + DIR);
 
         if (Platform.isMac())
@@ -69,7 +82,7 @@ public class JPicosat {
         else
             throw new Exception("JPicosat: Platform unsupported!");
 
-        System.setProperty("jna.library.path", pref.toString());
+        System.setProperty("jna.library.path", pref.toString());        
         INSTANCE = (CPicosat) Native.loadLibrary("picosat", CPicosat.class);
     }
 
@@ -85,12 +98,20 @@ public class JPicosat {
         INSTANCE.picosat_reset();
     }
 
-    public int picosat_sat(int to) {
-        return INSTANCE.picosat_sat(to);
+    public int picosat_enable_trace_generation() {
+        return INSTANCE.picosat_enable_trace_generation();
     }
 
     public int picosat_variables() {
         return INSTANCE.picosat_variables();
+    }
+
+    public int picosat_added_original_clauses() {
+        return INSTANCE.picosat_added_original_clauses();
+    }
+
+    public int picosat_sat(int to) {
+        return INSTANCE.picosat_sat(to);
     }
 
     public int picosat_deref(int int_lit) {
@@ -105,7 +126,6 @@ public class JPicosat {
         return INSTANCE.picosat_add(lit);
     }
 
-
     public void test() {
         picosat_init();
 
@@ -115,7 +135,7 @@ public class JPicosat {
         picosat_add(1);
         picosat_add(0);
 
-        System.out.println("p cnf 1 2\n-1 0\n1 0? "+picosat_sat(-1));
+        System.out.println("p cnf 1 2\n-1 0\n1 0? " + picosat_sat(-1));
 
         picosat_reset();
 
@@ -125,15 +145,14 @@ public class JPicosat {
         picosat_add(-2);
         picosat_add(0);
 
-        System.out.println("p cnf 2 1\n1 -2 0? "+picosat_sat(-1));
+        System.out.println("p cnf 2 1\n1 -2 0? " + picosat_sat(-1));
 
         picosat_reset();
     }
 
     public static void main(String[] args) throws Exception {
         //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
-        JPicosat jps=new JPicosat();
+        JPicosat jps = new JPicosat();
         jps.test();
     }
-
 }
