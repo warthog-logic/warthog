@@ -45,15 +45,14 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
   override def toString = "(" + literals.mkString(", ") + ")"
 
   override def equals(p1: Any): Boolean =
-    if (p1.getClass == this.getClass) {
-      val other_lits = p1.asInstanceOf[this.type].literals
+    if (p1.isInstanceOf[ClauseLike[L,T]]) {
+      val other_lits = p1.asInstanceOf[ClauseLike[L,T]].literals
       if (other_lits.size != literals.size)
         false
       else {
-        for (l <- other_lits) {
+        for (l <- other_lits)
           if (!literals.contains(l))
             return false
-        }
         true
       }
     } else

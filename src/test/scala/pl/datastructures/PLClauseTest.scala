@@ -57,11 +57,11 @@ class PLClauseTest extends Specification {
     "not be equal to m3" in {
       m1 == m3 must be equalTo false
     }
-    "not be equal to c1" in {
-      m1 == im1 must be equalTo false
+    "be equal to c1" in {
+      m1 == im1 must be equalTo true
     }
-    "not be equal to c2" in {
-      m1 == im2 must be equalTo false
+    "be equal to c2" in {
+      m1 == im2 must be equalTo true
     }
     "not be equal to c3" in {
       m1 == im3 must be equalTo false
@@ -78,11 +78,11 @@ class PLClauseTest extends Specification {
     "not be equal to im3" in {
       im1 == im3 must be equalTo false
     }
-    "not be equal to c1" in {
-      im1 == m1 must be equalTo false
+    "be equal to c1" in {
+      im1 == m1 must be equalTo true
     }
-    "not be equal to c2" in {
-      im1 == m2 must be equalTo false
+    "be equal to c2" in {
+      im1 == m2 must be equalTo true
     }
     "not be equal to c3" in {
       im1 == m3 must be equalTo false
@@ -99,11 +99,11 @@ class PLClauseTest extends Specification {
     "not be equal to m3" in {
       new MClause(im1) == m3 must be equalTo false
     }
-    "not be equal to im1" in {
-      new MClause(im1) == im1 must be equalTo false
+    "be equal to im1" in {
+      new MClause(im1) == im1 must be equalTo true
     }
-    "not be equal to im2" in {
-      new MClause(im1) == im2 must be equalTo false
+    "be equal to im2" in {
+      new MClause(im1) == im2 must be equalTo true
     }
     "not be equal to im3" in {
       new MClause(im1) == im3 must be equalTo false
@@ -120,11 +120,11 @@ class PLClauseTest extends Specification {
     "not be equal to im3" in {
       new IMClause(m1) == im3 must be equalTo false
     }
-    "not be equal to m1" in {
-      new IMClause(m1) == m1 must be equalTo false
+    "be equal to m1" in {
+      new IMClause(m1) == m1 must be equalTo true
     }
-    "not be equal to m2" in {
-      new IMClause(m1) == m2 must be equalTo false
+    "be equal to m2" in {
+      new IMClause(m1) == m2 must be equalTo true
     }
     "not be equal to m3" in {
       new IMClause(m1) == m3 must be equalTo false
