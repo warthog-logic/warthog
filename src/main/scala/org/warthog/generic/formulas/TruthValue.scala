@@ -33,7 +33,7 @@ package org.warthog.generic.formulas
  * Date:   25.01.12
  */
 abstract case class TruthValue[-L <: Logic](tv: String) extends Formula[L] {
-  override def toString = tv
+  override def toString = if (tv == Formula.TRUE) "$true" else "$false"
 
   def atoms = List()
 
