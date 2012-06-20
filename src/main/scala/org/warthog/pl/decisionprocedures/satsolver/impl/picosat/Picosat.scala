@@ -140,10 +140,16 @@ class Picosat extends Solver {
     require(initialized, "getModel(): Solver not yet initialized!")
     require(laststate == PSSAT || laststate == PSUNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
 
+    def toConjunction(a: Seq[Formula[PL]]) =
+      if (a.isEmpty)
+        Verum()
+      else
+        a.reduceLeft(And(_, _))
+
     laststate match {
       case PSUNSAT => Falsum()
       case PSSAT   =>
-        (for {
+        toConjunction((for {
           i <- 1 to jps.picosat_variables()
           j = i * jps.picosat_deref(i)
           if j != 0 /* filter out unassigned variables */
@@ -153,7 +159,7 @@ class Picosat extends Solver {
             Not(vartofm.getOrElse(-l, Falsum()))
           else
             vartofm.getOrElse(l, Verum())
-        ).reduceLeft(And(_, _))
+        ).toSeq)
     }
   }
 }

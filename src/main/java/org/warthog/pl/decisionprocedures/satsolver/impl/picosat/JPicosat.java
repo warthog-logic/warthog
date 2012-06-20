@@ -50,6 +50,8 @@ public class JPicosat {
     }
 
     public JPicosat(String libdir) throws Exception {
+        if (libdir == null || libdir == "")
+            libdir="lib";
         StringBuilder pref = new StringBuilder(libdir + DIR);
 
         if (Platform.isMac())
@@ -60,7 +62,10 @@ public class JPicosat {
         else if (Platform.isLinux())
             pref.append("/linux");
         else if (Platform.isWindows())
-            pref.append("/win");
+            if (Platform.is64Bit())
+                pref.append("/win/64");
+            else
+                pref.append("/win/32");
         else
             throw new Exception("JPicosat: Platform unsupported!");
 
