@@ -26,18 +26,15 @@
 package org.warthog.pl.formulas
 
 import org.warthog.pl.decisionprocedures.TruthTable
-import org.warthog.pl.transformations.Substitution
 import org.warthog.generic.formulas._
 import org.warthog.generic.transformations.{RemoveBooleanConstants, CNFDNF}
 import org.warthog.generic.printer.PrettyPrinter
+import org.warthog.pl.transformations.{DefinitionalCNF, Substitution}
 
 /**
  * Rich formula for propositional logic
- *
- * Author: zengler
- * Date:   18.01.12
  */
-trait PLTransformations extends CNFDNF[PL] with Substitution
+trait PLTransformations extends CNFDNF[PL] with Substitution with DefinitionalCNF
 
 trait PLSimplifications extends RemoveBooleanConstants[PL]
 
