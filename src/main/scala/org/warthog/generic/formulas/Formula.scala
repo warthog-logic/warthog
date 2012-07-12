@@ -72,12 +72,6 @@ abstract class Formula[-L <: Logic] extends Term[PL] {
   def boundVars: List[FVariable]
 
   /**
-   * The number of variables of this formula
-   * @return the number of variables of this formula
-   */
-  lazy val numOfVars: Int = vars.size
-
-  /**
    * The number of atoms of this formula
    * @return the number of atoms of this formula
    */
@@ -93,7 +87,7 @@ abstract class Formula[-L <: Logic] extends Term[PL] {
    * Print the statistics for this formula
    */
   def stats: String = {
-    "Number of variables: %d\n".format(numOfVars) +
+    "Number of variables: %d\n".format(vars.size) +
       "Number of atoms: %d\n".format(numOfAtoms) +
       "Number of nodes: %d\n".format(numOfNodes)
   }
