@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,15 +26,11 @@
 package pl.datastructures
 
 import org.specs2.mutable.Specification
-import org.warthog.pl.datastructures.cnf.{PLLiteral, MutablePLClause => MClause, ImmutablePLClause => IMClause}
+import org.warthog.pl.datastructures.cnf.{ PLLiteral, MutablePLClause => MClause, ImmutablePLClause => IMClause }
 
 /**
- * Test for the propositional clauses
- *
- * Author: zengler
- * Date:   15.05.12
- */
-
+  * Test for the propositional clauses
+  */
 class PLClauseTest extends Specification {
 
   val (x, y, z, nw) = (PLLiteral("x", true), PLLiteral("y", true), PLLiteral("z", true), PLLiteral("w", false))
@@ -45,7 +41,6 @@ class PLClauseTest extends Specification {
   val im1 = new IMClause(x, y, z)
   val im2 = new IMClause(y, x, z)
   val im3 = new IMClause(x, y)
-
 
   "m1" should {
     "be equal to m1" in {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -32,11 +32,8 @@ import org.warthog.generic.formulas._
 import org.warthog.pl.formulas.PLAtom
 
 /**
- * Test cases for the propositional logic parser
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Test cases for the propositional logic parser
+  */
 class PLParserTest extends Specification {
   val verum = Verum()
   val falsum = Falsum()

@@ -1,4 +1,4 @@
-/**
+/*
 * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
 * All rights reserved.
 *
@@ -27,14 +27,11 @@ package pl.datastructures
 
 import org.specs2.mutable.Specification
 import org.warthog.pl.parsers._
-import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause => Clause}
+import org.warthog.pl.datastructures.cnf.{ PLLiteral, ImmutablePLClause => Clause }
 
 /**
-* Test for the immutable propositional clauses
-*
-* Author: zengler
-* Date:   10.05.12
-*/
+  * Test for the immutable propositional clauses
+  */
 
 class ImmutablePLClauseTest extends Specification {
 

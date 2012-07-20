@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -31,11 +31,8 @@ import org.warthog.pl.parsers._
 import org.warthog.pl.formulas.PLAtom
 
 /**
- * Tests for Boolean constant removal
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Tests for Boolean constant removal
+  */
 class RemoveBooleanConstantsTest extends Specification {
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
 

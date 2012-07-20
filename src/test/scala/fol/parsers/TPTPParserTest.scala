@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -32,11 +32,8 @@ import org.warthog.fol.formulas._
 import org.warthog.generic.formulas._
 
 /**
- * Test cases for the propositional logic parsers
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Test cases for the propositional logic parsers
+  */
 class TPTPParserTest extends Specification {
   val verum = Verum()
   val falsum = Falsum()
@@ -98,9 +95,12 @@ class TPTPParserTest extends Specification {
   val exp = FOLExists(X, pp)
   val exyzp = FOLExists(Set(X, Y, Z), pp)
 
-  val h144 = Implication(FOLForAll(X, FOLPredicate("p", X) || FOLPredicate("r", Y)), FOLExists(Set(Y, Z), FOLPredicate("q", Y) || -FOLExists(Z, FOLPredicate("p", Z) && FOLPredicate("q", Z))))
-  val h150_1 = FOLExists(Y, Implication(FOLPredicate("<", X, Y), FOLForAll(U, FOLExists(V, FOLPredicate("<", FOLFunction("mul", X, U), FOLFunction("mul", Y, V))))))
-  val h150_2 = FOLForAll(X, Implication(FOLPredicate("p", X), (FOLExists(Set(X, Y), FOLPredicate("q", Y)) || -FOLExists(Z, FOLPredicate("p", Z) && FOLPredicate("q", Z)))))
+  val h144 = Implication(FOLForAll(X, FOLPredicate("p", X) || FOLPredicate("r", Y)),
+    FOLExists(Set(Y, Z), FOLPredicate("q", Y) || -FOLExists(Z, FOLPredicate("p", Z) && FOLPredicate("q", Z))))
+  val h150_1 = FOLExists(Y, Implication(FOLPredicate("<", X, Y),
+    FOLForAll(U, FOLExists(V, FOLPredicate("<", FOLFunction("mul", X, U), FOLFunction("mul", Y, V))))))
+  val h150_2 = FOLForAll(X, Implication(FOLPredicate("p", X),
+    (FOLExists(Set(X, Y), FOLPredicate("q", Y)) || -FOLExists(Z, FOLPredicate("p", Z) && FOLPredicate("q", Z)))))
 
   F.verum should {
     "be parsed to " + verum in {

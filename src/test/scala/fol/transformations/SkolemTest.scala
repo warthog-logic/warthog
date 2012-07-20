@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -30,11 +30,8 @@ import fol.F
 import org.warthog.fol.parsers.tptp._
 
 /**
- * Test cases for first order skolemization
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Test cases for first order skolemization
+  */
 class SkolemTest extends Specification {
   F.h150_1 should {
     val h150_1sk = "~(X < sk0(X)) | mul(X, U0) < mul(sk0(X), sk1(X,U0))"

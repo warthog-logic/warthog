@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,16 +26,13 @@
 package fol
 
 /**
- * A collection of interesting test generic in first order logic
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * A collection of interesting test generic in first order logic
+  */
 
 object F {
   /**
-   * simple generic to test connectives
-   */
+    * simple generic to test connectives
+    */
   // atoms
   val verum = "$true"
   val falsum = "$false"

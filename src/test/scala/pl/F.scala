@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,15 +26,12 @@
 package pl
 
 /**
- * A collection of interesting test generic in propositional logic
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * A collection of interesting test generic in propositional logic
+  */
 object F {
   /**
-   * simple generic
-   */
+    * simple generic
+    */
   // atoms
   val verum = "$true"
   val falsum = "$false"

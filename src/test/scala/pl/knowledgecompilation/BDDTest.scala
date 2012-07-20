@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -31,11 +31,8 @@ import org.warthog.pl.parsers._
 import org.warthog.pl.formulas.PLAtom
 
 /**
- * Tests for the internal BDD package
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Tests for the internal BDD package
+  */
 class BDDTest extends Specification {
   val (a, b, c) = (PLAtom("a"), PLAtom("b"), PLAtom("c"))
   val m = new BDDManager(Seq(a, b, c))

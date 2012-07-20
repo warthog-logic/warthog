@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -29,15 +29,11 @@ import org.specs2.mutable._
 import org.warthog.pl.formulas.PLAtom
 import org.warthog.pl.parsers._
 
-
 /**
- * Basic tests for propositional generic
- * + normal forms
- * + transformations & simplicifations
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Basic tests for propositional generic
+  * + normal forms
+  * + transformations & simplicifations
+  */
 class SubstitutionTest extends Specification {
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
 

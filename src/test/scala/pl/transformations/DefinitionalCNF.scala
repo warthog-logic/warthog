@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,13 +27,13 @@ package pl.transformations
 
 import org.specs2.mutable._
 import org.warthog.generic.formulas._
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.pl.parsers._
 import pl.F
 
 /**
- * Tests for Definitional CNF Transformation
- */
+  * Tests for Definitional CNF Transformation
+  */
 class DefinitionalCNF extends Specification {
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
   val notX = -x
@@ -134,18 +134,20 @@ class DefinitionalCNF extends Specification {
     }
   }
 
+  val (a, b, c, d, e) = (PLAtom("a"), PLAtom("b"), PLAtom("c"), PLAtom("d"), PLAtom("e"))
+
   "(a & ~b) | (c & ~d & e)" should {
     "have the right Tseitin CNF" in {
       val cnf = "(a & ~b) | (c & ~d & e)".pl.tseitinCNF
       cnf.isCNF must be equalTo true
       cnf.asInstanceOf[And[PL]].args.size must be equalTo 11
-      cnf.vars must containAllOf(Seq(PLAtom("a"), PLAtom("b"), PLAtom("c"), PLAtom("d"), PLAtom("e"), PLAtom("CNFVar0"), PLAtom("CNFVar1"), PLAtom("CNFVar2")))
+      cnf.vars must containAllOf(Seq(a, b, c, d, e, PLAtom("CNFVar0"), PLAtom("CNFVar1"), PLAtom("CNFVar2")))
     }
     "have the right Plaisted Greenbaum CNF'" in {
       val cnf = "(a & ~b) | (c & ~d & e)".pl.plaistedGreenbaumCNF
       cnf.isCNF must be equalTo true
       cnf.asInstanceOf[And[PL]].args.size must be equalTo 7
-      cnf.vars must containAllOf(Seq(PLAtom("a"), PLAtom("b"), PLAtom("c"), PLAtom("d"), PLAtom("e"), PLAtom("CNFVar0"), PLAtom("CNFVar1"), PLAtom("CNFVar2")))
+      cnf.vars must containAllOf(Seq(a, b, c, d, e, PLAtom("CNFVar0"), PLAtom("CNFVar1"), PLAtom("CNFVar2")))
     }
   }
 }

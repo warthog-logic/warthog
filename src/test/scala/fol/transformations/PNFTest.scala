@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -31,11 +31,8 @@ import org.warthog.fol.formulas.FOLVariable
 import org.warthog.fol.parsers.tptp._
 
 /**
- * Test cases for PNF transformation and matrix of first order generic
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Test cases for PNF transformation and matrix of first order generic
+  */
 class PNFTest extends Specification {
   val X = FOLVariable("X")
   val Y = FOLVariable("Y")

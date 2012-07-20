@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,22 +28,22 @@ package fol.formulas
 import org.specs2.mutable._
 import fol.F
 import org.warthog.fol.parsers.tptp._
-import org.warthog.fol.formulas.{FunctionSymbol, PredicateSymbol, FOLVariable}
+import org.warthog.fol.formulas.{ FunctionSymbol, PredicateSymbol, FOLVariable }
 
 /**
- * Basic tests for FOL generic
- * + normal forms
- * + transformations & simplicifations
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Basic tests for FOL generic
+  * + normal forms
+  * + transformations & simplicifations
+  */
 class BasicFormulaTest extends Specification {
   val X = FOLVariable("X")
   val Y = FOLVariable("Y")
   val Z = FOLVariable("Z")
   val U = FOLVariable("U")
   val V = FOLVariable("V")
+  val pp = PredicateSymbol("p", 1)
+  val qq = PredicateSymbol("q", 1)
+  val rr = PredicateSymbol("r", 1)
 
   "x" should {
     "be in NNF" in {
@@ -96,7 +96,7 @@ class BasicFormulaTest extends Specification {
       F.h144.fol.functions must have size 0
     }
     "have a set of predicates {p,q,r}" in {
-      F.h144.fol.predicates must be equalTo List(PredicateSymbol("p", 1), PredicateSymbol("r", 1), PredicateSymbol("q", 1))
+      F.h144.fol.predicates must be equalTo List(pp, rr, qq)
     }
   }
 
@@ -140,19 +140,19 @@ class BasicFormulaTest extends Specification {
       F.h150_2.fol.isGround must be equalTo true
     }
     "have a set of variables {X,Y,Z}" in {
-      F.h150_2.fol.vars must be equalTo List(X,Y,Z)
+      F.h150_2.fol.vars must be equalTo List(X, Y, Z)
     }
     "have an empty set of free variables" in {
       F.h150_2.fol.freeVars must have size 0
     }
     "have a set of bound variables {X,Y,Z}" in {
-      F.h150_2.fol.boundVars must be equalTo List(X,Y,Z)
+      F.h150_2.fol.boundVars must be equalTo List(X, Y, Z)
     }
     "have an empty set of functions" in {
       F.h150_2.fol.functions must have size 0
     }
     "have a set of predicates {p,q}" in {
-      F.h150_2.fol.predicates must be equalTo List(PredicateSymbol("p", 1), PredicateSymbol("q", 1))
+      F.h150_2.fol.predicates must be equalTo List(pp, qq)
     }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -32,13 +32,10 @@ import org.warthog.pl.parsers._
 import pl.F
 
 /**
- * Tests for CNF and DNF Conversion
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Tests for CNF and DNF Conversion
+  */
 class CNFDNFTest extends Specification {
-  val (x,y,z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
+  val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
   val notX = -x
   val impl = Implication(x, y)
   val xor = Xor(x, y)

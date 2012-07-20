@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,18 +25,15 @@
 
 package pl.decisionprocedures
 
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Solver, sat}
+import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Solver, sat }
 import org.specs2.mutable.Specification
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import org.warthog.pl.formulas.{ PL, PLAtom }
+import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 
 /**
- * Tests for the picosat bindings
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Tests for the picosat bindings
+  */
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
@@ -57,43 +54,47 @@ class PicosatTest extends Specification {
   "x" should {
     "be satisfiable" in {
       sat(ps) {
-        (solver: Solver) => {
-          solver.add(x)
-          rv0 = solver.sat(Infinity)
-        }
+        (solver: Solver) =>
+          {
+            solver.add(x)
+            rv0 = solver.sat(Infinity)
+          }
       }
       rv0 must be equalTo (1)
     }
     "be satisfied by model x" in {
       sat(ps) {
-        (solver: Solver) => {
-          solver.add(x)
-          solver.sat(Infinity)
-          fm = solver.getModel()
-        }
+        (solver: Solver) =>
+          {
+            solver.add(x)
+            solver.sat(Infinity)
+            fm = solver.getModel()
+          }
       }
       fm must be equalTo (x)
     }
     "be unsatisfiable after adding -x" in {
       sat(ps) {
-        solver => {
-          solver.add(x)
-          solver.add(-x)
-          rv0 = solver.sat(Infinity)
-        }
+        solver =>
+          {
+            solver.add(x)
+            solver.add(-x)
+            rv0 = solver.sat(Infinity)
+          }
       }
       rv0 must be equalTo (-1)
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
       sat(ps) {
-        solver => {
-          solver.add(x)
-          solver.mark()
-          solver.add(-x)
-          rv0 = solver.sat(Infinity)
-          solver.undo()
-          rv1 = solver.sat(Infinity)
-        }
+        solver =>
+          {
+            solver.add(x)
+            solver.mark()
+            solver.add(-x)
+            rv0 = solver.sat(Infinity)
+            solver.undo()
+            rv1 = solver.sat(Infinity)
+          }
       }
       (rv0 == -1 && rv1 == 1) must be equalTo (true)
     }
@@ -101,10 +102,11 @@ class PicosatTest extends Specification {
   "the empty clause" should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(Falsum())
-          rv0 = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(Falsum())
+            rv0 = s.sat(Infinity)
+          }
       }
       rv0 must be equalTo (-1)
     }
@@ -112,10 +114,11 @@ class PicosatTest extends Specification {
   "the empty formula" should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(Verum())
-          rv0 = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(Verum())
+            rv0 = s.sat(Infinity)
+          }
       }
       rv0 must be equalTo (1)
     }
@@ -124,13 +127,14 @@ class PicosatTest extends Specification {
     "return true uppon sat checking" in {
       var model: Formula[PL] = null
       sat(ps) {
-        s => {
-          s.add(Verum())
-          rv0 = s.sat(Infinity)
-          model = s.getModel()
-        }
+        s =>
+          {
+            s.add(Verum())
+            rv0 = s.sat(Infinity)
+            model = s.getModel()
+          }
       }
-      model must be equalTo(Verum())
+      model must be equalTo (Verum())
     }
   }
 }

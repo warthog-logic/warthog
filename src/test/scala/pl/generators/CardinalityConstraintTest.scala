@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,18 +26,15 @@
 package pl.generators
 
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, sat}
+import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, sat }
 import org.warthog.generic.formulas.Formula
 import org.specs2.mutable.Specification
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.pl.generators.cardinality._
 
 /**
- * Tests for the cardinality constraints
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Tests for the cardinality constraints
+  */
 class CardinalityConstraintTest extends Specification {
   val ps = new Picosat
   val (w, x, y, z) = (PLAtom("w"), PLAtom("x"), PLAtom("y"), PLAtom("z"))
@@ -78,30 +75,33 @@ class CardinalityConstraintTest extends Specification {
   def lefrag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo (1)
     }
     "be unsatisfiable after adding x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          s.add(x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            s.add(x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo (-1)
     }
     "be satisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          s.add(-x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            s.add(-x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo (1)
     }
@@ -110,82 +110,91 @@ class CardinalityConstraintTest extends Specification {
   def ltfrag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -194,82 +203,91 @@ class CardinalityConstraintTest extends Specification {
   def eq3t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -278,118 +296,131 @@ class CardinalityConstraintTest extends Specification {
   def eq4t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for w=x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -399,109 +430,121 @@ class CardinalityConstraintTest extends Specification {
   def gefrag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -510,136 +553,151 @@ class CardinalityConstraintTest extends Specification {
   def gtfrag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -649,280 +707,311 @@ class CardinalityConstraintTest extends Specification {
   def le4t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for w=x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be satisfiable for w=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
@@ -932,280 +1021,311 @@ class CardinalityConstraintTest extends Specification {
   def lt4t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for w=x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be satisfiable for w=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
@@ -1215,280 +1335,311 @@ class CardinalityConstraintTest extends Specification {
   def ge4t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for w=x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
@@ -1498,280 +1649,311 @@ class CardinalityConstraintTest extends Specification {
   def gt4t2frag(name: String, fm: Formula[PL]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s => {
-          s.add(fm)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=x=y=z=true" in {
       sat(ps) {
-        s => {
-          s.add(fm && w && x && y && z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && w && x && y && z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for w=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be satisfiable for z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo 1
     }
     "be unsatisfiable for w=x=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }
     "be unsatisfiable for w=x=y=z=false" in {
       sat(ps) {
-        s => {
-          s.add(fm && -w && -x && -y && -z)
-          rv = s.sat(Infinity)
-        }
+        s =>
+          {
+            s.add(fm && -w && -x && -y && -z)
+            rv = s.sat(Infinity)
+          }
       }
       rv must be equalTo -1
     }

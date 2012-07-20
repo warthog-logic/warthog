@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,15 +27,11 @@ package pl.datastructures
 
 import org.specs2.mutable.Specification
 import org.warthog.pl.parsers._
-import org.warthog.pl.datastructures.cnf.{PLLiteral, MutablePLClause => Clause}
+import org.warthog.pl.datastructures.cnf.{ PLLiteral, MutablePLClause => Clause }
 
 /**
- * Test for the mutable propositional clauses
- *
- * Author: zengler
- * Date:   10.05.12
- */
-
+  * Test for the mutable propositional clauses
+  */
 class MutablePLClauseTest extends Specification {
 
   val (x, y, z, nw) = (PLLiteral("x", true), PLLiteral("y", true), PLLiteral("z", true), PLLiteral("w", false))

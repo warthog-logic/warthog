@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -32,11 +32,8 @@ import org.warthog.pl.decisionprocedures.dpll.DPLL
 import org.warthog.pl.generators.PigeonHoleGenerator
 
 /**
- * Tests for the DPLL implementation
- *
- * Author: zengler
- * Date:   10.05.12
- */
+  * Tests for the DPLL implementation
+  */
 
 class DPTest extends Specification {
 

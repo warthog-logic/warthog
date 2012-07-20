@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,17 +27,12 @@ package pl.datastructures
 
 import org.specs2.mutable.Specification
 import org.warthog.pl.parsers._
-import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause => Clause}
+import org.warthog.pl.datastructures.cnf.{ PLLiteral, ImmutablePLClause => Clause }
 
 /**
- * Test for propositional literals
- *
- * Author: zengler
- * Date:   15.05.12
- */
-
+  * Test for propositional literals
+  */
 class PLLiteralTest extends Specification {
-
   "Literal x" should {
     "be formula x" in {
       PLLiteral("x".pl).toFormula must be equalTo "x".pl
