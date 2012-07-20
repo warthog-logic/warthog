@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,21 +26,18 @@
 package org.warthog.pl.generators
 
 import org.warthog.generic.formulas._
-import org.warthog.pl.formulas.{PLAtom, PL}
+import org.warthog.pl.formulas.{ PLAtom, PL }
 
 /**
- * Generator for pigeonhole problems
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Generator for pigeonhole problems
+  */
 object PigeonHoleGenerator {
 
   /**
-   * Generate a pigeon hole instance for 'n+1' pigeons, n holes
-   * @param n the number of pigeons
-   * @return a pigeon hole instance for 'n+1' pigeons
-   */
+    * Generate a pigeon hole instance for 'n+1' pigeons, n holes
+    * @param n the number of pigeons
+    * @return a pigeon hole instance for 'n+1' pigeons
+    */
   def generate(n: Int): Formula[PL] = {
     require(n > 0, "Pigeon hole instance must have at least 1 pigeon")
     placeInSomeHole(n) && onlyOnePigeonInHole(n)

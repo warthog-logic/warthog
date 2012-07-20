@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,31 +26,28 @@
 package org.warthog.pl.transformations
 
 import org.warthog.generic.formulas._
-import org.warthog.generic.transformations.{Substitution => GenericSubstituion}
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{And, Formula, Not, Or}
+import org.warthog.generic.transformations.{ Substitution => GenericSubstituion }
+import org.warthog.pl.formulas.{ PL, PLAtom }
+import org.warthog.generic.formulas.{ And, Formula, Not, Or }
 
 /**
- * Substitution for propositional generic
- *
- * Author: zengler
- * Date:   19.01.12
- */
+  * Substitution for propositional generic
+  */
 trait Substitution extends GenericSubstituion[PL] {
 
   /**
-   * Substitute a formula for a propositional atom
-   * @param v: the propositional atom
-   * @param t: the formula to substitute
-   * @return the substituted formula f[v/t]
-   */
+    * Substitute a formula for a propositional atom
+    * @param v: the propositional atom
+    * @param t: the formula to substitute
+    * @return the substituted formula f[v/t]
+    */
   def substitute(v: PLAtom, t: Formula[PL]): Formula[PL] = subst(Map(v -> t), f)
 
   /**
-   * Substitute a formula for a propositional atom
-   * @param m: a map of atoms to generic
-   * @return the substituted formula
-   */
+    * Substitute a formula for a propositional atom
+    * @param m: a map of atoms to generic
+    * @return the substituted formula
+    */
   def substitute(m: Map[PLAtom, Formula[PL]]): Formula[PL] = subst(m, f)
 
   private def subst(m: Map[PLAtom, Formula[PL]], arg: Formula[PL]): Formula[PL] = arg match {

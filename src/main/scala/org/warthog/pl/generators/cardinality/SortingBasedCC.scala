@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,44 +25,40 @@
 
 package org.warthog.pl.generators.cardinality
 
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas._
 
 /**
- * Trait for sorting based cardinality constraints
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Trait for sorting based cardinality constraints
+  */
 trait SortingBasedCC {
-  def sorter(in: Array[PLAtom], auxpref: String): (Array[PLAtom],Formula[PL])
+  def sorter(in: Array[PLAtom], auxpref: String): (Array[PLAtom], Formula[PL])
 
-  def apply(in: Array[PLAtom], lowerBound: Int, upperBound: Int, auxpref: String="out") = {
-    require(lowerBound>=0, "lowerBound out of bounds")
-    require(upperBound>=0, "upperBound out of bounds")
-    require(lowerBound<=upperBound, "lowerBound>upperBound!")
+  def apply(in: Array[PLAtom], lowerBound: Int, upperBound: Int, auxpref: String = "out") = {
+    require(lowerBound >= 0, "lowerBound out of bounds")
+    require(upperBound >= 0, "upperBound out of bounds")
+    require(lowerBound <= upperBound, "lowerBound>upperBound!")
 
-    if (lowerBound>in.length) /* if lowerBound > in.length, the constraint is trivially unsat */
+    if (lowerBound > in.length) /* if lowerBound > in.length, the constraint is trivially unsat */
       Falsum()
-    else if (lowerBound==0 && upperBound>=in.length) /* a sum of in.length booleans is always in [0,in.length] */
+    else if (lowerBound == 0 && upperBound >= in.length) /* a sum of in.length booleans is always in [0,in.length] */
       Verum()
     else {
-      val (o,f) = sorter(in, auxpref)
+      val (o, f) = sorter(in, auxpref)
       And(
         f,
         //o.take(lowerBound).foldLeft(PropTrue: Formula)(And(_, _)),
         lowerB(o, lowerBound),
         //o.drop(upperBound).map(Negation(_)).foldLeft(PropTrue: Formula)(And(_,_))
-        upperB(o, upperBound)
-      )
+        upperB(o, upperBound))
     }
   }
 
-  def le(in: Array[PLAtom], k: Int, auxpref: String="out") = apply(in, 0, k, auxpref)
-  def ge(in: Array[PLAtom], k: Int, auxpref: String="out") = apply(in, k, in.length, auxpref)
-  def eq(in: Array[PLAtom], k: Int, auxpref: String="out") = apply(in, k, k, auxpref)
-  def lt(in: Array[PLAtom], k: Int, auxpref: String="out") = le(in, k-1, auxpref)
-  def gt(in: Array[PLAtom], k: Int, auxpref: String="out") = ge(in, k+1, auxpref)
+  def le(in: Array[PLAtom], k: Int, auxpref: String = "out") = apply(in, 0, k, auxpref)
+  def ge(in: Array[PLAtom], k: Int, auxpref: String = "out") = apply(in, k, in.length, auxpref)
+  def eq(in: Array[PLAtom], k: Int, auxpref: String = "out") = apply(in, k, k, auxpref)
+  def lt(in: Array[PLAtom], k: Int, auxpref: String = "out") = le(in, k - 1, auxpref)
+  def gt(in: Array[PLAtom], k: Int, auxpref: String = "out") = ge(in, k + 1, auxpref)
   def lowerB(out: Array[PLAtom], l: Int) = out.take(l).foldLeft(Verum(): Formula[PL])(And(_, _))
   def upperB(out: Array[PLAtom], u: Int) = out.drop(u).map(Not(_)).foldLeft(Verum(): Formula[PL])(And(_, _))
 }

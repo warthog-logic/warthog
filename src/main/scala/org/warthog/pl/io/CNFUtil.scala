@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,22 +27,17 @@ package org.warthog.pl.io
 
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
-import org.warthog.pl.datastructures.cnf.{ImmutablePLClause, PLLiteral, MutablePLClause}
-
-//import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause}
+import org.warthog.pl.datastructures.cnf.{ ImmutablePLClause, PLLiteral, MutablePLClause }
 
 /**
- * A utility class to produce different output formats for CNFs
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * A utility class to produce different output formats for CNFs
+  */
 object CNFUtil {
   /**
-   * List representation of a CNF formula
-   * @param f a formula in cnf
-   * @return a list (conjunction) of lists (clauses) of literals
-   */
+    * List representation of a CNF formula
+    * @param f a formula in cnf
+    * @return a list (conjunction) of lists (clauses) of literals
+    */
   def toList(f: Formula[PL]): List[List[Formula[PL]]] = {
     (f.cnf match {
       case And(fs@_*) => (for (i <- fs; x = toList(i); if x != Nil) yield x.head).toList
@@ -52,10 +47,10 @@ object CNFUtil {
   }
 
   /**
-   * Internal CNF representation with mutable clauses
-   * @param f a formula in cnf
-   * @return a list of clauses
-   */
+    * Internal CNF representation with mutable clauses
+    * @param f a formula in cnf
+    * @return a list of clauses
+    */
   def toMutableCNF(f: Formula[PL]): List[MutablePLClause] = {
     (f.simplifiedCNF.removeBooleanConstants match {
       case v: Verum[PL]  => List[MutablePLClause]()
@@ -67,10 +62,10 @@ object CNFUtil {
   }
 
   /**
-   * Internal CNF representation with immutable clauses
-   * @param f a formula in cnf
-   * @return a list of clauses
-   */
+    * Internal CNF representation with immutable clauses
+    * @param f a formula in cnf
+    * @return a list of clauses
+    */
   def toCNF(f: Formula[PL]): List[ImmutablePLClause] = {
     (f.simplifiedCNF.removeBooleanConstants match {
       case v: Verum[PL]  => List[ImmutablePLClause]()

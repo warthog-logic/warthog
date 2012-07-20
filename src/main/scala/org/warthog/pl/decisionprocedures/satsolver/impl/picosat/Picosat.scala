@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,17 +27,14 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 
 import scala.collection.mutable.Map
 
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, Solver}
+import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver }
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
 
 /**
- * Solver Wrapper for Picosat
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Solver Wrapper for Picosat
+  */
 class Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
@@ -73,7 +70,7 @@ class Picosat extends Solver {
      */
     val lcls = CNFUtil.toList(fm) match {
       case Nil => Nil
-      case l   => l.map(_.map(f => {
+      case l => l.map(_.map(f => {
         val (at, mul) = f match {
           case Not(ff) => (ff, -1)
           case _       => (f, 1)
@@ -128,7 +125,7 @@ class Picosat extends Solver {
         clss = clss.drop(clss.length - h)
         clss.foreach(add_cls)
       }
-      case _      => {
+      case _ => {
         marks = 0 :: marks
         undo()
       }
@@ -148,18 +145,17 @@ class Picosat extends Solver {
 
     laststate match {
       case PSUNSAT => Falsum()
-      case PSSAT   =>
+      case PSSAT =>
         toConjunction((for {
           i <- 1 to jps.picosat_variables()
           j = i * jps.picosat_deref(i)
           if j != 0 /* filter out unassigned variables */
         } yield j).
           map(l => /* map literals to proper generic */
-          if (l < 0)
-            Not(vartofm.getOrElse(-l, Falsum()))
-          else
-            vartofm.getOrElse(l, Verum())
-        ).toSeq)
+            if (l < 0)
+              Not(vartofm.getOrElse(-l, Falsum()))
+            else
+              vartofm.getOrElse(l, Verum())).toSeq)
     }
   }
 }

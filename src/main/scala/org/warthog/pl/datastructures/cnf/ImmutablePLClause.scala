@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,14 +26,11 @@
 package org.warthog.pl.datastructures.cnf
 
 import org.warthog.pl.formulas.PL
-import org.warthog.generic.datastructures.cnf.{ClauseLike, ImmutableClause}
+import org.warthog.generic.datastructures.cnf.{ ClauseLike, ImmutableClause }
 
 /**
- * Representation of an immutable propositional clause
- *
- * Author: zengler
- * Date:   14.05.12
- */
+  * Representation of an immutable propositional clause
+  */
 class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiteral](ls) {
   def this() {
     this(Nil)
@@ -48,15 +45,15 @@ class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiter
   }
 
   /**
-   * Delete a literal in this clause
-   * @param lit a literal
-   */
+    * Delete a literal in this clause
+    * @param lit a literal
+    */
   def delete(lit: PLLiteral) = new ImmutablePLClause(_lits.filterNot(_ == lit))
 
   /**
-   * Push a literal to this clause
-   * @param lit a literal
-   */
+    * Push a literal to this clause
+    * @param lit a literal
+    */
   def push(lit: PLLiteral) =
     if (!_lits.contains(lit))
       new ImmutablePLClause(lit :: _lits)
@@ -64,8 +61,8 @@ class ImmutablePLClause(ls: List[PLLiteral]) extends ImmutableClause[PL, PLLiter
       this
 
   /**
-   * Add a number of literals to this clause
-   * @param lits a list of literals
-   */
+    * Add a number of literals to this clause
+    * @param lits a list of literals
+    */
   def pushLiterals(lits: PLLiteral*) = new ImmutablePLClause((_lits ++ lits).distinct)
 }

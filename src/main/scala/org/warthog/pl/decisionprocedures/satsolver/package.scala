@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,11 +26,8 @@
 package org.warthog.pl.decisionprocedures
 
 /**
- * Package Object for SAT Solvers
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Package Object for SAT Solvers
+  */
 package object satsolver {
   implicit def intToDuration(i: Int) = new Duration(i.toLong)
 

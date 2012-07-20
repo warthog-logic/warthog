@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -29,11 +29,8 @@ import org.warthog.pl.printer.UTF8Printer
 import org.warthog.generic.formulas.Formula
 
 /**
- * Package object for propositional logic
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Package object for propositional logic
+  */
 package object formulas {
   implicit def pl2RichFormula(f: Formula[PL]) = new PLFormula(f)
 

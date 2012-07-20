@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,22 +26,28 @@
 package org.warthog.pl.transformations
 
 import org.warthog.generic.transformations.Transformation
-import org.warthog.pl.formulas.{PLAtom, PL}
-import org.warthog.generic.formulas.{Or, NAryOperator, And, Formula}
+import org.warthog.pl.formulas.{ PLAtom, PL }
+import org.warthog.generic.formulas.{ Or, NAryOperator, And, Formula }
 
 /**
- * Implementation of definitional CNF
- *
- * Tseitin
- * Plaisted/Greenbaum
- */
+  * Implementation of definitional CNF
+  *
+  * Tseitin
+  * Plaisted/Greenbaum
+  */
 trait DefinitionalCNF extends Transformation[PL] {
 
   private var auxilliaryCounter = 0L
   private val auxillaryPrefix = "CNFVar"
 
+  /**
+    * Returns a CNF according to Tseitin
+    */
   def tseitinCNF: Formula[PL] = executeMethod(tseitin)
 
+  /**
+    * Returns a CNF according to Plaisted-Greenbaum
+    */
   def plaistedGreenbaumCNF: Formula[PL] = executeMethod(pg)
 
   private def executeMethod(method: Formula[PL] => (Option[PLAtom], List[Formula[PL]])) = {
@@ -73,7 +79,7 @@ trait DefinitionalCNF extends Transformation[PL] {
       value = addFormulas(transformedChildren, value)
       (Some(aux), value)
     }
-    case _                   => (None, List(fm))
+    case _ => (None, List(fm))
   }
 
   private def pg(fm: Formula[PL]): (Option[PLAtom], List[Formula[PL]]) = fm match {
@@ -93,10 +99,11 @@ trait DefinitionalCNF extends Transformation[PL] {
       value = addFormulas(transformedChildren, value)
       (Some(aux), value)
     }
-    case _                   => (None, List(fm))
+    case _ => (None, List(fm))
   }
 
-  private def transformChildren(children: List[Formula[PL]], method: Formula[PL] => (Option[PLAtom], List[Formula[PL]])) =
+  private def transformChildren(children: List[Formula[PL]],
+                                method: Formula[PL] => (Option[PLAtom], List[Formula[PL]])) =
     children.map(method)
 
   private def tpgLiterals(pairs: List[(Option[PLAtom], List[Formula[PL]])]) =

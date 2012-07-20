@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,11 +28,8 @@ package org.warthog.pl.formulas
 import org.warthog.generic.formulas.Logic
 
 /**
- * Propositional Logic
- *
- * Author: zengler
- * Date:   11.01.12
- */
+  * Propositional Logic
+  */
 class PL extends Logic {
   type AtomLogic = this.type
   type VariableLogic = this.type

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,21 +25,18 @@
 
 package org.warthog.pl.generators.cardinality
 
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas._
 
 /**
- * Sorting net based approach taken from
- *
- *   O. Bailleux, Y. Boufkhad:
- *   "Efficient CNF Encoding of Boolean Cardinality Constraints",
- *   Proc. of CP 2003
- *
- * Encoding size is quadratic in the size of inputs
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Sorting net based approach taken from
+  *
+  *   O. Bailleux, Y. Boufkhad:
+  *   "Efficient CNF Encoding of Boolean Cardinality Constraints",
+  *   Proc. of CP 2003
+  *
+  * Encoding size is quadratic in the size of inputs
+  */
 object BailleuxBoufkhad extends SortingBasedCC {
   /* TODO: Requires extensive testing */
   private def totalitarize(in0: Array[PLAtom], in1: Array[PLAtom], out: Array[PLAtom]) = {
@@ -53,24 +50,21 @@ object BailleuxBoufkhad extends SortingBasedCC {
         /* make sure that if in0 is at least i, in1 at least j then the result is at least i+j */
         Implication(And(in0(i), in1(j)), out(i + j + 1)),
         /* make sure that if the result is i+j, then i0 is at least i or i1 is at least j */
-        Implication(out(i + j), Or(in0(i), in1(j)))
-      )
+        Implication(out(i + j), Or(in0(i), in1(j))))
     }) ++
       (for (i <- 0 until len0) yield {
         And(
           /* if in0 is at least i, output is at least i as well */
           Implication(in0(i), out(i)),
           /* if output is at least len1+i, in0 is at least i */
-          Implication(out(len1 + i), in0(i))
-        )
+          Implication(out(len1 + i), in0(i)))
       }) ++
       (for (i <- 0 until len1) yield {
         And(
           /* if in1 is at least i, output is at least i as well */
           Implication(in1(i), out(i)),
           /* if output is at least len0+i, in1 is at least i */
-          Implication(out(len0 + i), in1(i))
-        )
+          Implication(out(len0 + i), in1(i)))
       })).reduceLeft(And(_, _))
   }
 
@@ -84,16 +78,3 @@ object BailleuxBoufkhad extends SortingBasedCC {
       (in, Verum())
     }
 }
-
-/* Usage e.g.:
-object TestBB {
-  def main(args: Array[String]) {
-    val in: Array[Atom] = (1 to 3).map(s => Variable("v_"+s)).toArray
-    println("\\sum_{1<=i<=3} v_i <= 2: "+BailleuxBoufkhad.le(in, 2))
-    println("\\sum_{1<=i<=3} v_i >= 2: "+BailleuxBoufkhad.ge(in, 2))
-    println("\\sum_{1<=i<=3} v_i == 2: "+BailleuxBoufkhad.eq(in, 2))
-    println("\\sum_{1<=i<=3} v_i <  2: "+BailleuxBoufkhad.lt(in, 2))
-    println("\\sum_{1<=i<=3} v_i >  2: "+BailleuxBoufkhad.gt(in, 2))
-  }
-}
-*/

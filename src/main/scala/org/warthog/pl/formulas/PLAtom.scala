@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
 
 package org.warthog.pl.formulas
 
-import org.warthog.generic.formulas.{Atom, Formula, Variable}
+import org.warthog.generic.formulas.{ Atom, Formula, Variable }
 
 /**
- * Propositional Variable
- * @param name the name of the variable
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Propositional Variable
+  * @param name the name of the variable
+  */
 case class PLAtom(name: String) extends Formula[PL] with Atom[PL] with Variable[PL] {
 
   override def toString = name

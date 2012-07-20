@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -29,11 +29,8 @@ import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.PL
 
 /**
- * Class hierarchy for forming resolution proofs
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Class hierarchy for forming resolution proofs
+  */
 abstract class ResolutionRefutation
 
 case class OriginalClause(lits: Formula[PL]*) extends ResolutionRefutation

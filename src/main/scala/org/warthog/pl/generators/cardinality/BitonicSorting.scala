@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,27 +25,22 @@
 
 package org.warthog.pl.generators.cardinality
 
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas._
 
 /**
- * Bitonic sorting net (acc. to Cormen, Leiserson, Rivest, Stein: Introduction
- * to Algorithms, 2nd edition, ch. 27)
- *
- * Encoding complexity: n lg**2 n comparisons
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Bitonic sorting net (acc. to Cormen, Leiserson, Rivest, Stein: Introduction
+  * to Algorithms, 2nd edition, ch. 27)
+  *
+  * Encoding complexity: n lg**2 n comparisons
+  */
 object BitonicSorting extends SortingBasedCC with PowerOf2 {
   // TODO: Requires extensive testing
   private def comparator(in0: PLAtom, in1: PLAtom, out0: PLAtom, out1: PLAtom): (Array[PLAtom], Formula[PL]) = {
     (Array(out0, out1),
       And(
         Equiv(And(in0, in1), out1),
-        Equiv(Or(in0, in1), out0)
-      )
-      )
+        Equiv(Or(in0, in1), out0)))
   }
 
   private def halfcleaner(in: Array[PLAtom], auxpref: String) = {
@@ -94,8 +89,7 @@ object BitonicSorting extends SortingBasedCC with PowerOf2 {
       And(
         fm,
         extIn.foldLeft(Verum(): Formula[PL])((f: Formula[PL], a: Formula[PL]) => And(f, -a)),
-        out.drop(in.length).foldLeft(Verum(): Formula[PL])((f: Formula[PL], a: Formula[PL]) => And(f, -a))
-      ))
+        out.drop(in.length).foldLeft(Verum(): Formula[PL])((f: Formula[PL], a: Formula[PL]) => And(f, -a))))
   }
 
   private def recsorter(in: Array[PLAtom], auxpref: String): (Array[PLAtom], Formula[PL]) = {
@@ -109,17 +103,3 @@ object BitonicSorting extends SortingBasedCC with PowerOf2 {
     }
   }
 }
-
-/* Usage e.g.:
-object TestBS {
-  def main(args: Array[String]) {
-    val in: Array[Atom] = (1 to 3).map(s => Variable("v_"+s)).toArray
-    val in0: Array[Atom]= (1 to 4).map(s => Variable("v_"+s)).toArray
-    println("\\sum_{1<=i<=3} v_i <= 2: "+BitonicSorting.le(in, 2))
-    println("\\sum_{1<=i<=3} v_i >= 2: "+BitonicSorting.ge(in, 2))
-    println("\\sum_{1<=i<=3} v_i == 2: "+BitonicSorting.eq(in, 2))
-    println("\\sum_{1<=i<=4} v_i <  2: "+BitonicSorting.lt(in0, 2))
-    println("\\sum_{1<=i<=3} v_i >  2: "+BitonicSorting.gt(in, 2))
-  }
-}
-*/

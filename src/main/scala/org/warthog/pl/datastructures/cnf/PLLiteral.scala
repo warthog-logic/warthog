@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,30 +25,27 @@
 
 package org.warthog.pl.datastructures.cnf
 
-import org.warthog.pl.formulas.{PLAtom, PL}
-import org.warthog.generic.formulas.{Not, Formula}
+import org.warthog.pl.formulas.{ PLAtom, PL }
+import org.warthog.generic.formulas.{ Not, Formula }
 import org.warthog.generic.datastructures.cnf.Literal
 
 /**
- * Representation of a propositional literal
- *
- * Author: zengler
- * Date:   15.05.12
- */
+  * Representation of a propositional literal
+  */
 case class PLLiteral(v: PLAtom, phase: Boolean = true) extends Literal[PL] {
 
   override def toString = if (phase) v.toString else Formula.NOT + v
 
   /**
-   * A formula representation of the literal
-   * @return a formula respresentation in propositional logic
-   */
+    * A formula representation of the literal
+    * @return a formula respresentation in propositional logic
+    */
   def toFormula: Formula[PL] = if (phase) v else -v
 
   /**
-   * Return a negated copy of the literal
-   * @return a negated copy of the literal
-   */
+    * Return a negated copy of the literal
+    * @return a negated copy of the literal
+    */
   def negate: PLLiteral = PLLiteral(v, !phase)
 
 }

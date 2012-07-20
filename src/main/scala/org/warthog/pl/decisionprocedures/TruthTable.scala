@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,22 +25,19 @@
 
 package org.warthog.pl.decisionprocedures
 
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas.Formula
 
 /**
- * Propositional truth table generation
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Propositional truth table generation
+  */
 object TruthTable {
 
   /**
-   * Generate the truth table of a propositional formula
-   * @param f a propositional formula
-   * @return a stringrepresentation of f's truth table
-   */
+    * Generate the truth table of a propositional formula
+    * @param f a propositional formula
+    * @return a stringrepresentation of f's truth table
+    */
   def generate(f: Formula[PL]): String = {
     val sb = new StringBuilder
     val leftSideLength = f.vars.foldLeft(0)(_ + _.toString.length + 1)
@@ -53,13 +50,12 @@ object TruthTable {
   }
 
   private def generateRows(
-                            sb: StringBuilder,
-                            f: Formula[PL],
-                            v: Map[PLAtom, Boolean],
-                            ats: List[PLAtom]
-                            ): Unit =
+    sb: StringBuilder,
+    f: Formula[PL],
+    v: Map[PLAtom, Boolean],
+    ats: List[PLAtom]): Unit =
     ats match {
-      case Nil     => getRow(sb, v, f.eval(v))
+      case Nil => getRow(sb, v, f.eval(v))
       case p :: ps => {
         generateRows(sb, f, v + (p -> false), ps)
         generateRows(sb, f, v + (p -> true), ps)

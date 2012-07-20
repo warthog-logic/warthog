@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,42 +27,43 @@ package org.warthog.pl.formulas
 
 import org.warthog.pl.decisionprocedures.TruthTable
 import org.warthog.generic.formulas._
-import org.warthog.generic.transformations.{RemoveBooleanConstants, CNFDNF}
+import org.warthog.generic.transformations.{ RemoveBooleanConstants, CNFDNF }
 import org.warthog.generic.printer.PrettyPrinter
-import org.warthog.pl.transformations.{DefinitionalCNF, Substitution}
+import org.warthog.pl.transformations.{ DefinitionalCNF, Substitution }
 
-/**
- * Rich formula for propositional logic
- */
 trait PLTransformations extends CNFDNF[PL] with Substitution with DefinitionalCNF
 
 trait PLSimplifications extends RemoveBooleanConstants[PL]
 
+/**
+  * Rich formula for propositional logic
+  * @param f a propositional logic formula
+  */
 class PLFormula(override val f: Formula[PL]) extends PLTransformations with PLSimplifications {
 
   /**
-   * pretty print a formula
-   * @param prettyPrinter the pretty printer to use
-   * @return the pretty printed formula
-   */
+    * Pretty print a formula
+    * @param prettyPrinter the pretty printer to use
+    * @return the pretty printed formula
+    */
   def pp(implicit prettyPrinter: PrettyPrinter[PL]) = prettyPrinter.print(f)
 
   /**
-   * Get the truth table of `f`
-   * @return a string representation of `f`'s truth table
-   */
+    * Get the truth table of the formula
+    * @return a string representation of the formula's truth table
+    */
   def truthTable = TruthTable.generate(f)
 
   /**
-   * Evaluate a propositional formula
-   * @param v the mapping of variables to Boolean values
-   * @param arg the formula to evaluate (default `f`)
-   * @return `true` if arg evalutes to true under v, `false` otherwise
-   */
+    * Evaluate a propositional formula
+    * @param v the mapping of variables to Boolean values
+    * @param arg the formula to evaluate (default `f`)
+    * @return `true` if arg evalutes to true under v, `false` otherwise
+    */
   def eval(v: Map[PLAtom, Boolean], arg: Formula[PL] = f): Boolean = arg match {
-    case f: Falsum[PL]     => false
-    case v: Verum[PL]      => true
-    case p: PLAtom         => v.get(p) match {
+    case f: Falsum[PL] => false
+    case v: Verum[PL]  => true
+    case p: PLAtom => v.get(p) match {
       case Some(t) => t
       case None    => throw new Exception("Variable %s was not assigned".format(p))
     }

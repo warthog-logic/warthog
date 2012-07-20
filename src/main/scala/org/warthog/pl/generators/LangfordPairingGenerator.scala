@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -29,36 +29,36 @@ import org.warthog.generic.formulas._
 import org.warthog.pl.formulas.PLAtom
 
 /**
- * Produce a propositional encoding of the Langford pairing problem
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Produce a propositional encoding of the Langford pairing problem
+  */
 object LangfordPairingGenerator {
   private def ge_one_position(n: Int) =
     And(
-      (for (i <- 1 to 2 * n) yield
-        Or((for (j <- 1 to 2 * n) yield PLAtom("v" + placeat(i, j, n))): _*)): _*)
+      (for (i <- 1 to 2 * n) yield Or((for (j <- 1 to 2 * n) yield PLAtom("v" + placeat(i, j, n))): _*)): _*)
 
   private def le_one_position(n: Int) =
-    And((for {i <- 1 to 2 * n
-              j <- 1 to 2 * n
-              k <- 1 to 2 * n if j != k} yield
-      Implication(PLAtom("v" + placeat(i, k, n)), -PLAtom("v" + placeat(i, j, n)))): _*)
+    And((for {
+      i <- 1 to 2 * n
+      j <- 1 to 2 * n
+      k <- 1 to 2 * n if j != k
+    } yield Implication(PLAtom("v" + placeat(i, k, n)), -PLAtom("v" + placeat(i, j, n)))): _*)
 
   private def le_one_per_position(n: Int) =
-    And((for {i <- 1 to 2 * n
-              j <- 1 to 2 * n
-              k <- 1 to 2 * n if j != k} yield
-      Implication(PLAtom("v" + placeat(j, i, n)), -PLAtom("v" + placeat(k, i, n)))): _*)
+    And((for {
+      i <- 1 to 2 * n
+      j <- 1 to 2 * n
+      k <- 1 to 2 * n if j != k
+    } yield Implication(PLAtom("v" + placeat(j, i, n)), -PLAtom("v" + placeat(k, i, n)))): _*)
 
   private def langford_prop(n: Int) =
-    And((for {i <- 1 to n
-              j <- 1 to 2 * n - i - 1} yield
-      Implication(PLAtom("v" + placeat(fst(i), j, n)), PLAtom("v" + placeat(snd(i), j + i + 1, n)))): _*) &&
-      And((for {i <- 1 to n
-                j <- 2 * n - i to 2 * n} yield
-        -PLAtom("v" + placeat(fst(i), j, n))): _*)
+    And((for {
+      i <- 1 to n
+      j <- 1 to 2 * n - i - 1
+    } yield Implication(PLAtom("v" + placeat(fst(i), j, n)), PLAtom("v" + placeat(snd(i), j + i + 1, n)))): _*) &&
+      And((for {
+        i <- 1 to n
+        j <- 2 * n - i to 2 * n
+      } yield -PLAtom("v" + placeat(fst(i), j, n))): _*)
 
   /**first of pair with order n */
   private def fst(i: Int) = 2 * i - 1

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,14 +26,11 @@
 package org.warthog.pl.datastructures.cnf
 
 import org.warthog.pl.formulas.PL
-import org.warthog.generic.datastructures.cnf.{ClauseLike, MutableClause}
+import org.warthog.generic.datastructures.cnf.{ ClauseLike, MutableClause }
 
 /**
- * Representation of a mutable propositional clause
- *
- * Author: zengler
- * Date:   10.05.12
- */
+  * Representation of a mutable propositional clause
+  */
 class MutablePLClause(ls: List[PLLiteral]) extends MutableClause[PL, PLLiteral](ls) {
   def this() {
     this(Nil)

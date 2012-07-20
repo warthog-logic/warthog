@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,11 +26,8 @@
 package org.warthog.pl.generators.cardinality
 
 /**
- * Generate power of 2s
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Generate power of 2s
+  */
 trait PowerOf2 extends SortingBasedCC {
   def nextPowerOf2(n: Int) = {
     if (n >= Int.MaxValue)

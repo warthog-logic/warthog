@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,12 +26,9 @@
 package org.warthog.pl
 
 /**
- * Package object for the TPTP PL parser
- * (implicit conversion of Strings)
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Package object for the TPTP PL parser
+  * (implicit conversion of Strings)
+  */
 package object parsers {
   implicit def stringToPL(fm: String) = new TPTPPL(fm)
 }

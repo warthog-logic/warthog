@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,28 +28,25 @@ package org.warthog.pl.decisionprocedures.dpll
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.io.CNFUtil
-import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause => Clause}
+import org.warthog.pl.datastructures.cnf.{ PLLiteral, ImmutablePLClause => Clause }
 
 /**
- * A basic implementation of the DP and DPLL procedures
- *
- * Author: zengler
- * Date:   09.05.12
- */
+  * A basic implementation of the DP and DPLL procedures
+  */
 object DPLL {
 
   /**
-   * Main entry point for the DP procedure
-   * @param f a PL formula
-   * @return `true` if the clauseset is satisfiable, `false` otherwise
-   */
+    * Main entry point for the DP procedure
+    * @param f a PL formula
+    * @return `true` if the clauseset is satisfiable, `false` otherwise
+    */
   def dp(f: Formula[PL]): Boolean = dpRec(CNFUtil.toCNF(f))
 
   /**
-   * The main recursive DP algorithm
-   * @param clauses a list of clauses
-   * @return `true` if the clauseset is satisfiable, `false` otherwise
-   */
+    * The main recursive DP algorithm
+    * @param clauses a list of clauses
+    * @return `true` if the clauseset is satisfiable, `false` otherwise
+    */
   private def dpRec(clauses: List[Clause]): Boolean = {
     if (clauses.isEmpty)
       true
@@ -66,10 +63,10 @@ object DPLL {
   }
 
   /**
-   * The one literal rule
-   * @param clauses a list of clauses
-   * @return a list of clauses with one unit literal eliminated
-   */
+    * The one literal rule
+    * @param clauses a list of clauses
+    * @return a list of clauses with one unit literal eliminated
+    */
   private def oneLiteralRule(clauses: List[Clause]): Option[List[Clause]] = {
     val unitClause = clauses.find(_.size == 1)
     if (unitClause == None)
@@ -82,10 +79,10 @@ object DPLL {
   }
 
   /**
-   * The affirmative negative rule
-   * @param clauses a list of clauses
-   * @return a list of clauses with pure literals eliminated
-   */
+    * The affirmative negative rule
+    * @param clauses a list of clauses
+    * @return a list of clauses with pure literals eliminated
+    */
   private def affirmativeNegatigeRule(clauses: List[Clause]): List[Clause] = {
     val pos = clauses.map(_.consequence).flatten
     val neg = clauses.map(_.premise).flatten
@@ -94,10 +91,10 @@ object DPLL {
   }
 
   /**
-   * The resolution rule
-   * @param clauses a list of clauses
-   * @return a list of clauses where one variable is eliminated by resolution (the one with the smallest blowup)
-   */
+    * The resolution rule
+    * @param clauses a list of clauses
+    * @return a list of clauses where one variable is eliminated by resolution (the one with the smallest blowup)
+    */
   private def resolutionRule(clauses: List[Clause]): List[Clause] = {
     val vars = clauses.foldLeft(List[PLLiteral]())((l, e) => l ++ e.literals).distinct
     if (vars.isEmpty)
@@ -109,11 +106,11 @@ object DPLL {
   }
 
   /**
-   * Eliminate a variable by computing all resolvents
-   * @param p a variable
-   * @param clauses a list of clauses
-   * @return the set of clauses with p eliminated
-   */
+    * Eliminate a variable by computing all resolvents
+    * @param p a variable
+    * @param clauses a list of clauses
+    * @return the set of clauses with p eliminated
+    */
   private def resolveOn(p: PLLiteral, clauses: List[Clause]): List[Clause] = {
     val (pos, notpos) = clauses.partition(_.contains(p))
     val (neg, other) = notpos.partition(_.contains(p.negate))
@@ -129,11 +126,11 @@ object DPLL {
   }
 
   /**
-   * Compute the maximal blowup for all resolutions on a variable
-   * @param p a variable
-   * @param clauses a list of clauses
-   * @return the maximal blowup
-   */
+    * Compute the maximal blowup for all resolutions on a variable
+    * @param p a variable
+    * @param clauses a list of clauses
+    * @return the maximal blowup
+    */
   private def resolutionBlowup(p: PLLiteral, clauses: List[Clause]): Int = {
     val m = clauses.filter(_.contains(p)).size
     val n = clauses.filter(_.contains(p.negate)).size

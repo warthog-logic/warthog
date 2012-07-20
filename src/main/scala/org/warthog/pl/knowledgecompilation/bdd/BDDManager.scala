@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,34 +26,31 @@
 package org.warthog.pl.knowledgecompilation.bdd
 
 import java.io.PrintStream
-import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas._
 import scala.collection.mutable.{ HashMap => MutableHashMap }
 
 /**
- * BDD Manager for ROBDDs with complemented edges
- * (c.f. Harrison: Handbook of Practical Logic and Automated Reasoning)
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * BDD Manager for ROBDDs with complemented edges
+  * (c.f. Harrison: Handbook of Practical Logic and Automated Reasoning)
+  */
 class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
 
   /**
-   * Inner class representing a single BDD node
-   *
-   * Corresponds to Harrison's BDD((unique,uback,index),ord)
-   * @param v the variable at this node
-   * @param left the index of the left child
-   * @param right the index of the right child
-   */
+    * Inner class representing a single BDD node
+    *
+    * Corresponds to Harrison's BDD((unique,uback,index),ord)
+    * @param v the variable at this node
+    * @param left the index of the left child
+    * @param right the index of the right child
+    */
   private case class BDDNode(v: PLAtom, left: Int, right: Int) {
     override def toString = "[%s | left: %s , right: %s]".format(v, left, right)
 
     /**
-     * Get the complement of this node (i.e. negated left and right children)
-     * @return the complemented node
-     */
+      * Get the complement of this node (i.e. negated left and right children)
+      * @return the complemented node
+      */
     def complement: BDDNode = BDDNode(v, -left, -right)
   }
 
@@ -68,10 +65,11 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
 
   override def toString = "<BDD with %d nodes>".format(index)
 
-  /**Get a Formula representation of the BDD indexed by m
-   * @param m the index
-   * @return the Formula representation of the BDD rooted at m
-   */
+  /**
+    * Get a Formula representation of the BDD indexed by m
+    * @param m the index
+    * @return the Formula representation of the BDD rooted at m
+    */
   def toFormula(m: Int): Formula[PL] =
     if (m == 1)
       Verum()
@@ -83,10 +81,10 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
     }
 
   /**
-   * Get the corresponding BDD node to an index
-   * @param n the index
-   * @return the corresponding node
-   */
+    * Get the corresponding BDD node to an index
+    * @param n the index
+    * @return the corresponding node
+    */
   private def expandNode(n: Int): BDDNode =
     if (n >= 0)
       unique.getOrElse(n, BDDNode(null, 1, 1))
@@ -97,14 +95,14 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
       }
 
   /**
-   * Add a new node to the BDD.
-   * If the node is not already present, add a new one.  In both cases return the index of the new node.
-   * @param node the new node to add
-   * @return the index of the new node
-   */
+    * Add a new node to the BDD.
+    * If the node is not already present, add a new one.  In both cases return the index of the new node.
+    * @param node the new node to add
+    * @return the index of the new node
+    */
   private def lookupUnique(node: BDDNode): Int = uback.get(node) match {
     case Some(i) => i
-    case None    => {
+    case None => {
       unique += (index -> node);
       uback += (node -> index);
       index += 1;
@@ -113,20 +111,20 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
   }
 
   /**
-   * Extract the order of a BDD.
-   * @param v1 the first variable for comparison
-   * @param v2 the second variable for comparison
-   * @return `true` if v1 < v2 wrt. the current ordering, `false` else
-   */
+    * Extract the order of a BDD.
+    * @param v1 the first variable for comparison
+    * @param v2 the second variable for comparison
+    * @return `true` if v1 < v2 wrt. the current ordering, `false` else
+    */
   private def order(v1: PLAtom, v2: PLAtom): Boolean = (v2 == null && v1 != null) || ord.indexOf(v1) < ord.indexOf(v2)
 
   /**
-   * Make a new BDD node and return its index.
-   * @param v the variable at this node
-   * @param left the index of the left child
-   * @param right the index of the right child
-   * @return the index of the new node
-   */
+    * Make a new BDD node and return its index.
+    * @param v the variable at this node
+    * @param left the index of the left child
+    * @param right the index of the right child
+    * @return the index of the new node
+    */
   def mkNode(v: PLAtom, left: Int, right: Int): Int = {
     if (!ord.contains(v))
       ord :+= v
@@ -139,11 +137,11 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
   }
 
   /**
-   * Compute the conjunction of two BDDs.
-   * @param m1 the first BDD (index of root node)
-   * @param m2 the second BDD (index of root node)
-   * @return m1 & m2 (index of root node)
-   */
+    * Compute the conjunction of two BDDs.
+    * @param m1 the first BDD (index of root node)
+    * @param m2 the second BDD (index of root node)
+    * @return m1 & m2 (index of root node)
+    */
   def bddAnd(m1: Int, m2: Int): Int = {
     if (m1 == -1 || m2 == -1) -1
     else if (m1 == 1) m2
@@ -160,40 +158,39 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
       val result = mkNode(p, lnew, rnew)
       computeTable += (Set(m1, m2) -> result)
       result
-    }
-    )
+    })
   }
 
   /**
-   * Compute the disjunction of two BDDs.
-   * @param m1 the first BDD (index of root node)
-   * @param m2 the second BDD (index of root node)
-   * @return m1 | m2 (index of root node)
-   */
+    * Compute the disjunction of two BDDs.
+    * @param m1 the first BDD (index of root node)
+    * @param m2 the second BDD (index of root node)
+    * @return m1 | m2 (index of root node)
+    */
   def bddOr(m1: Int, m2: Int): Int = -bddAnd(-m1, -m2)
 
   /**
-   * Compute the implication of two BDDs.
-   * @param m1 the first BDD (index of root node)
-   * @param m2 the second BDD (index of root node)
-   * @return m1 => m2 (index of root node)
-   */
+    * Compute the implication of two BDDs.
+    * @param m1 the first BDD (index of root node)
+    * @param m2 the second BDD (index of root node)
+    * @return m1 => m2 (index of root node)
+    */
   def bddImplication(m1: Int, m2: Int): Int = bddOr(-m1, m2)
 
   /**
-   * Compute the equivalence of two BDDs.
-   * @param m1 the first BDD (index of root node)
-   * @param m2 the second BDD (index of root node)
-   * @return m1 <=> m2 (index of root node)
-   */
+    * Compute the equivalence of two BDDs.
+    * @param m1 the first BDD (index of root node)
+    * @param m2 the second BDD (index of root node)
+    * @return m1 <=> m2 (index of root node)
+    */
   def bddEquiv(m1: Int, m2: Int): Int = bddOr(bddAnd(m1, m2), bddAnd(-m1, -m2))
 
   /**
-   * Compute the xor of two BDDs.
-   * @param m1 the first BDD (index of root node)
-   * @param m2 the second BDD (index of root node)
-   * @return m1 XOR m2 (index of root node)
-   */
+    * Compute the xor of two BDDs.
+    * @param m1 the first BDD (index of root node)
+    * @param m2 the second BDD (index of root node)
+    * @return m1 XOR m2 (index of root node)
+    */
   def bddXor(m1: Int, m2: Int): Int = bddOr(bddAnd(m1, -m2), bddAnd(-m1, m2))
 
   /*
@@ -215,10 +212,10 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
   def bddForAll(m: Int, vs: Set[PLAtom]) = bddQE(m, vs, bddAnd)
 
   /**
-   * Compute the BDD for a given formula.
-   * @param f the formula
-   * @return the corresponding BDD (index of root node)
-   */
+    * Compute the BDD for a given formula.
+    * @param f the formula
+    * @return the corresponding BDD (index of root node)
+    */
   def mkBDD(f: Formula[PL]): Int = f match {
     case a: Falsum[PL]     => bddFalse
     case a: Verum[PL]      => bddTrue
@@ -232,17 +229,17 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
   }
 
   /**
-   * Is BDD m a tautology.
-   * @param m the BDD to test for the tautology test (index of root node)
-   * @return 'true' if m is a tautology, 'false' else
-   */
+    * Is BDD m a tautology.
+    * @param m the BDD to test for the tautology test (index of root node)
+    * @return 'true' if m is a tautology, 'false' else
+    */
   def isTautology(m: Int) = m == bddTrue
 
   /**
-   * Is BDD m a contradiction.
-   * @param m BDD to test for the conbtradiction test (index of root node)
-   * @return 'true' if m is a contradiction, 'false' else
-   */
+    * Is BDD m a contradiction.
+    * @param m BDD to test for the conbtradiction test (index of root node)
+    * @return 'true' if m is a contradiction, 'false' else
+    */
   def isContradiction(m: Int) = m == bddFalse
 
   def debugInfo: String = {
@@ -250,11 +247,12 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
     unique.foldLeft(init)((s, p) => s + "Node %d: %s\n".format(p._1, p._2))
   }
 
-  /**A printer for the Graphviz dot graph drawing utility
-   *
-   * @param m root of the BDD to output
-   * @param out the output stream to print to
-   */
+  /**
+    * A printer for the Graphviz dot graph drawing utility
+    *
+    * @param m root of the BDD to output
+    * @param out the output stream to print to
+    */
   def printDot(m: Int, out: PrintStream = System.out) {
     val edgeSeen = MutableHashMap[(Int, Int), Boolean]()
     def edge(a: Int, b: Int, comp: Boolean, left: Boolean) = {
@@ -289,8 +287,7 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
         0 [style=invisible];
         1 [shape=box];
 
-      """
-    )
+      """)
 
     out.println(edge(0, m.abs.toInt, m < 0, true))
     visitnode(m.abs.toInt)

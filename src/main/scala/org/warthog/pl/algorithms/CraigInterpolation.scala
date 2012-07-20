@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,21 +25,25 @@
 
 package org.warthog.pl.algorithms
 
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import org.warthog.pl.formulas.{ PL, PLAtom }
+import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
 
 /**
- * Propositional Craig Interpolation
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Propositional Craig Interpolation
+  */
 object CraigInterpolation {
+  /**
+    * Compute the craig interpolant of two propositional formulas
+    * @param p the first formula
+    * @param q the second formula
+    * @return the craig interpolant of p and q
+    */
   def pinterpolate(p: Formula[PL], q: Formula[PL]): Formula[PL] = {
     val setminus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
     setminus.size match {
       case 0 => p
-      case _ => pinterpolate(p.substitute(setminus.head, Falsum()).removeBooleanConstants || p.substitute(setminus.head, Verum()).removeBooleanConstants, q).removeBooleanConstants
+      case _ => pinterpolate(p.substitute(setminus.head, Falsum()).removeBooleanConstants ||
+        p.substitute(setminus.head, Verum()).removeBooleanConstants, q).removeBooleanConstants
     }
   }
 }
