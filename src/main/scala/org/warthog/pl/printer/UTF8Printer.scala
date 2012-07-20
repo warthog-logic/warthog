@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,18 +26,15 @@
 package org.warthog.pl.printer
 
 import org.warthog.generic.formulas.Formula
-import org.warthog.pl.formulas.{PLAtom, PL}
-import org.warthog.generic.printer.{UTF8Printer => SuperPrinter}
+import org.warthog.pl.formulas.{ PLAtom, PL }
+import org.warthog.generic.printer.{ UTF8Printer => SuperPrinter }
 
 /**
- * UTF-8 printer for propositional logic
- *
- * Author: zengler
- * Date:   19.01.12
- */
+  * An UTF8 printer for propositional logic formulas
+  */
 object UTF8Printer extends SuperPrinter[PL] {
   override def print[T <: PL](f: Formula[T]) = f match {
-    case PLAtom(n)     => SuperPrinter.prettyPrintName(n)
+    case PLAtom(n)     => SuperPrinter.ppName(n)
     case p: Formula[T] => super.print(p)
   }
 }

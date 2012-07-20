@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,19 +26,19 @@
 package org.warthog.generic.formulas
 
 /**
- * Abstract case class for an n-ary operator (e.g. and, or)
- * @param op the string representing the operator
- * @param args a list of generic
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Abstract class for an n-ary operator (e.g. and, or)
+  * @param op the string representing the operator
+  * @param args a list of formulas
+  * @tparam L The logic of the formula
+  */
 abstract class NAryOperator[-L <: Logic](val op: String, val args: Formula[L]*) extends Formula[L] {
+
+  override def toString = "(" + args.mkString(" %s ".format(op)) + ")"
 
   override def equals(a: Any) = a match {
     case n: NAryOperator[L] => n.op == op && args.length == n.args.length &&
       (0 until args.length).forall(i => args(i) == n.args(i))
-    case _                  => false
+    case _ => false
   }
 
   def atoms = args.map(_.atoms).reduce(_ union _).distinct
@@ -56,9 +56,6 @@ abstract class NAryOperator[-L <: Logic](val op: String, val args: Formula[L]*) 
   def isNNF = args forall (_.isNNF)
 }
 
-/**
- * Companion object to simulate a case class
- */
 object NAryOperator {
   def compactify[L <: Logic](Op: String, fs: Formula[L]*): List[Formula[L]] = {
     fs.foldLeft(Nil: List[Formula[L]])((list, elem) => elem match {

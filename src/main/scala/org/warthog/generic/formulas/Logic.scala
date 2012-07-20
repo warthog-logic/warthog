@@ -1,6 +1,4 @@
-package org.warthog.generic.formulas
-
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,13 +23,11 @@ package org.warthog.generic.formulas
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Trait for a Logic
- *
- * Author: zengler
- * Date:   11.01.12
- */
+package org.warthog.generic.formulas
 
+/**
+  * Trait for a logic
+  */
 trait Logic {
   type AtomLogic <: Logic
   type VariableLogic <: Logic
@@ -39,4 +35,7 @@ trait Logic {
   type SubstMap = Map[Variable[VariableLogic], Term[TermLogic]]
 }
 
+/**
+  * Trait for a quantified logic
+  */
 trait QuantifiedLogic extends Logic

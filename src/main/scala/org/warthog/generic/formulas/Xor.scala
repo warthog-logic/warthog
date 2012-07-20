@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,16 +26,12 @@
 package org.warthog.generic.formulas
 
 /**
- * Case Class for a xor arg1 xor arg2
- * @param arg1 a formula
- * @param arg2 a formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Case Class for a logical xor
+  * @param arg1 a formula
+  * @param arg2 a formula
+  * @tparam L The logic of the formula
+  */
 case class Xor[-L <: Logic](arg1: Formula[L], arg2: Formula[L]) extends BinaryOperator[L](Formula.XOR, arg1, arg2) {
-
-  override def toString = "(" + arg1 + " <~> " + arg2  + ")"
 
   override def booleanFlatten = {
     val ff1 = arg1.booleanFlatten

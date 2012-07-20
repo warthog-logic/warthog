@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,15 +26,13 @@
 package org.warthog.generic.formulas
 
 /**
- * Case Class for a negation -arg
- * @param arg a formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Case Class for the logical negation
+  * @param arg a formula
+  * @tparam L The logic of the formula
+  */
 class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
 
-  override def toString = "~" + (if (arg.isLiteral) arg else "(" + arg + ")")
+  override def toString = Formula.NOT + (if (arg.isLiteral) arg else "(" + arg + ")")
 
   override def equals(t: Any): Boolean = t match {
     case Not(form) => arg.equals(form)
@@ -77,9 +75,6 @@ class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
   def priority = 60
 }
 
-/**
- * Companion object to simulate arg1 case class
- */
 object Not {
   def apply[L <: Logic](f: Formula[L]) = f match {
     case Not(n) => n

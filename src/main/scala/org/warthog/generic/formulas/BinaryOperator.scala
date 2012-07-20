@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,15 +26,15 @@
 package org.warthog.generic.formulas
 
 /**
- * Abstract case class for a binary operator (e.g. implication, equivalence, xor)
- * @param op the string representing the operator
- * @param f1 a formula
- * @param f2 a formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Abstract class for a binary operator (e.g. implication, equivalence, xor)
+  * @param op the string representing the operator
+  * @param f1 a formula
+  * @param f2 a formula
+  * @tparam L The logic of the formula
+  */
 abstract class BinaryOperator[-L <: Logic](val op: String, val f1: Formula[L], val f2: Formula[L]) extends Formula[L] {
+
+  override def toString = "(%s %s %s)".format(f1, op, f2)
 
   override def equals(a: Any) = a match {
     case n: BinaryOperator[L] => n.op == op && n.f1 == f1 && n.f2 == f2

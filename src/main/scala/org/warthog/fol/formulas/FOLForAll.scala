@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,19 +25,14 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{Formula, Quantifier}
+import org.warthog.generic.formulas.{ Formula, Quantifier }
 
 /**
- * Case class for a FOL universal quantifier
- * @param v the quantified variable
- * @param form a formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Case class for a FOL universal quantifier
+  * @param v the quantified variable
+  * @param form a formula
+  */
 case class FOLForAll(v: FOLVariable, form: Formula[FOL]) extends Quantifier[FOL](Formula.FORALL, v, form) {
-
-  override def toString = "![%s]: %s".format(v, form)
 
   override def booleanFlatten = FOLForAll(v, form.booleanFlatten)
 

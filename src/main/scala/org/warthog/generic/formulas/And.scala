@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,26 +26,21 @@
 package org.warthog.generic.formulas
 
 /**
- * Case Class for an n-ary and
- *
- * Formulas are automatically compactified, e.g. `And(And(x,y),And(a,b))` is transformed to `And(x,y,a,b)`
- * @param fs the list of generic
- *
- * ATTENTION: you should not use `fs` to access the argument list, but `args`.  In args the compacified
- * arguments are stored.
- *
- * Author: zengler
- * Date:   25.01.12
- */
-class And[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.AND, NAryOperator.compactify(Formula.AND, fs: _*): _*) {
+  * Case Class for an n-ary logical 'and'
+  *
+  * Formulas are automatically compactified, e.g. `And(And(x,y),And(a,b))` is transformed to `And(x,y,a,b)`
+  * @param fs the list of generic
+  * @tparam L The logic of the formula
+  *
+  * ATTENTION: you should not use `fs` to access the argument list, but `args`.  In args the compacified
+  * arguments are stored.
+  */
+class And[-L <: Logic](fs: Formula[L]*)
+    extends NAryOperator[L](Formula.AND, NAryOperator.compactify(Formula.AND, fs: _*): _*) {
 
-  override def toString = "(" + args.mkString(" & ") + ")"
-
-  override def equals(t: Any) = {
-    t match {
-      case a: And[L] => super.equals(t)
-      case _         => false
-    }
+  override def equals(t: Any) = t match {
+    case a: And[L] => super.equals(t)
+    case _         => false
   }
 
   override def hashCode() = args.foldLeft(-1)(_ & _.##)
@@ -62,11 +57,6 @@ class And[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.AND, NAr
   def priority = 40
 }
 
-/**
- * Companion object to simulate a case class
- *
- * This is necessary because in Pattern matching we want access to the compactified version of the parameters.
- */
 object And {
   def apply[L <: Logic](fs: Formula[L]*) = {
     new And[L](fs: _*)

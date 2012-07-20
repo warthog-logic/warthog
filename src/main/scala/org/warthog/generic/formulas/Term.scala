@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,10 +26,7 @@
 package org.warthog.generic.formulas
 
 /**
- * Trait for a term
- *
- * Author: zengler
- * Date:   19.01.12
- */
-
+  * Trait for a term
+  * @tparam L The logic of the term
+  */
 trait Term[L <: Logic]

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,11 +26,9 @@
 package org.warthog.generic.formulas
 
 /**
- * Trait for an atomic formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Trait for an atomic formula
+  * @tparam L The logic of the atom
+  */
 trait Atom[-L <: Logic] extends Formula[L] {
   def freeVars = vars
 

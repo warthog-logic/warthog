@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,26 +28,72 @@ package org.warthog.generic.printer
 import org.warthog.generic.formulas._
 
 /**
- * A UTF-8 printer for formulas
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * An UTF8 printer for formulas
+  * @tparam L The logic of the formula to print
+  */
 class UTF8Printer[-L <: Logic] extends PrettyPrinter[L] {
   def print[T <: L](f: Formula[T]) = f match {
-    case v: Verum[T]          => Formula.TRUE
-    case f: Falsum[T]         => Formula.FALSE
-    case Not(p)               => Formula.NOT + (if (f.priority < p.priority) print(p) else "(" + print(p) + ")")
-    case p: BinaryOperator[T] => (if (f.priority < p.f1.priority) print(p.f1) else "(" + print(p.f1) + ")") + " " + p.op + " " + (if (f.priority < p.f2.priority) print(p.f2) else "(" + print(p.f2) + ")")
-    case p: NAryOperator[T]   => (p.args.map(x => if (f.priority < x.priority) print(x) else "(" + print(x) + ")") mkString (" " + p.op + " "))
+    case v: Verum[T]  => UTF8Printer.TRUE
+    case f: Falsum[T] => UTF8Printer.FALSE
+    case Not(p)       => UTF8Printer.NOT + (if (f.priority < p.priority) print(p) else "(" + print(p) + ")")
+    case p: BinaryOperator[T] => {
+      val p1 = if (f.priority < p.f1.priority) print(p.f1) else "(" + print(p.f1) + ")"
+      val p2 = if (f.priority < p.f2.priority) print(p.f2) else "(" + print(p.f2) + ")"
+      "%s %s %s".format(p1, UTF8Printer.ppOperator(p.op), p2)
+    }
+    case p: NAryOperator[T] => {
+      val ps = p.args.map(x => if (f.priority < x.priority) print(x) else "(" + print(x) + ")")
+      ps.mkString(" %s ".format(UTF8Printer.ppOperator(p.op)))
+    }
   }
 }
 
 object UTF8Printer {
+  /*
+   * UTF 8 constants for operators and other symbols
+   */
   val CONST = "\u2071"
   val PREDCONST = "\u2070"
+  val TRUE = "\u22a4"
+  val FALSE = "\u22a5"
+  val NOT = "\u00ac"
+  val XOR = "\u2295"
+  val IMPL = "\u2192"
+  val EQUIV = "\u2194"
+  val AND = "\u2227"
+  val OR = "\u2228"
+  val FORALL = "\u2200"
+  val EXISTS = "\u2203"
 
-  def prettyPrintName(name: String) = {
+  /**
+    * Returns the UTF8 symbol for an operator
+    * @param op the operator
+    * @return the matching UTF8 symbol
+    */
+  def ppOperator(op: String) = op match {
+    case Formula.XOR   => XOR
+    case Formula.IMPL  => IMPL
+    case Formula.EQUIV => EQUIV
+    case Formula.AND   => AND
+    case Formula.OR    => OR
+  }
+
+  /**
+    * Returns the UTF8 symbol for a quantor
+    * @param quant the quantor
+    * @return the matching UTF8 symbol
+    */
+  def ppQuantor(quant: String) = quant match {
+    case Formula.FORALL => FORALL
+    case Formula.EXISTS => EXISTS
+  }
+
+  /**
+    * Returns the UTF8 string for a variable/function/predicate name
+    * @param name the name
+    * @return the matching UTF8 symbol
+    */
+  def ppName(name: String) = {
     val varParser = """(.*?)(\d*)""".r
     val varParser(prefix, number) = name
     if (number.isEmpty)
@@ -69,6 +115,6 @@ object UTF8Printer {
       case '8' => "\u2088"
       case '9' => "\u2089"
     }
-    i.toSeq.foldLeft("")((l,e) => l + matchSingle(e))
+    i.toSeq.foldLeft("")((l, e) => l + matchSingle(e))
   }
 }

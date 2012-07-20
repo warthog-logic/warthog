@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,9 +26,7 @@
 package org.warthog.generic.formulas
 
 /**
- * Trait for a variable
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Trait for a variable
+  * @tparam L The logic of the variable
+  */
 trait Variable[-L <: Logic]

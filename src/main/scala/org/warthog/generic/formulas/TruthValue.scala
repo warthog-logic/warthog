@@ -1,6 +1,4 @@
-package org.warthog.generic.formulas
-
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +23,15 @@ package org.warthog.generic.formulas
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+package org.warthog.generic.formulas
+
 /**
- * Case Class for a truth value (`true` or `false`)
- * @param tv the string representing the truth value
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Case Class for a truth value (`true` or `false`)
+  * @param tv the string representing the truth value
+  * @tparam L The logic of the formula
+  */
 abstract case class TruthValue[-L <: Logic](tv: String) extends Formula[L] {
-  override def toString = if (tv == Formula.TRUE) "$true" else "$false"
+  override def toString = if (tv == Formula.TRUE) Formula.TRUE else Formula.FALSE
 
   def atoms = List()
 
@@ -58,8 +56,8 @@ abstract case class TruthValue[-L <: Logic](tv: String) extends Formula[L] {
 }
 
 /**
- * The constant `true`
- */
+  * The constant `true`
+  */
 class Verum[-L <: Logic] extends TruthValue[L](Formula.TRUE) {
   def getNNF(phase: Boolean) = if (phase) this else Falsum()
 }
@@ -69,8 +67,8 @@ object Verum {
 }
 
 /**
- * The constant `false`
- */
+  * The constant `false`
+  */
 class Falsum[-L <: Logic] extends TruthValue[L](Formula.FALSE) {
   def getNNF(phase: Boolean) = if (phase) this else Verum()
 }

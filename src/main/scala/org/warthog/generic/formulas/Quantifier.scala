@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,24 +26,27 @@
 package org.warthog.generic.formulas
 
 /**
- * Abstract case class for a quantifier (e.g. exists, forall)
- * @param quant the string representing the quantifier
- * @param x the set of quantified variables
- * @param arg a formula
- *
- * Author: zengler
- * Date:   25.01.12
- */
-abstract class Quantifier[-L <: QuantifiedLogic](val quant: String, val x: Variable[L#VariableLogic], val arg: Formula[L]) extends Formula[L] {
+  * Abstract case class for a quantifier (e.g. exists, forall)
+  * @param quant the string representing the quantifier
+  * @param x the set of quantified variables
+  * @param arg a formula
+  * @tparam L The logic of the formula
+  */
+abstract class Quantifier[-L <: QuantifiedLogic](val quant: String,
+                                                 val x: Variable[L#VariableLogic],
+                                                 val arg: Formula[L])
+    extends Formula[L] {
 
-  def atoms = arg.atoms
-
-  def vars = (x :: arg.vars).distinct
+  override def toString = "%s[%s]: %s".format(quant, x, arg)
 
   override def equals(f: Any) = f match {
     case q: Quantifier[L] => q.quant == quant && q.x == x && q.arg == arg
     case _                => false
   }
+
+  def atoms = arg.atoms
+
+  def vars = (x :: arg.vars).distinct
 
   def freeVars = arg.freeVars.filterNot(e => e == x)
 

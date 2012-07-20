@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,37 +25,40 @@
 
 package org.warthog.fol.printer
 
-import org.warthog.generic.printer.{UTF8Printer => SuperPrinter}
-import org.warthog.generic.formulas.{Quantifier, Formula}
+import org.warthog.generic.printer.{ UTF8Printer => SuperPrinter }
+import org.warthog.generic.formulas.{ Quantifier, Formula }
 import org.warthog.fol.formulas._
 
 /**
- * UTF-8 printer for first order logic
- *
- * Author: zengler
- * Date:   19.01.12
- */
+  * An UTF8 printer for first order logic formulas
+  */
 object UTF8Printer extends SuperPrinter[FOL] {
   override def print[T <: FOL](f: Formula[T]) = f match {
-    case p: Quantifier[FOL]        => if (p.priority == p.arg.priority) p.quant + "%s%s".format(p.x, print(p.arg)) else p.quant + "%s: %s".format(p.x, print(p.arg))
-    case FOLPredicate(s, args@_ *) => {
+    case p: Quantifier[FOL] => {
+      val form = if (p.priority == p.arg.priority)
+        "%s%s".format(p.x, print(p.arg))
+      else
+        "%s: %s".format(p.x, print(p.arg))
+      SuperPrinter.ppQuantor(p.quant) + form
+    }
+    case FOLPredicate(s, args@_*) => {
       if (args.size == 0)
-        SuperPrinter.prettyPrintName(s.name) + SuperPrinter.PREDCONST
+        SuperPrinter.ppName(s.name) + SuperPrinter.PREDCONST
       else if (args.size == 2 && s.name.size == 1 && "<>=".contains(s.name))
         printTerm(args(0)) + " " + s + " " + printTerm(args(1))
       else
-        SuperPrinter.prettyPrintName(s.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
+        SuperPrinter.ppName(s.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
     }
-    case p: Formula[T]             => super.print(p)
+    case p: Formula[T] => super.print(p)
   }
 
   private def printTerm(t: FOLTerm): String = t match {
-    case FOLVariable(n)          => SuperPrinter.prettyPrintName(n)
+    case FOLVariable(n) => SuperPrinter.ppName(n)
     case FOLFunction(s, args@_*) => {
       if (args.size == 0)
         s.name + SuperPrinter.CONST
       else
-        SuperPrinter.prettyPrintName(s.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
+        SuperPrinter.ppName(s.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
     }
   }
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,26 +26,21 @@
 package org.warthog.generic.formulas
 
 /**
- * Case Class for an n-ary or
- *
- * Formulas are automatically compactified, e.g. `Or(Or(x,y),Or(a,b))` is transformed to `Or(x,y,a,b)`
- * @param fs the list of generic
- *
- * ATTENTION: you should not use `fs` to access the argument list, but `args`.  In args the compacified
- * arguments are stored.
- *
- * Author: zengler
- * Date:   25.01.12
- */
-class Or[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.OR, NAryOperator.compactify(Formula.OR, fs: _*): _*) {
+  * Case Class for an n-ary logical 'or'
+  *
+  * Formulas are automatically compactified, e.g. `Or(Or(x,y),Or(a,b))` is transformed to `Or(x,y,a,b)`
+  * @param fs the list of generic
+  * @tparam L The logic of the formula
+  *
+  * ATTENTION: you should not use `fs` to access the argument list, but `args`.  In args the compacified
+  * arguments are stored.
+  */
+class Or[-L <: Logic](fs: Formula[L]*)
+    extends NAryOperator[L](Formula.OR, NAryOperator.compactify(Formula.OR, fs: _*): _*) {
 
-  override def toString = "(" + args.mkString(" | ") + ")"
-
-  override def equals(t: Any) = {
-    t match {
-      case a: Or[L] => super.equals(t)
-      case _        => false
-    }
+  override def equals(t: Any) = t match {
+    case a: Or[L] => super.equals(t)
+    case _        => false
   }
 
   override def hashCode() = args.foldLeft(0)(_ | _.##)
@@ -62,11 +57,6 @@ class Or[-L <: Logic](fs: Formula[L]*) extends NAryOperator[L](Formula.OR, NAryO
   def priority = 30
 }
 
-/**
- * Companion object to simulate a case class
- *
- * This is necessary because in Pattern matching we want access to the compactified version of the parameters.
- */
 object Or {
   def apply[L <: Logic](fs: Formula[L]*) = {
     new Or[L](fs: _*)
