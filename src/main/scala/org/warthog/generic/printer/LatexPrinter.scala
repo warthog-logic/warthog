@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,11 +28,8 @@ package org.warthog.generic.printer
 import org.warthog.generic.formulas._
 
 /**
- * A LaTeX printer for formulas
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * A LaTeX printer for formulas
+  */
 class LatexPrinter[-L <: Logic] extends PrettyPrinter[L] {
   def print[T <: L](f: Formula[T]) = f match {
     case v: Verum[T]       => """\top"""

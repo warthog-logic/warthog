@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,14 +25,11 @@
 
 package org.warthog.generic.printer
 
-import org.warthog.generic.formulas.{Formula, Logic}
+import org.warthog.generic.formulas.{ Formula, Logic }
 
 /**
- * Trait for a pretty printer
- *
- * Author: zengler
- * Date:   01.02.12
- */
+  * Trait for a pretty printer
+  */
 trait PrettyPrinter[-L <: Logic] {
   def print[T <: L](f: Formula[T]): String
 }

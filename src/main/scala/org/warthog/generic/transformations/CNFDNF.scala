@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,71 +28,68 @@ package org.warthog.generic.transformations
 import org.warthog.generic.formulas._
 
 /**
- * Trait for mixing in CNF and DNF conversion and predicates
- *
- * Author: zengler
- * Date:   18.01.12
- */
+  * Trait for mixing in CNF and DNF conversion and predicates
+  */
 trait CNFDNF[L <: Logic] extends Transformation[L] {
 
   /**
-   * Is a formula in CNF
-   * @return true if the formula is in CNF, false otherwise
-   */
+    * Is a formula in CNF
+    * @return true if the formula is in CNF, false otherwise
+    */
   def isCNF = cnfp(f)
 
   /**
-   * Is a formula in DNF
-   * @return true if the formula is in DNF, false otherwise
-   */
+    * Is a formula in DNF
+    * @return true if the formula is in DNF, false otherwise
+    */
   def isDNF = dnfp(f)
 
   /**
-   * Get the CNF of a formula
-   * @return the CNF of the formula
-   */
+    * Get the CNF of a formula
+    * @return the CNF of the formula
+    */
   def cnf: Formula[L] = (-(computeDNF(-f))).nnf
 
   /**
-   * Get the DNF of a formula
-   * @return the DNF of the formula
-   */
+    * Get the DNF of a formula
+    * @return the DNF of the formula
+    */
   def dnf: Formula[L] = computeDNF(f): Formula[L]
 
   /**
-   * Get the simplified CNF of a formula
-   * @return the simplified CNF of the formula
-   */
+    * Get the simplified CNF of a formula
+    * @return the simplified CNF of the formula
+    */
   def simplifiedCNF: Formula[L] = simplifyCNF(cnf)
 
   /**
-   * Get the simplified DNF of a formula
-   * @return the simplified DNF of the formula
-   */
+    * Get the simplified DNF of a formula
+    * @return the simplified DNF of the formula
+    */
   def simplifiedDNF: Formula[L] = simplifyDNF(dnf)
 
   private def cnfp(arg: Formula[L]): Boolean = arg match {
     case t: TruthValue[L]     => true
     case a: Atom[L]           => true
     case b: BinaryOperator[L] => false
-    case Not(p)               => p match {
+    case Not(p) => p match {
       case a: Atom[L] => true
       case _          => false
     }
-    case And(fs@_*)           => fs.forall(cnfp(_))
-    case Or(fs@_*)            => fs.forall(_.isLiteral)
+    case And(fs@_*) => fs.forall(cnfp(_))
+    case Or(fs@_*)  => fs.forall(_.isLiteral)
   }
 
   private def dnfp(arg: Formula[L]): Boolean = arg match {
     case t: TruthValue[L]     => true
     case a: Atom[L]           => true
     case b: BinaryOperator[L] => false
-    case Not(p)               => p match {
+    case Not(p) => p match {
       case a: Atom[L] => true
       case _          => false
     }
-    case And(fs@_*)           => fs.forall(_.isLiteral)
-    case Or(fs@_*)            => fs.forall(dnfp(_))
+    case And(fs@_*) => fs.forall(_.isLiteral)
+    case Or(fs@_*)  => fs.forall(dnfp(_))
   }
 
   private def computeDNF(arg: Formula[L]): Formula[L] = {
@@ -113,12 +110,13 @@ trait CNFDNF[L <: Logic] extends Transformation[L] {
   }
 
   private def simplifyCNF(f: Formula[L]): Formula[L] = f match {
-    case And(fs@_*) => fs.map(simplifyCNF).filter(_ != Verum()).filterNot(x => fs.exists(y => isSubsumedBy(x, y))) match {
-      case Nil => Verum()
-      case l   => if (l.length == 1) l.head else And(l: _*)
-    }
-    case Or(fs@_*)  => if (fs.exists(x => fs.exists(y => y == -x))) Verum() else f
-    case _          => f
+    case And(fs@_*) =>
+      fs.map(simplifyCNF).filter(_ != Verum()).filterNot(x => fs.exists(y => isSubsumedBy(x, y))) match {
+        case Nil => Verum()
+        case l   => if (l.length == 1) l.head else And(l: _*)
+      }
+    case Or(fs@_*) => if (fs.exists(x => fs.exists(y => y == -x))) Verum() else f
+    case _         => f
   }
 
   /* true iff x is subsumed by y */
@@ -129,11 +127,11 @@ trait CNFDNF[L <: Logic] extends Transformation[L] {
   })
 
   private def simplifyDNF(f: Formula[L]): Formula[L] = f match {
-    case Or(fs@_*)  => fs.map(simplifyDNF).filter(_ != Falsum())
+    case Or(fs@_*) => fs.map(simplifyDNF).filter(_ != Falsum())
       .filterNot(x => fs.exists(y => isAbsorbedBy(x, y))) match {
-      case Nil => Falsum()
-      case l   => if (l.length == 1) l.head else Or(l: _*)
-    }
+        case Nil => Falsum()
+        case l   => if (l.length == 1) l.head else Or(l: _*)
+      }
     case And(fs@_*) => if (fs.exists(x => fs.exists(y => y == -x))) Falsum() else f
     case _          => f
   }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
 
 package org.warthog.generic.transformations
 
-import org.warthog.generic.formulas.{Formula, Logic}
+import org.warthog.generic.formulas.{ Formula, Logic }
 
 /**
- * Main trait for a formula transformation
- * The formula to transform is stored in f
- *
- * Author: zengler
- * Date:   18.01.12
- */
+  * Main trait for a formula transformation
+  * The formula to transform is stored in f
+  */
 abstract class Transformation[L <: Logic] {
   val f: Formula[L]
 }

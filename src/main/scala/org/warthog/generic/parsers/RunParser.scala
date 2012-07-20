@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,11 +28,8 @@ package org.warthog.generic.parsers
 import util.parsing.combinator._
 
 /**
- * Main trait for parsers
- *
- * Author: kuebler
- * Date:   25.01.12
- */
+  * Main trait for parsers
+  */
 trait RunParser {
   this: RegexParsers =>
 

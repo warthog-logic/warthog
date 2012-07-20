@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,18 +28,15 @@ package org.warthog.generic.datastructures.cnf
 import org.warthog.generic.formulas.Logic
 
 /**
- * Base class for an immutable clause
- *
- * Author: zengler
- * Date:   14.05.12
- */
+  * Base class for an immutable clause
+  */
 abstract class ImmutableClause[L <: Logic, T <: Literal[L]](ls: List[T]) extends ClauseLike[L, T] {
 
   protected val _lits = ls.distinct
 
   /**
-   * The sequence of literals in this clause
-   * @return the list of literals
-   */
+    * The sequence of literals in this clause
+    * @return the list of literals
+    */
   def literals = _lits
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,27 +26,24 @@
 package org.warthog.generic.datastructures.cnf
 
 import org.warthog.fol.formulas.FOL
-import org.warthog.generic.formulas.{Or, Falsum, Logic, Formula}
+import org.warthog.generic.formulas.{ Or, Falsum, Logic, Formula }
 
 /**
- * Trait for a clause
- *
- * Author: zengler
- * Date:   15.05.12
- */
+  * Trait for a clause
+  */
 trait ClauseLike[L <: Logic, T <: Literal[L]] {
 
   /**
-   * The sequence of literals in this clause
-   * @return the list of literals
-   */
+    * The sequence of literals in this clause
+    * @return the list of literals
+    */
   def literals: List[T]
 
   override def toString = "(" + literals.mkString(", ") + ")"
 
   override def equals(p1: Any): Boolean =
-    if (p1.isInstanceOf[ClauseLike[L,T]]) {
-      val other_lits = p1.asInstanceOf[ClauseLike[L,T]].literals
+    if (p1.isInstanceOf[ClauseLike[L, T]]) {
+      val other_lits = p1.asInstanceOf[ClauseLike[L, T]].literals
       if (other_lits.size != literals.size)
         false
       else {
@@ -61,34 +58,34 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
   override def hashCode() = literals.foldLeft(1)(_ & _.##)
 
   /**
-   * Delete a literal in this clause
-   * @param lit a literal
-   */
+    * Delete a literal in this clause
+    * @param lit a literal
+    */
   def delete(lit: T): ClauseLike[L, T]
 
   /**
-   * Push a literal to this clause
-   * @param lit a literal
-   */
+    * Push a literal to this clause
+    * @param lit a literal
+    */
   def push(lit: T): ClauseLike[L, T]
 
   /**
-   * Add a number of literals to this clause
-   * @param lits a list of literals
-   */
+    * Add a number of literals to this clause
+    * @param lits a list of literals
+    */
   def pushLiterals(lits: T*): ClauseLike[L, T]
 
   /**
-   * Unite this clause with another one
-   * @param c a clause
-   * @return the union of this clause and c
-   */
+    * Unite this clause with another one
+    * @param c a clause
+    * @return the union of this clause and c
+    */
   def union(c: ClauseLike[L, T]): ClauseLike[L, T] = pushLiterals(c.literals: _*)
 
   /**
-   * A formula representation of the clause
-   * @return a formula respresentation in propositional logic
-   */
+    * A formula representation of the clause
+    * @return a formula respresentation in propositional logic
+    */
   def toFormula: Formula[L] =
     if (isEmpty)
       new Falsum
@@ -98,27 +95,27 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
       Or(literals.map(_.toFormula): _*)
 
   /**
-   * The size of the clause
-   * @return the size of the clause
-   */
+    * The size of the clause
+    * @return the size of the clause
+    */
   def size: Int = literals.size
 
   /**
-   * Is this clause empty?
-   * @return `true` if the clause is empty, `false` otherwise
-   */
+    * Is this clause empty?
+    * @return `true` if the clause is empty, `false` otherwise
+    */
   def isEmpty: Boolean = literals.isEmpty
 
   /**
-   * Is this clause unit?
-   * @return `true` if the clause is unit, `false` otherwise
-   */
+    * Is this clause unit?
+    * @return `true` if the clause is unit, `false` otherwise
+    */
   def isUnit: Boolean = literals.size == 1
 
   /**
-   * Is this clause a tautology?
-   * @return `true` if the clause is a tautology, `false` otherwise
-   */
+    * Is this clause a tautology?
+    * @return `true` if the clause is a tautology, `false` otherwise
+    */
   def isTautology: Boolean = {
     val (pos, neg) = literals.partition(_.phase)
     for (p <- pos) {
@@ -129,22 +126,22 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
   }
 
   /**
-   * Does this clause contain a certain literal
-   * @param literal a literal
-   * @return `true` if this clause contains the literal, `false` otherwise
-   */
+    * Does this clause contain a certain literal
+    * @param literal a literal
+    * @return `true` if this clause contains the literal, `false` otherwise
+    */
   def contains(literal: T): Boolean = literals.contains(literal)
 
   /**
-   * Return the premise of the clause as a list of literals
-   * @return the premise of the clause
-   */
+    * Return the premise of the clause as a list of literals
+    * @return the premise of the clause
+    */
   def premise = literals.filter(!_.phase).toList
 
   /**
-   * Return the consequence of the clause as a list of literals
-   * @return the consequence of the clause
-   */
+    * Return the consequence of the clause as a list of literals
+    * @return the consequence of the clause
+    */
   def consequence = literals.filter(_.phase).toList
 
 }

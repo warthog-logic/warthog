@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,9 +28,6 @@ package org.warthog.generic.transformations
 import org.warthog.generic.formulas.Logic
 
 /**
- * Main trait for substitutions on generic
- *
- * Author: zengler
- * Date:   19.01.12
- */
+  * Main trait for substitutions on generic
+  */
 trait Substitution[L <: Logic] extends Transformation[L]

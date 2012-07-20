@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,13 +28,10 @@ package org.warthog.generic.transformations
 import org.warthog.generic.formulas._
 
 /**
- * Remove all Boolean constants of a formula
- *
- * If the formula is equivalent to `true` or `false` there will obviously be one constant in the result.
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * Remove all Boolean constants of a formula
+  *
+  * If the formula is equivalent to `true` or `false` there will obviously be one constant in the result.
+  */
 trait RemoveBooleanConstants[L <: Logic] extends Transformation[L] {
 
   def removeBooleanConstants: Formula[L] = simplify(f)
