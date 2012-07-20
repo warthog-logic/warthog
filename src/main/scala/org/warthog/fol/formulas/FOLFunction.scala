@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -28,13 +28,10 @@ package org.warthog.fol.formulas
 import org.warthog.generic.formulas.Formula
 
 /**
- * FOL function application
- * @param symbol the function symbol
- * @param args the applied terms
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * FOL function application
+  * @param symbol the function symbol
+  * @param args the applied terms
+  */
 case class FOLFunction(symbol: FunctionSymbol, args: FOLTerm*) extends FOLTerm {
 
   override def toString = if (args.size == 0) symbol.toString else symbol + "(" + (args.mkString(",")) + ")"
@@ -49,5 +46,6 @@ case class FOLFunction(symbol: FunctionSymbol, args: FOLTerm*) extends FOLTerm {
 }
 
 object FOLFunction {
-  def apply(name: String, args: FOLTerm*): FOLFunction = new FOLFunction(new FunctionSymbol(name, args.length), args: _*)
+  def apply(name: String, args: FOLTerm*): FOLFunction =
+    new FOLFunction(new FunctionSymbol(name, args.length), args: _*)
 }

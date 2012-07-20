@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,16 +25,13 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{Atom, Formula}
+import org.warthog.generic.formulas.{ Atom, Formula }
 
 /**
- * FOL predicate application
- * @param symbol the predicate symbol
- * @param args the applied terms
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * FOL predicate application
+  * @param symbol the predicate symbol
+  * @param args the applied terms
+  */
 case class FOLPredicate(symbol: PredicateSymbol, args: FOLTerm*) extends Formula[FOL] with Atom[FOL] {
 
   override def toString =
@@ -57,5 +54,6 @@ case class FOLPredicate(symbol: PredicateSymbol, args: FOLTerm*) extends Formula
 }
 
 object FOLPredicate {
-  def apply(name: String, args: FOLTerm*): FOLPredicate = new FOLPredicate(new PredicateSymbol(name, args.length), args: _*)
+  def apply(name: String, args: FOLTerm*): FOLPredicate =
+    new FOLPredicate(new PredicateSymbol(name, args.length), args: _*)
 }

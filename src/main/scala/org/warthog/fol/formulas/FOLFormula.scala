@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -31,38 +31,35 @@ import org.warthog.fol.unification.Unification
 import org.warthog.fol.transformations._
 
 /**
- * Rich formula for first order logic
- *
- * Author: zengler, kuebler
- * Date:   18.01.12
- */
+  * Rich formula for first order logic
+  */
 trait FOLTransformations extends Substitution with PNF with Matrix with Skolemization with QuantifierClosures
 
 class FOLFormula(override val f: Formula[FOL]) extends FOLTransformations {
 
   /**
-   * pretty print a formula
-   * @param prettyPrinter the pretty printer to use
-   * @return the pretty printed formula
-   */
+    * pretty print a formula
+    * @param prettyPrinter the pretty printer to use
+    * @return the pretty printed formula
+    */
   def pp(implicit prettyPrinter: PrettyPrinter[FOL]) = prettyPrinter.print(f)
 
   /**
-   * Get the list of function symbols in `f`
-   * @return a list of function symbols
-   */
+    * Get the list of function symbols in `f`
+    * @return a list of function symbols
+    */
   def functions: List[FunctionSymbol] = functionsl(f)
 
   /**
-   * Get the list of predicate symbols in `f`
-   * @return a list of predicate symbols
-   */
+    * Get the list of predicate symbols in `f`
+    * @return a list of predicate symbols
+    */
   def predicates: List[PredicateSymbol] = predicatesl(f)
 
   private def functionsl(arg: Formula[FOL]): List[FunctionSymbol] = arg match {
     case Not(p)                 => functionsl(p)
     case q: BinaryOperator[FOL] => (functionsl(q.f1) union functionsl(q.f2)).distinct
-    case NAryOperator(_, ps@_*) => (ps.foldLeft(List[FunctionSymbol]())((set, elem) => set union functionsl(elem))).distinct
+    case NAryOperator(_, ps@_*) => (ps.foldLeft(List[FunctionSymbol]())((s, e) => s.union(functionsl(e)))).distinct
     case q: Quantifier[FOL]     => functionsl(q.arg)
     case p: FOLPredicate        => p.functions
     case _                      => List[FunctionSymbol]()
@@ -71,7 +68,7 @@ class FOLFormula(override val f: Formula[FOL]) extends FOLTransformations {
   private def predicatesl(arg: Formula[FOL]): List[PredicateSymbol] = arg match {
     case Not(p)                 => predicatesl(p)
     case q: BinaryOperator[FOL] => (predicatesl(q.f1) union predicatesl(q.f2)).distinct
-    case NAryOperator(_, ps@_*) => (ps.foldLeft(List[PredicateSymbol]())((set, elem) => set union predicatesl(elem))).distinct
+    case NAryOperator(_, ps@_*) => (ps.foldLeft(List[PredicateSymbol]())((s, e) => s.union(predicatesl(e)))).distinct
     case q: Quantifier[FOL]     => predicatesl(q.arg)
     case q: FOLPredicate        => List[PredicateSymbol](q.symbol)
     case _                      => List[PredicateSymbol]()

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{Formula, Variable}
+import org.warthog.generic.formulas.{ Formula, Variable }
 
 /**
- * A FOL individual variable
- * @param name the name of the variable
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * A FOL individual variable
+  * @param name the name of the variable
+  */
 case class FOLVariable(name: String) extends FOLTerm with Variable[FOL] {
 
   override def toString = name
@@ -47,13 +44,12 @@ case class FOLVariable(name: String) extends FOLTerm with Variable[FOL] {
   def tsubst(s: Map[FOLVariable, FOLTerm]) = s.getOrElse(this, this)
 
   /**
-   * Generate a fresh variable which is not present in a given formula.
-   * @param f the formula
-   * @param s an additional set of disallowed variables
-   * @param i the current variable index (should not be set by the user)
-   *
-   * @return a fresh variable
-   */
+    * Generate a fresh variable which is not present in a given formula.
+    * @param f the formula
+    * @param s an additional set of disallowed variables
+    * @param i the current variable index (should not be set by the user)
+    * @return a fresh variable
+    */
   def freshVariable(f: Formula[FOL], s: Set[FOLVariable] = Set[FOLVariable](), i: Int = 0): FOLVariable = {
     val varParser = """(.*?)(\d*)""".r
     val varParser(prefix, number) = name

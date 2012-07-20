@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -27,14 +27,11 @@ package org.warthog.fol.transformations
 
 import org.warthog.generic.transformations.Transformation
 import org.warthog.generic.formulas.Formula
-import org.warthog.fol.formulas.{FOLVariable, FOLExists, FOLForAll, FOL}
+import org.warthog.fol.formulas.{ FOLVariable, FOLExists, FOLForAll, FOL }
 
 /**
- * Quantifier closures
- *
- * Author: kuebler
- * Date:   09.05.12
- */
+  * Quantifier closures
+  */
 trait QuantifierClosures extends Transformation[FOL] {
 
   def universalClosure: Formula[FOL] = {

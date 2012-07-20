@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,31 +25,28 @@
 
 package org.warthog.fol.transformations
 
-import org.warthog.fol.formulas.{FOL, FOLExists, FOLForAll}
+import org.warthog.fol.formulas.{ FOL, FOLExists, FOLForAll }
 import org.warthog.generic.formulas._
 import org.warthog.generic.transformations.Transformation
 
 /**
- * FOL PNF Generation
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * FOL PNF Generation
+  */
 trait PNF extends Transformation[FOL] with Substitution {
   /**
-   * Is a formula in PNF
-   * @return true if the formula is in PNF, false otherwise
-   */
+    * Is a formula in PNF
+    * @return true if the formula is in PNF, false otherwise
+    */
   def isPNF: Boolean = pnfp(f)
 
   /**
-   * Get the PNF of a formula
-   * @return the PNF of the formula
-   */
+    * Get the PNF of a formula
+    * @return the PNF of the formula
+    */
   def pnf: Formula[FOL] = pnf(f.nnf)
 
   private def pnfp(arg: Formula[FOL]): Boolean = arg match {
-    case Not(p)                 => if (p.isInstanceOf[Quantifier[FOL]]) false else pnfp(p)
+    case Not(p) => if (p.isInstanceOf[Quantifier[FOL]]) false else pnfp(p)
     case b: BinaryOperator[FOL] => (b.f1 match {
       case q: Quantifier[FOL] => false
       case _                  => pnfp(b.f1)
@@ -57,9 +54,9 @@ trait PNF extends Transformation[FOL] with Substitution {
       case q: Quantifier[FOL] => false
       case _                  => pnfp(b.f2)
     })
-    case n: NAryOperator[FOL]   => n.args.forall(f => !f.isInstanceOf[Quantifier[FOL]] && pnfp(f))
-    case q: Quantifier[FOL]     => pnfp(q.arg)
-    case _                      => true
+    case n: NAryOperator[FOL] => n.args.forall(f => !f.isInstanceOf[Quantifier[FOL]] && pnfp(f))
+    case q: Quantifier[FOL]   => pnfp(q.arg)
+    case _                    => true
   }
 
   private def pnf(arg: Formula[FOL]): Formula[FOL] = arg match {
@@ -76,16 +73,16 @@ trait PNF extends Transformation[FOL] with Substitution {
     fs.find(_.isInstanceOf[FOLForAll]) match {
       case Some(q) => {
         val foundQuant = q.asInstanceOf[FOLForAll]
-        val newVar = foundQuant.v.freshVariable(And(fs: _*))
-        FOLForAll(newVar, pullquants(op, fs.updated(fs.indexOf(q), foundQuant.form.substitute(foundQuant.v, newVar)): _*))
+        val nv = foundQuant.v.freshVariable(And(fs: _*))
+        FOLForAll(nv, pullquants(op, fs.updated(fs.indexOf(q), foundQuant.form.substitute(foundQuant.v, nv)): _*))
       }
-      case None    => fs.find(_.isInstanceOf[FOLExists]) match {
+      case None => fs.find(_.isInstanceOf[FOLExists]) match {
         case Some(q) => {
           val foundQuant = q.asInstanceOf[FOLExists]
-          val newVar = foundQuant.v.freshVariable(And(fs: _*))
-          FOLExists(newVar, pullquants(op, fs.updated(fs.indexOf(q), foundQuant.form.substitute(foundQuant.v, newVar)): _*))
+          val nv = foundQuant.v.freshVariable(And(fs: _*))
+          FOLExists(nv, pullquants(op, fs.updated(fs.indexOf(q), foundQuant.form.substitute(foundQuant.v, nv)): _*))
         }
-        case None    => throw new Exception("This should not happen at all")
+        case None => throw new Exception("This should not happen at all")
       }
     }
   }

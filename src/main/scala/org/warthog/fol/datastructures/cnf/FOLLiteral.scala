@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,29 +26,26 @@
 package org.warthog.fol.datastructures.cnf
 
 import org.warthog.generic.datastructures.cnf.Literal
-import org.warthog.fol.formulas.{FOL, FOLPredicate}
-import org.warthog.generic.formulas.{Not, Formula}
+import org.warthog.fol.formulas.{ FOL, FOLPredicate }
+import org.warthog.generic.formulas.{ Not, Formula }
 
 /**
- * Representation of a FOL literal
- *
- * Author: zengler
- * Date:   16.05.12
- */
+  * Representation of a FOL literal
+  */
 case class FOLLiteral(p: FOLPredicate, phase: Boolean = true) extends Literal[FOL] {
 
   override def toString = if (phase) p.toString else Formula.NOT + p
 
   /**
-   * A formula representation of the literal
-   * @return a formula respresentation in propositional logic
-   */
+    * A formula representation of the literal
+    * @return a formula respresentation in propositional logic
+    */
   def toFormula = if (phase) p else -p
 
   /**
-   * Return a negated copy of the literal
-   * @return a negated copy of the literal
-   */
+    * Return a negated copy of the literal
+    * @return a negated copy of the literal
+    */
   def negate = FOLLiteral(p, !phase)
 }
 

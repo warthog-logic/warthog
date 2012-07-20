@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,13 +26,10 @@
 package org.warthog.fol.formulas
 
 /**
- * A FOL function symbol
- * @param name the name of the function
- * @param arity the arity of the function
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * A FOL function symbol
+  * @param name the name of the function
+  * @param arity the arity of the function
+  */
 case class FunctionSymbol(name: String, arity: Int) {
   override def toString = name
 }

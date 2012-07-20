@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,12 +26,9 @@
 package org.warthog.fol.parsers
 
 /**
- * Package object for the TPTP parser
- * (implicit conversion of Strings)
- *
- * Author: kuebler
- * Date:   18.01.12
- */
+  * Package object for the TPTP parser
+  * (implicit conversion of Strings)
+  */
 package object tptp {
   implicit def stringToTPTP(fm: String) = new TPTP(fm)
 }

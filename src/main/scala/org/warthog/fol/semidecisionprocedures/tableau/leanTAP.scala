@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,60 +25,57 @@
 
 package org.warthog.fol.semidecisionprocedures.tableau
 
-import org.warthog.fol.formulas.{FOLTerm, FOLForAll, FOLVariable, FOL}
+import org.warthog.fol.formulas.{ FOLTerm, FOLForAll, FOLVariable, FOL }
 import org.warthog.fol.unification.Unification
-import org.warthog.generic.formulas.{Verum, Or, And, Formula}
+import org.warthog.generic.formulas.{ Verum, Or, And, Formula }
 
 /**
- * leanTAP free variable tableau prover - adapted mostly from J. Harrison,
- * Handbook of Practical Logic and Automated Reasoning
- *
- * Author: kuebler
- * Date:   09.05.12
- */
+  * leanTAP free variable tableau prover - adapted mostly from J. Harrison,
+  * Handbook of Practical Logic and Automated Reasoning
+  */
 object leanTAP {
 
   private def prove(fm: Formula[FOL], unexp: List[Formula[FOL]], lits: List[Formula[FOL]],
-                      free: List[FOLVariable], bound: Int): Boolean =
-      fm match {
-        case And(opnds @ _*) =>
-          prove(opnds.head,
-            (if (opnds.tail.size > 1) And(opnds.tail: _*) else opnds.tail.head) :: unexp,
-            lits, free, bound)
+                    free: List[FOLVariable], bound: Int): Boolean =
+    fm match {
+      case And(opnds@_*) =>
+        prove(opnds.head,
+          (if (opnds.tail.size > 1) And(opnds.tail: _*) else opnds.tail.head) :: unexp,
+          lits, free, bound)
 
-        case Or(opnds @ _*) =>
-          /*
+      case Or(opnds@_*) =>
+        /*
            * This one makes prove non-tail recursive! Might be avoided using continuations
            * (cf. Harrison, Handbook of Practical Logic and Automated Reasoning)
            */
-          opnds.forall(prove(_, unexp, lits, free, bound))
+        opnds.forall(prove(_, unexp, lits, free, bound))
 
-        case FOLForAll(x, p) =>
-          if (free.length < bound) {
-            val xPrime = x.freshVariable(Verum[FOL], free.toSet)
-            val pPrime = p.substitute(Map[FOLVariable, FOLTerm](x -> xPrime))
+      case FOLForAll(x, p) =>
+        if (free.length < bound) {
+          val xPrime = x.freshVariable(Verum[FOL], free.toSet)
+          val pPrime = p.substitute(Map[FOLVariable, FOLTerm](x -> xPrime))
 
-            prove(pPrime, unexp :+ fm, lits, xPrime :: free, bound)
-          } else
-            false
+          prove(pPrime, unexp :+ fm, lits, xPrime :: free, bound)
+        } else
+          false
 
-        case lit =>
-          if (lits.exists(Unification.unifyable(-lit, _))) /* close branch */
-            true
-          else
-            unexp match {
-              case Nil =>
-                throw new Exception("No proof! (SAT?)")
+      case lit =>
+        if (lits.exists(Unification.unifyable(-lit, _))) /* close branch */
+          true
+        else
+          unexp match {
+            case Nil =>
+              throw new Exception("No proof! (SAT?)")
 
-              case head :: tail =>
-                prove(head, tail, lit :: lits, free, bound)
-            }
-      }
-
-    def leanTAP(fm: Formula[FOL], bound: Int) = {
-      /* transform formula to skolem normalform (nnf), compute universal closure */
-      val fmPrime = fm.skolemize.universalClosure
-
-      prove(fmPrime, Nil, Nil, Nil, bound)
+            case head :: tail =>
+              prove(head, tail, lit :: lits, free, bound)
+          }
     }
+
+  def leanTAP(fm: Formula[FOL], bound: Int) = {
+    /* transform formula to skolem normalform (nnf), compute universal closure */
+    val fmPrime = fm.skolemize.universalClosure
+
+    prove(fmPrime, Nil, Nil, Nil, bound)
+  }
 }

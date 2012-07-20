@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -29,11 +29,8 @@ import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas.QuantifiedLogic
 
 /**
- * First Order Logic
- *
- * Author: zengler
- * Date:   11.01.12
- */
+  * First Order Logic
+  */
 class FOL extends PL with QuantifiedLogic {
   override type AtomLogic = this.type
   override type VariableLogic = this.type

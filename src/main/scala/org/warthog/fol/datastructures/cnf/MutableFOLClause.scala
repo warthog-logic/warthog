@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
 
 package org.warthog.fol.datastructures.cnf
 
-import org.warthog.generic.datastructures.cnf.{MutableClause, ClauseLike}
+import org.warthog.generic.datastructures.cnf.{ MutableClause, ClauseLike }
 import org.warthog.fol.formulas.FOL
 
 /**
- * Representation of a mutable FOL clause
- *
- * Author: zengler
- * Date:   16.05.12
- */
+  * Representation of a mutable FOL clause
+  */
 class MutableFOLClause(ls: List[FOLLiteral]) extends MutableClause[FOL, FOLLiteral](ls) {
   def this() {
     this(Nil)

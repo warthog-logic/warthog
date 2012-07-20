@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,31 +25,28 @@
 
 package org.warthog.fol.transformations
 
-import org.warthog.generic.transformations.{Substitution => GenericSubstitution}
+import org.warthog.generic.transformations.{ Substitution => GenericSubstitution }
 import org.warthog.fol.formulas._
 import org.warthog.generic.formulas._
 
 /**
- * Substitution for FOL generic
- *
- * Author: zengler
- * Date:   19.01.12
- */
+  * Substitution for FOL generic formula
+  */
 trait Substitution extends GenericSubstitution[FOL] {
 
   /**
-   * Substitute a term for a variable
-   * @param v: the variable
-   * @param t: the term to substitute
-   * @return the substituted formula f[v/t]
-   */
+    * Substitute a term for a variable
+    * @param v: the variable
+    * @param t: the term to substitute
+    * @return the substituted formula f[v/t]
+    */
   def substitute(v: FOLVariable, t: FOLTerm): Formula[FOL] = subst(Map(v -> t), f)
 
   /**
-   * Substitute a term for a variable
-   * @param m: a map of variables to terms
-   * @return the substituted formula
-   */
+    * Substitute a term for a variable
+    * @param m: a map of variables to terms
+    * @return the substituted formula
+    */
   def substitute(m: Map[FOLVariable, FOLTerm]) = subst(m, f)
 
   private def subst(m: Map[FOLVariable, FOLTerm], arg: Formula[FOL]): Formula[FOL] = arg match {
@@ -65,5 +62,4 @@ trait Substitution extends GenericSubstitution[FOL] {
     case _                 => arg
   }
 }
-
 

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,16 +26,12 @@
 package org.warthog.fol.transformations
 
 import org.warthog.fol.formulas.FOL
-import org.warthog.generic.formulas.{Formula, Quantifier}
+import org.warthog.generic.formulas.{ Formula, Quantifier }
 import org.warthog.generic.transformations.Transformation
 
 /**
- * FOL matrix generation
- *
- * Author: zengler
- * Date:   23.01.12
- */
-
+  * FOL matrix generation
+  */
 trait Matrix extends Transformation[FOL] with PNF {
   def matrix: Formula[FOL] = stripquant(f)
 

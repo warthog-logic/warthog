@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -30,11 +30,8 @@ import org.warthog.fol.formulas._
 import org.warthog.generic.transformations.Transformation
 
 /**
- * FOL Skolemization
- *
- * Author: zengler
- * Date:   31.01.12
- */
+  * FOL Skolemization
+  */
 
 trait Skolemization extends Transformation[FOL] {
 
@@ -51,9 +48,9 @@ trait Skolemization extends Transformation[FOL] {
       val (newP, newFuns) = skolem(p, funs)
       (FOLForAll(x, newP), newFuns)
     }
-    case And(fs@_*)      => skolem2(Formula.AND, funs, fs: _*)
-    case Or(fs@_*)       => skolem2(Formula.OR, funs, fs: _*)
-    case _               => (arg, funs)
+    case And(fs@_*) => skolem2(Formula.AND, funs, fs: _*)
+    case Or(fs@_*)  => skolem2(Formula.OR, funs, fs: _*)
+    case _          => (arg, funs)
   }
 
   private def skolem2(op: String, funs: List[FunctionSymbol], fs: Formula[FOL]*) = {

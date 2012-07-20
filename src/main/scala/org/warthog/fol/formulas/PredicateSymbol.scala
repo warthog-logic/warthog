@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -26,13 +26,10 @@
 package org.warthog.fol.formulas
 
 /**
- * A FOL predicate symbol
- * @param name the name of the predicate
- * @param arity the arity of the predicate
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * A FOL predicate symbol
+  * @param name the name of the predicate
+  * @param arity the arity of the predicate
+  */
 case class PredicateSymbol(name: String, arity: Int) {
   override def toString = name
 }

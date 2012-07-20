@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,15 +25,12 @@
 
 package org.warthog.fol.datastructures.cnf
 
-import org.warthog.generic.datastructures.cnf.{ImmutableClause, ClauseLike}
+import org.warthog.generic.datastructures.cnf.{ ImmutableClause, ClauseLike }
 import org.warthog.fol.formulas.FOL
 
 /**
- * File Description
- *
- * Author: zengler
- * Date:   16.05.12
- */
+  * File Description
+  */
 class ImmutableFOLClause(ls: List[FOLLiteral]) extends ImmutableClause[FOL, FOLLiteral](ls) {
 
   def this() {
@@ -49,15 +46,15 @@ class ImmutableFOLClause(ls: List[FOLLiteral]) extends ImmutableClause[FOL, FOLL
   }
 
   /**
-   * Delete a literal in this clause
-   * @param lit a literal
-   */
+    * Delete a literal in this clause
+    * @param lit a literal
+    */
   def delete(lit: FOLLiteral) = new ImmutableFOLClause(_lits.filterNot(_ == lit))
 
   /**
-   * Push a literal to this clause
-   * @param lit a literal
-   */
+    * Push a literal to this clause
+    * @param lit a literal
+    */
   def push(lit: FOLLiteral) =
     if (!_lits.contains(lit))
       new ImmutableFOLClause(lit :: _lits)
@@ -65,9 +62,9 @@ class ImmutableFOLClause(ls: List[FOLLiteral]) extends ImmutableClause[FOL, FOLL
       this
 
   /**
-   * Add a number of literals to this clause
-   * @param lits a list of literals
-   */
+    * Add a number of literals to this clause
+    * @param lits a list of literals
+    */
   def pushLiterals(lits: FOLLiteral*) = new ImmutableFOLClause((_lits ++ lits).distinct)
 
 }

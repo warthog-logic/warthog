@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -25,38 +25,35 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{Term, Variable}
+import org.warthog.generic.formulas.{ Term, Variable }
 
 /**
- * FOL term
- *
- * Author: zengler
- * Date:   25.01.12
- */
+  * FOL term
+  */
 abstract class FOLTerm extends Term[FOL] {
 
   /**
-   * Get the variables in this term
-   * @return a list of FOL variables
-   */
+    * Get the variables in this term
+    * @return a list of FOL variables
+    */
   def vars: List[Variable[FOL]]
 
   /**
-   * Get the function symbols in this term
-   * @return a list of function symbols
-   */
+    * Get the function symbols in this term
+    * @return a list of function symbols
+    */
   def functions: List[FunctionSymbol]
 
   /**
-   * Get the number of nodes in this term
-   * @return the number of nodes
-   */
+    * Get the number of nodes in this term
+    * @return the number of nodes
+    */
   def numOfNodes: Int
 
   /**
-   * Substitute variables with terms
-   * @param s the mapping of variables to terms
-   * @return the substituted term
-   */
+    * Substitute variables with terms
+    * @param s the mapping of variables to terms
+    * @return the substituted term
+    */
   def tsubst(s: Map[FOLVariable, FOLTerm]): FOLTerm
 }

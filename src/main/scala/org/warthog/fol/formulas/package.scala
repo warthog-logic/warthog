@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
  * All rights reserved.
  *
@@ -30,11 +30,8 @@ import printer.UTF8Printer
 import unification.Unification
 
 /**
- * Package object for first order logic
- *
- * Author: zengler, kuebler
- * Date:   25.01.12
- */
+  * Package object for first order logic
+  */
 package object formulas {
   implicit def fol2RichFormula(f: Formula[FOL]) = new FOLFormula(f)
   implicit def foltermUnifiable(f: FOLTerm) = new {
