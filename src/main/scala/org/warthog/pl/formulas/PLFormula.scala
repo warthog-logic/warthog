@@ -63,8 +63,12 @@ class PLFormula(override val f: Formula[PL]) extends PLTransformations with PLSi
   def eval(v: Map[PLAtom, Boolean], arg: Formula[PL] = f): Boolean = arg match {
     case f: Falsum[PL] => false
     case v: Verum[PL]  => true
-    case p: PLAtom => v.get(p) match {
+    case p@PLAtom(_, true) => v.get(p) match {
       case Some(t) => t
+      case None    => throw new Exception("Variable %s was not assigned".format(p))
+    }
+    case p@PLAtom(_, false) => v.get(p.negate) match {
+      case Some(t) => !t
       case None    => throw new Exception("Variable %s was not assigned".format(p))
     }
     case Not(p)            => !eval(v, p)

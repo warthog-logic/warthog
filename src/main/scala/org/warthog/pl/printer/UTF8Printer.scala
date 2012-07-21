@@ -34,7 +34,7 @@ import org.warthog.generic.printer.{ UTF8Printer => SuperPrinter }
   */
 object UTF8Printer extends SuperPrinter[PL] {
   override def print[T <: PL](f: Formula[T]) = f match {
-    case PLAtom(n)     => SuperPrinter.ppName(n)
-    case p: Formula[T] => super.print(p)
+    case PLAtom(n, phase) => SuperPrinter.ppName(n)
+    case p: Formula[T]    => super.print(p)
   }
 }

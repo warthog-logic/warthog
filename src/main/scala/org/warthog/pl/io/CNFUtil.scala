@@ -25,9 +25,9 @@
 
 package org.warthog.pl.io
 
-import org.warthog.pl.formulas.PL
+import org.warthog.pl.formulas.{ PLAtom, PL }
 import org.warthog.generic.formulas._
-import org.warthog.pl.datastructures.cnf.{ ImmutablePLClause, PLLiteral, MutablePLClause }
+import org.warthog.pl.datastructures.cnf.PLClause
 
 /**
   * A utility class to produce different output formats for CNFs
@@ -47,32 +47,17 @@ object CNFUtil {
   }
 
   /**
-    * Internal CNF representation with mutable clauses
+    * Internal CNF representation with clauses
     * @param f a formula in cnf
     * @return a list of clauses
     */
-  def toMutableCNF(f: Formula[PL]): List[MutablePLClause] = {
+  def toCNF(f: Formula[PL]): List[PLClause] = {
     (f.simplifiedCNF.removeBooleanConstants match {
-      case v: Verum[PL]  => List[MutablePLClause]()
-      case f: Falsum[PL] => List(new MutablePLClause())
-      case And(fs@_*)    => (for (i <- fs; x = toMutableCNF(i)) yield x.head).toList
-      case Or(fs@_*)     => List(new MutablePLClause(fs.toList.map(PLLiteral(_))))
-      case literal       => List(new MutablePLClause(PLLiteral(literal)))
-    })
-  }
-
-  /**
-    * Internal CNF representation with immutable clauses
-    * @param f a formula in cnf
-    * @return a list of clauses
-    */
-  def toCNF(f: Formula[PL]): List[ImmutablePLClause] = {
-    (f.simplifiedCNF.removeBooleanConstants match {
-      case v: Verum[PL]  => List[ImmutablePLClause]()
-      case f: Falsum[PL] => List(new ImmutablePLClause())
+      case v: Verum[PL]  => List[PLClause]()
+      case f: Falsum[PL] => List(new PLClause())
       case And(fs@_*)    => (for (i <- fs; x = toCNF(i)) yield x.head).toList
-      case Or(fs@_*)     => List(new ImmutablePLClause(fs.toList.map(PLLiteral(_))))
-      case literal       => List(new ImmutablePLClause(PLLiteral(literal)))
+      case Or(fs@_*)     => List(new PLClause(fs.toList.asInstanceOf[List[PLAtom]]))
+      case lit: PLAtom   => List(new PLClause(lit))
     })
   }
 }

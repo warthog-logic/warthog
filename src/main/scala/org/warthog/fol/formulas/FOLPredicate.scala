@@ -25,24 +25,31 @@
 
 package org.warthog.fol.formulas
 
-import org.warthog.generic.formulas.{ Atom, Formula }
+import org.warthog.generic.formulas.{ Literal, Formula }
 
 /**
   * FOL predicate application
   * @param symbol the predicate symbol
   * @param args the applied terms
   */
-case class FOLPredicate(symbol: PredicateSymbol, args: FOLTerm*) extends Formula[FOL] with Atom[FOL] {
+case class FOLPredicate(symbol: PredicateSymbol, phase: Boolean, args: FOLTerm*)
+    extends Formula[FOL] with Literal[FOL] {
 
-  override def toString =
-    if (args.size == 0)
+  def negate = FOLPredicate(symbol, !phase, args: _*)
+
+  def getAtom = FOLPredicate(symbol, true, args: _*)
+
+  override def toString = {
+    val s = if (args.size == 0)
       symbol.toString
     else if (args.size == 2 && symbol.name.size == 1 && "<>=".contains(symbol.name))
-      args(0) + " " + symbol + " " + args(1)
+      "(" + args(0) + " " + symbol + " " + args(1) + ")"
     else
       symbol + "(" + (args.mkString(",")) + ")"
+    if (phase) s else Formula.NOT + s
+  }
 
-  def atoms = List(this.asInstanceOf[Atom[FOL]])
+  def atoms = List(FOLPredicate(symbol, true, args: _*).asInstanceOf[Literal[FOL]])
 
   def vars = if (args.size > 0) args.map(_.vars).reduce(_ union _).distinct else List()
 
@@ -50,10 +57,14 @@ case class FOLPredicate(symbol: PredicateSymbol, args: FOLTerm*) extends Formula
 
   def numOfNodes = args.foldLeft(1)((s, e) => s + e.numOfNodes)
 
-  def tsubst(s: Map[FOLVariable, FOLTerm]): FOLPredicate = FOLPredicate(symbol, args.map(_.tsubst(s)): _*)
+  def tsubst(s: Map[FOLVariable, FOLTerm]): FOLPredicate = FOLPredicate(symbol, phase, args.map(_.tsubst(s)): _*)
 }
 
 object FOLPredicate {
   def apply(name: String, args: FOLTerm*): FOLPredicate =
-    new FOLPredicate(new PredicateSymbol(name, args.length), args: _*)
+    new FOLPredicate(new PredicateSymbol(name, args.length), true, args: _*)
+
+  def apply(name: String, phase: Boolean, args: FOLTerm*): FOLPredicate =
+    new FOLPredicate(new PredicateSymbol(name, args.length), phase, args: _*)
+
 }

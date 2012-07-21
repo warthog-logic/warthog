@@ -25,25 +25,24 @@
 
 package org.warthog.generic.datastructures.cnf
 
-import org.warthog.fol.formulas.FOL
-import org.warthog.generic.formulas.{ Or, Falsum, Logic, Formula }
+import org.warthog.generic.formulas._
 
 /**
   * Trait for a clause
   */
-trait ClauseLike[L <: Logic, T <: Literal[L]] {
+trait Clause[L <: Logic] {
 
   /**
     * The sequence of literals in this clause
     * @return the list of literals
     */
-  def literals: List[T]
+  def literals: List[Literal[L]]
 
   override def toString = "(" + literals.mkString(", ") + ")"
 
   override def equals(p1: Any): Boolean =
-    if (p1.isInstanceOf[ClauseLike[L, T]]) {
-      val other_lits = p1.asInstanceOf[ClauseLike[L, T]].literals
+    if (p1.isInstanceOf[Clause[L]]) {
+      val other_lits = p1.asInstanceOf[Clause[L]].literals
       if (other_lits.size != literals.size)
         false
       else {
@@ -61,26 +60,26 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
     * Delete a literal in this clause
     * @param lit a literal
     */
-  def delete(lit: T): ClauseLike[L, T]
+  def delete(lit: Literal[L]): Clause[L]
 
   /**
     * Push a literal to this clause
     * @param lit a literal
     */
-  def push(lit: T): ClauseLike[L, T]
+  def push(lit: Literal[L]): Clause[L]
 
   /**
     * Add a number of literals to this clause
     * @param lits a list of literals
     */
-  def pushLiterals(lits: T*): ClauseLike[L, T]
+  def pushLiterals(lits: Literal[L]*): Clause[L]
 
   /**
     * Unite this clause with another one
     * @param c a clause
     * @return the union of this clause and c
     */
-  def union(c: ClauseLike[L, T]): ClauseLike[L, T] = pushLiterals(c.literals: _*)
+  def union(c: Clause[L]): Clause[L] = pushLiterals(c.literals: _*)
 
   /**
     * A formula representation of the clause
@@ -90,9 +89,9 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
     if (isEmpty)
       new Falsum
     else if (isUnit)
-      literals(0).toFormula
+      literals(0)
     else
-      Or(literals.map(_.toFormula): _*)
+      Or(literals: _*)
 
   /**
     * The size of the clause
@@ -130,7 +129,7 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
     * @param literal a literal
     * @return `true` if this clause contains the literal, `false` otherwise
     */
-  def contains(literal: T): Boolean = literals.contains(literal)
+  def contains(literal: Literal[L]): Boolean = literals.contains(literal)
 
   /**
     * Return the premise of the clause as a list of literals

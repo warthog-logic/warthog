@@ -25,19 +25,23 @@
 
 package org.warthog.pl.formulas
 
-import org.warthog.generic.formulas.{ Atom, Formula, Variable }
+import org.warthog.generic.formulas.{ Literal, Formula, Variable }
 
 /**
   * Propositional Variable
   * @param name the name of the variable
   */
-case class PLAtom(name: String) extends Formula[PL] with Atom[PL] with Variable[PL] {
+case class PLAtom(name: String, phase: Boolean = true) extends Formula[PL] with Literal[PL] with Variable[PL] {
 
-  override def toString = name
+  override def toString = if (phase) name else Formula.NOT + name
 
-  def atoms = List(this.asInstanceOf[Atom[PL]])
+  def negate = PLAtom(name, !phase)
 
-  def vars = List(this.asInstanceOf[Variable[PL]])
+  def getAtom = PLAtom(name)
+
+  def atoms = List(PLAtom(name).asInstanceOf[Literal[PL]])
+
+  def vars = List(PLAtom(name).asInstanceOf[Variable[PL]])
 
   def numOfNodes = 1
 }

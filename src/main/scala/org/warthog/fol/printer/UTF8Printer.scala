@@ -41,7 +41,7 @@ object UTF8Printer extends SuperPrinter[FOL] {
         "%s: %s".format(p.x, print(p.arg))
       SuperPrinter.ppQuantor(p.quant) + form
     }
-    case FOLPredicate(s, args@_*) => {
+    case FOLPredicate(s, phase, args@_*) => {
       if (args.size == 0)
         SuperPrinter.ppName(s.name) + SuperPrinter.PREDCONST
       else if (args.size == 2 && s.name.size == 1 && "<>=".contains(s.name))

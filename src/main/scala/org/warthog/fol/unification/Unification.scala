@@ -72,9 +72,9 @@ object Unification {
 
   def unify(lit0: Formula[FOL], lit1: Formula[FOL]): Map[FOLVariable, FOLTerm] =
     (lit0.nnf, lit1.nnf) match {
-      case (Not(FOLPredicate(a, aas@_*)), Not(FOLPredicate(b, bargs@_*))) if (a == b && aas.length == bargs.length) =>
+      case (FOLPredicate(a, false, aas@_*), FOLPredicate(b, false, bargs@_*)) if (a == b && aas.length == bargs.length) =>
         unify(aas.zip(bargs).toList, Map.empty[FOLVariable, FOLTerm])
-      case (FOLPredicate(a, aas@_*), FOLPredicate(b, bargs@_*)) if (a == b && aas.length == bargs.length) =>
+      case (FOLPredicate(a, true, aas@_*), FOLPredicate(b, true, bargs@_*)) if (a == b && aas.length == bargs.length) =>
         unify(aas.zip(bargs).toList, Map.empty[FOLVariable, FOLTerm])
       case _ =>
         throw new UnunifiableException
@@ -96,10 +96,10 @@ object Unification {
         false
 
     (lit0.nnf, lit1.nnf) match {
-      case (Not(FOLPredicate(a, aargs@_*)), Not(FOLPredicate(b, bargs@_*))) =>
+      case (FOLPredicate(a, false, aargs@_*), FOLPredicate(b, false, bargs@_*)) =>
         check(a, b, aargs, bargs)
 
-      case (FOLPredicate(a, aargs@_*), FOLPredicate(b, bargs@_*)) =>
+      case (FOLPredicate(a, true, aargs@_*), FOLPredicate(b, true, bargs@_*)) =>
         check(a, b, aargs, bargs)
 
       case _ => false

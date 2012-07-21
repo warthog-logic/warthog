@@ -29,7 +29,7 @@ import scala.collection.mutable.Map
 
 import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver }
 import org.warthog.pl.io.CNFUtil
-import org.warthog.pl.formulas.PL
+import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas._
 
 /**
@@ -72,8 +72,8 @@ class Picosat extends Solver {
       case Nil => Nil
       case l => l.map(_.map(f => {
         val (at, mul) = f match {
-          case Not(ff) => (ff, -1)
-          case _       => (f, 1)
+          case p@PLAtom(ff, false) => (p.negate, -1)
+          case PLAtom(ff, true)    => (f, 1)
         }
         fmtovar.getOrElseUpdate(at, {
           val lit = fmtovar.size + 1

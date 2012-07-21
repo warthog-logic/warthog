@@ -217,15 +217,16 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
     * @return the corresponding BDD (index of root node)
     */
   def mkBDD(f: Formula[PL]): Int = f match {
-    case a: Falsum[PL]     => bddFalse
-    case a: Verum[PL]      => bddTrue
-    case v@PLAtom(_)       => mkNode(v, 1, -1)
-    case Not(p)            => -mkBDD(p)
-    case Implication(p, q) => bddImplication(mkBDD(p), mkBDD(q))
-    case Equiv(p, q)       => bddEquiv(mkBDD(p), mkBDD(q))
-    case Xor(p, q)         => bddXor(mkBDD(p), mkBDD(q))
-    case And(fs@_*)        => fs.foldLeft(bddTrue)((bdd, op) => bddAnd(bdd, mkBDD(op)))
-    case Or(fs@_*)         => fs.foldLeft(bddFalse)((bdd, op) => bddOr(bdd, mkBDD(op)))
+    case a: Falsum[PL]      => bddFalse
+    case a: Verum[PL]       => bddTrue
+    case v@PLAtom(_, true)  => mkNode(v, 1, -1)
+    case v@PLAtom(_, false) => -mkBDD(v.negate)
+    case Not(p)             => -mkBDD(p)
+    case Implication(p, q)  => bddImplication(mkBDD(p), mkBDD(q))
+    case Equiv(p, q)        => bddEquiv(mkBDD(p), mkBDD(q))
+    case Xor(p, q)          => bddXor(mkBDD(p), mkBDD(q))
+    case And(fs@_*)         => fs.foldLeft(bddTrue)((bdd, op) => bddAnd(bdd, mkBDD(op)))
+    case Or(fs@_*)          => fs.foldLeft(bddFalse)((bdd, op) => bddOr(bdd, mkBDD(op)))
   }
 
   /**

@@ -25,22 +25,49 @@
 
 package org.warthog.pl.datastructures.cnf
 
-import org.warthog.pl.formulas.PL
-import org.warthog.generic.datastructures.cnf.{ ClauseLike, MutableClause }
+import org.warthog.pl.formulas.{ PLAtom, PL }
+import org.warthog.generic.datastructures.cnf.Clause
+import org.warthog.generic.formulas.Literal
 
 /**
-  * Representation of a mutable propositional clause
+  * Representation of a propositional clause
   */
-class MutablePLClause(ls: List[PLLiteral]) extends MutableClause[PL, PLLiteral](ls) {
+class PLClause(ls: List[Literal[PL]]) extends Clause[PL] {
+  private val _lits = ls.distinct
+
+  /**
+    * The sequence of literals in this clause
+    * @return the list of literals
+    */
+  def literals = _lits
+
   def this() {
     this(Nil)
   }
 
-  def this(lits: PLLiteral*) {
+  def this(lits: PLAtom*) {
     this(lits.toList)
   }
 
-  def this(c: ClauseLike[PL, PLLiteral]) {
-    this(c.literals)
-  }
+  /**
+    * Delete a literal in this clause
+    * @param lit a literal
+    */
+  def delete(lit: Literal[PL]) = new PLClause(_lits.filterNot(_ == lit))
+
+  /**
+    * Push a literal to this clause
+    * @param lit a literal
+    */
+  def push(lit: Literal[PL]) =
+    if (!_lits.contains(lit))
+      new PLClause(lit :: _lits)
+    else
+      this
+
+  /**
+    * Add a number of literals to this clause
+    * @param lits a list of literals
+    */
+  def pushLiterals(lits: Literal[PL]*) = new PLClause((_lits ++ lits).distinct)
 }

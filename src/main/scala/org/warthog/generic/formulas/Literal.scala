@@ -23,24 +23,35 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.fol.datastructures.cnf
-
-import org.warthog.generic.datastructures.cnf.{ MutableClause, ClauseLike }
-import org.warthog.fol.formulas.FOL
+package org.warthog.generic.formulas
 
 /**
-  * Representation of a mutable FOL clause
+  * Trait for an atomic formula
+  * @tparam L The logic of the atom
   */
-class MutableFOLClause(ls: List[FOLLiteral]) extends MutableClause[FOL, FOLLiteral](ls) {
-  def this() {
-    this(Nil)
+trait Literal[-L <: Logic] extends Formula[L] {
+  def phase: Boolean
+
+  def negate: Literal[L]
+
+  def getAtom: Literal[L]
+
+  def freeVars = vars
+
+  def boundVars = List()
+
+  def numOfAtoms = 1
+
+  def getNNF(phase: Boolean) = if (phase) this else this.negate
+
+  override def isLiteral = true
+
+  def syntacticalRewrite[T <: L](subs: Map[Formula[T], Formula[T]]) = subs.get(this) match {
+    case Some(p) => p
+    case None    => this
   }
 
-  def this(lits: FOLLiteral*) {
-    this(lits.toList)
-  }
+  def isNNF = true
 
-  def this(c: ClauseLike[FOL, FOLLiteral]) {
-    this(c.literals)
-  }
+  def priority = 100
 }

@@ -51,7 +51,8 @@ trait Substitution extends GenericSubstituion[PL] {
   def substitute(m: Map[PLAtom, Formula[PL]]): Formula[PL] = subst(m, f)
 
   private def subst(m: Map[PLAtom, Formula[PL]], arg: Formula[PL]): Formula[PL] = arg match {
-    case p: PLAtom         => m.getOrElse(p, p)
+    case PLAtom(n, true)   => m.getOrElse(PLAtom(n), PLAtom(n))
+    case PLAtom(n, false)  => Not(m.getOrElse(PLAtom(n), PLAtom(n)))
     case Not(p)            => Not(subst(m, p))
     case Implication(p, q) => Implication(subst(m, p), subst(m, q))
     case Equiv(p, q)       => Equiv(subst(m, p), subst(m, q))

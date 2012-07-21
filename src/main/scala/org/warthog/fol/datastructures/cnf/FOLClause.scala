@@ -25,34 +25,51 @@
 
 package org.warthog.fol.datastructures.cnf
 
-import org.warthog.generic.datastructures.cnf.Literal
-import org.warthog.fol.formulas.{ FOL, FOLPredicate }
-import org.warthog.generic.formulas.{ Not, Formula }
+import org.warthog.generic.datastructures.cnf.Clause
+import org.warthog.fol.formulas.FOL
+import org.warthog.generic.formulas.Literal
 
 /**
-  * Representation of a FOL literal
+  * File Description
   */
-case class FOLLiteral(p: FOLPredicate, phase: Boolean = true) extends Literal[FOL] {
+class FOLClause(ls: List[Literal[FOL]]) extends Clause[FOL] {
 
-  override def toString = if (phase) p.toString else Formula.NOT + p
-
-  /**
-    * A formula representation of the literal
-    * @return a formula respresentation in propositional logic
-    */
-  def toFormula = if (phase) p else -p
+  val _lits = ls.distinct
 
   /**
-    * Return a negated copy of the literal
-    * @return a negated copy of the literal
+    * The sequence of literals in this clause
+    * @return the list of literals
     */
-  def negate = FOLLiteral(p, !phase)
-}
+  def literals = _lits
 
-object FOLLiteral {
-  def apply(f: Formula[FOL]): FOLLiteral = f match {
-    case p: FOLPredicate      => new FOLLiteral(p)
-    case Not(p: FOLPredicate) => new FOLLiteral(p, false)
-    case _                    => throw new IllegalArgumentException("Cannot convert %s to a literal.".format(f))
+  def this() {
+    this(Nil)
   }
+
+  def this(lits: Literal[FOL]*) {
+    this(lits.toList)
+  }
+
+  /**
+    * Delete a literal in this clause
+    * @param lit a literal
+    */
+  def delete(lit: Literal[FOL]) = new FOLClause(_lits.filterNot(_ == lit))
+
+  /**
+    * Push a literal to this clause
+    * @param lit a literal
+    */
+  def push(lit: Literal[FOL]) =
+    if (!_lits.contains(lit))
+      new FOLClause(lit :: _lits)
+    else
+      this
+
+  /**
+    * Add a number of literals to this clause
+    * @param lits a list of literals
+    */
+  def pushLiterals(lits: Literal[FOL]*) = new FOLClause((_lits ++ lits).distinct)
+
 }

@@ -70,11 +70,11 @@ trait CNFDNF[L <: Logic] extends Transformation[L] {
 
   private def cnfp(arg: Formula[L]): Boolean = arg match {
     case t: TruthValue[L]     => true
-    case a: Atom[L]           => true
+    case a: Literal[L]        => true
     case b: BinaryOperator[L] => false
     case Not(p) => p match {
-      case a: Atom[L] => true
-      case _          => false
+      case a: Literal[L] => true
+      case _             => false
     }
     case And(fs@_*) => fs.forall(cnfp(_))
     case Or(fs@_*)  => fs.forall(_.isLiteral)
@@ -82,11 +82,11 @@ trait CNFDNF[L <: Logic] extends Transformation[L] {
 
   private def dnfp(arg: Formula[L]): Boolean = arg match {
     case t: TruthValue[L]     => true
-    case a: Atom[L]           => true
+    case a: Literal[L]        => true
     case b: BinaryOperator[L] => false
     case Not(p) => p match {
-      case a: Atom[L] => true
-      case _          => false
+      case a: Literal[L] => true
+      case _             => false
     }
     case And(fs@_*) => fs.forall(_.isLiteral)
     case Or(fs@_*)  => fs.forall(dnfp(_))

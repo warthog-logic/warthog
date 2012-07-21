@@ -63,13 +63,13 @@ class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
   def getNNF(phase: Boolean) = if (phase) arg.getNNF(false) else arg.getNNF(true)
 
   override def isLiteral = arg match {
-    case a: Atom[L] => true
-    case _          => false
+    case a: Literal[L] => true
+    case _             => false
   }
 
   def isNNF = arg match {
-    case a: Atom[L] => true
-    case _          => false
+    case a: Literal[L] => true
+    case _             => false
   }
 
   def priority = 60
@@ -77,8 +77,9 @@ class Not[-L <: Logic](protected val arg: Formula[L]) extends Formula[L] {
 
 object Not {
   def apply[L <: Logic](f: Formula[L]) = f match {
-    case Not(n) => n
-    case _      => new Not[L](f)
+    case l: Literal[L] => l.negate
+    case Not(n)        => n
+    case _             => new Not[L](f)
   }
 
   def unapply[L <: Logic](f: Formula[L]): Option[Formula[L]] = f match {

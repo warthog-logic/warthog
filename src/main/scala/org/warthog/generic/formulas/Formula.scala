@@ -32,7 +32,7 @@ import org.warthog.pl.formulas.PL
   * @tparam L The logic of the formula
   */
 abstract class Formula[-L <: Logic] extends Term[PL] {
-  type FAtom = Atom[L#AtomLogic]
+  type FAtom = Literal[L#AtomLogic]
   type FVariable = Variable[L#VariableLogic]
   type FTerm = Term[L#TermLogic]
 
