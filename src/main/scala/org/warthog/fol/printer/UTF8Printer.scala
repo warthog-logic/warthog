@@ -41,14 +41,14 @@ object UTF8Printer extends SuperPrinter[FOL] {
         "%s: %s".format(p.x, print(p.arg))
       SuperPrinter.ppQuantor(p.quant) + form
     }
-    case FOLPredicate(s, phase, args@_*) => {
-      if (args.size == 0)
-        SuperPrinter.ppName(s.name) + SuperPrinter.PREDCONST
-      else if (args.size == 2 && s.name.size == 1 && "<>=".contains(s.name))
-        printTerm(args(0)) + " " + s + " " + printTerm(args(1))
+    case FOLPredicate(n, phase, args@_*) => {
+      val s = if (args.size == 0)
+        SuperPrinter.ppName(n.name) + SuperPrinter.PREDCONST
+      else if (args.size == 2 && n.name.size == 1 && "<>=".contains(n.name))
+        "(" + printTerm(args(0)) + " " + n + " " + printTerm(args(1)) + ")"
       else
-        SuperPrinter.ppName(s.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
-    }
+        SuperPrinter.ppName(n.name) + "(" + args.map(x => printTerm(x)).mkString(",") + ")"
+      if (phase) s else SuperPrinter.NOT + s    }
     case p: Formula[T] => super.print(p)
   }
 
