@@ -52,6 +52,10 @@ object FormulaGenerators {
         } yield
           FOLPredicate(name, terms: _*)
 
+      def genAtom(termDepth: Int): Gen[Formula[FOL]] = Gen.oneOf(
+        genPredicate(termDepth), Gen.value(Verum()), Gen.value(Falsum())
+      )
+
       def genNary(depth: Int): Gen[Formula[FOL]] =
         for {
           operator <- Gen.oneOf(Seq(And.apply[FOL] _, Or.apply[FOL] _))
@@ -82,9 +86,9 @@ object FormulaGenerators {
 
       def genFormula(depth: Int): Gen[Formula[FOL]] =
         if (depth == 0)
-          genPredicate(maxTermDepth)
+          genAtom(maxTermDepth)
         else
-          Gen.oneOf(genQuantifier(depth), genNary(depth), genBinary(depth), genNot(depth), genPredicate(depth))
+          Gen.oneOf(genQuantifier(depth), genNary(depth), genBinary(depth), genNot(depth), genAtom(depth))
 
       Gen.sized { depth =>
         if (depth >= maxFormulaDepth)
