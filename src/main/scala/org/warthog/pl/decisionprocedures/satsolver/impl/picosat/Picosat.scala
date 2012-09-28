@@ -33,8 +33,8 @@ import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
 
 /**
- * Solver Wrapper for Picosat
- */
+  * Solver Wrapper for Picosat
+  */
 object Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
@@ -77,7 +77,7 @@ object Picosat extends Solver {
       case l => l.map(_.map(f => {
         val (at, mul) = f match {
           case Not(ff) => (ff, -1)
-          case _ => (f, 1)
+          case _       => (f, 1)
         }
         fmtovar.getOrElseUpdate(at, {
           val lit = fmtovar.size + 1
@@ -108,7 +108,7 @@ object Picosat extends Solver {
       /* call sat only if solver is in unknown state */
       laststate = to match {
         case Infinity => jps.picosat_sat(-1)
-        case _ => jps.picosat_sat(to.to.toInt)
+        case _        => jps.picosat_sat(to.to.toInt)
       }
     }
     if (laststate == PSSAT) 1 else if (laststate == PSUNSAT) -1 else 0
