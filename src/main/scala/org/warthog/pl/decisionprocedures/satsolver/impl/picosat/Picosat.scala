@@ -27,15 +27,15 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 
 import scala.collection.mutable.Map
 
-import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver }
+import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, Solver}
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
 
 /**
-  * Solver Wrapper for Picosat
-  */
-class Picosat extends Solver {
+ * Solver Wrapper for Picosat
+ */
+object Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
   private val PSUNKNOWN = 0
@@ -48,18 +48,22 @@ class Picosat extends Solver {
   private var laststate = PSUNKNOWN
 
   override def init(): Unit = {
-    jps.picosat_init()
-    initialized = true
+    if (!initialized) {
+      jps.picosat_init()
+      initialized = true
+    }
   }
 
   override def reset(): Unit = {
-    jps.picosat_reset()
-    fmtovar.clear()
-    vartofm.clear()
-    clss = Nil
-    marks = Nil
-    laststate = PSUNKNOWN
-    initialized = false
+    if (initialized) {
+      jps.picosat_reset()
+      fmtovar.clear()
+      vartofm.clear()
+      clss = Nil
+      marks = Nil
+      laststate = PSUNKNOWN
+      initialized = false
+    }
   }
 
   override def add(fm: Formula[PL]): Unit = {
@@ -73,7 +77,7 @@ class Picosat extends Solver {
       case l => l.map(_.map(f => {
         val (at, mul) = f match {
           case Not(ff) => (ff, -1)
-          case _       => (f, 1)
+          case _ => (f, 1)
         }
         fmtovar.getOrElseUpdate(at, {
           val lit = fmtovar.size + 1
@@ -104,7 +108,7 @@ class Picosat extends Solver {
       /* call sat only if solver is in unknown state */
       laststate = to match {
         case Infinity => jps.picosat_sat(-1)
-        case _        => jps.picosat_sat(to.to.toInt)
+        case _ => jps.picosat_sat(to.to.toInt)
       }
     }
     if (laststate == PSSAT) 1 else if (laststate == PSUNSAT) -1 else 0
@@ -152,10 +156,10 @@ class Picosat extends Solver {
           if j != 0 /* filter out unassigned variables */
         } yield j).
           map(l => /* map literals to proper generic */
-            if (l < 0)
-              Not(vartofm.getOrElse(-l, Falsum()))
-            else
-              vartofm.getOrElse(l, Verum())).toSeq)
+          if (l < 0)
+            Not(vartofm.getOrElse(-l, Falsum()))
+          else
+            vartofm.getOrElse(l, Verum())).toSeq)
     }
   }
 }
