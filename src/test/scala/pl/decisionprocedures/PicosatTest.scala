@@ -32,8 +32,8 @@ import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 
 /**
-  * Tests for the picosat bindings
-  */
+ * Tests for the picosat bindings
+ */
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))

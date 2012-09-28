@@ -27,7 +27,7 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 
 import scala.collection.mutable.Map
 
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, Solver}
+import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver }
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
@@ -156,10 +156,10 @@ object Picosat extends Solver {
           if j != 0 /* filter out unassigned variables */
         } yield j).
           map(l => /* map literals to proper generic */
-          if (l < 0)
-            Not(vartofm.getOrElse(-l, Falsum()))
-          else
-            vartofm.getOrElse(l, Verum())).toSeq)
+            if (l < 0)
+              Not(vartofm.getOrElse(-l, Falsum()))
+            else
+              vartofm.getOrElse(l, Verum())).toSeq)
     }
   }
 }
