@@ -36,9 +36,9 @@ object UTF8Printer extends SuperPrinter[FOL] {
   override def print[T <: FOL](f: Formula[T]) = f match {
     case p: Quantifier[FOL] => {
       val form = if (p.priority == p.arg.priority)
-        "%s%s".format(p.x, print(p.arg))
+        "%s%s".format(printTerm(p.x.asInstanceOf[FOLTerm]), print(p.arg))
       else
-        "%s: %s".format(p.x, print(p.arg))
+        "%s: %s".format(printTerm(p.x.asInstanceOf[FOLTerm]), print(p.arg))
       SuperPrinter.ppQuantor(p.quant) + form
     }
     case FOLPredicate(s, args@_*) => {
