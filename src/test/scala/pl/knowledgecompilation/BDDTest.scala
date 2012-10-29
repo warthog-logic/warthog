@@ -79,13 +79,13 @@ class BDDTest extends Specification {
 
   "![b]: a | b | c" should {
     "be equal to a | c" in {
-      m.toFormula(all1) must be equalTo "a & $true | (~a & (c & $true | ~c & ~$true))".pl
+      m.toFormula(all1) must be equalTo "a | (~a & c)".pl
     }
   }
 
   "?[b]: a & b & c" should {
     "be equal to a & c" in {
-      m.toFormula(ex1) must be equalTo "a & (c & $true | ~c & ~$true) | ~a & ~$true".pl
+      m.toFormula(ex1) must be equalTo "a & c".pl
     }
   }
 
