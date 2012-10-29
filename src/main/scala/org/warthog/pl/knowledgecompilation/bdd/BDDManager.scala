@@ -74,10 +74,10 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
     if (m == 1)
       Verum()
     else if (m < 0)
-      Not(toFormula(-m))
+      Not(toFormula(-m)).nnf
     else {
       val BDDNode(v, l, r) = expandNode(m)
-      v && toFormula(l) || -v && toFormula(r)
+      (v && toFormula(l) || -v && toFormula(r)).removeBooleanConstants.nnf
     }
 
   /**
