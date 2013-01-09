@@ -5,8 +5,8 @@ organization := "org.warthog"
 version := "0.1-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-    "org.specs2" %% "specs2" % "1.7",
-    "org.specs2" %% "specs2-scalaz-core" % "6.0.1" % "test",
+    "org.specs2" % "specs2_2.10" % "1.12.3",
+    "org.specs2" % "specs2-scalaz-core_2.10" % "6.0.1" % "test",
     "net.java.dev.jna" % "jna" % "3.3.0",
     "org.scalacheck" %% "scalacheck" % "1.10.0" % "test")
 
@@ -15,7 +15,7 @@ resolvers ++= Seq(
   "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 )
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.10.0"
 
 parallelExecution in Test := false
 

@@ -61,7 +61,7 @@ object FormulaGenerators {
           operator <- Gen.oneOf(Seq(And.apply[FOL] _, Or.apply[FOL] _))
           arity <- Gen.choose(2, maxNaryArity)
           operands <- Gen.listOfN(arity, genFormula(depth-1))
-        } yield operator(operands: _*)
+        } yield operator(operands)
 
       def genBinary(depth: Int): Gen[Formula[FOL]] =
         for {
