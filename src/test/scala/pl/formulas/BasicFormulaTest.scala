@@ -29,6 +29,7 @@ import org.specs2.mutable._
 import pl.F
 import org.warthog.pl.formulas.PLAtom
 import org.warthog.pl.parsers._
+import org.warthog.generic.formulas.And
 
 /**
   * Basic tests for propositional generic
@@ -305,6 +306,22 @@ class BasicFormulaTest extends Specification {
     }
     "have an empty set of bound variables" in {
       F.n_nxoyoz.pl.boundVars must have size 0
+    }
+  }
+
+  "An empty n-ary operator" should {
+    val emptyFormula = And()
+    "should contain no variables" in {
+      emptyFormula.vars must be equalTo Nil
+    }
+    "should contain no free variables" in {
+      emptyFormula.freeVars must be equalTo Nil
+    }
+    "should contain no atoms" in {
+      emptyFormula.atoms must be equalTo Nil
+    }
+    "should contain no bound variables" in {
+      emptyFormula.boundVars must be equalTo Nil
     }
   }
 }

@@ -41,13 +41,15 @@ abstract class NAryOperator[-L <: Logic](val op: String, val args: Formula[L]*) 
     case _ => false
   }
 
-  def atoms = args.map(_.atoms).reduce(_ union _).distinct
+  private def mappedArgumentsWithoutDuplicates[A](f: Formula[L] => List[A]) = args.flatMap(f).toList.distinct
 
-  def vars = args.map(_.vars).reduce(_ union _).distinct
+  def atoms = mappedArgumentsWithoutDuplicates { _.atoms }
 
-  def freeVars = args.map(_.freeVars).reduce(_ union _).distinct
+  def vars = mappedArgumentsWithoutDuplicates { _.vars }
 
-  def boundVars = args.map(_.boundVars).reduce(_ union _).distinct
+  def freeVars = mappedArgumentsWithoutDuplicates { _.freeVars }
+
+  def boundVars = mappedArgumentsWithoutDuplicates { _.boundVars }
 
   def numOfAtoms = args.foldLeft(0)((sum, f) => sum + f.numOfAtoms)
 
