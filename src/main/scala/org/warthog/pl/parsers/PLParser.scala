@@ -40,7 +40,7 @@ class TPTPPL(fm: String) {
 class PLParser extends RegexParsers with PackratParsers with RunParser {
   override type Elem = Char
 
-  lazy val variable: PackratParser[Formula[PL]] = """([A-Za-z0-9]+)""".r ^^ (PLAtom(_))
+  lazy val variable: PackratParser[Formula[PL]] = """([A-Za-z0-9_]+)""".r ^^ (PLAtom(_))
 
   lazy val const: PackratParser[Formula[PL]] = ("$true" | "$false") ^^ {
     case "$true"  => Verum();
