@@ -37,7 +37,6 @@ import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
-  val ps = new Picosat
   var rv0: Int = _
   var rv1: Int = _
   var fm: Formula[PL] = _
@@ -53,7 +52,7 @@ class PicosatTest extends Specification {
 
   "x" should {
     "be satisfiable" in {
-      sat(ps) {
+      sat(Picosat) {
         (solver: Solver) =>
           {
             solver.add(x)
@@ -63,7 +62,7 @@ class PicosatTest extends Specification {
       rv0 must be equalTo (1)
     }
     "be satisfied by model x" in {
-      sat(ps) {
+      sat(Picosat) {
         (solver: Solver) =>
           {
             solver.add(x)
@@ -74,7 +73,7 @@ class PicosatTest extends Specification {
       fm must be equalTo (x)
     }
     "be unsatisfiable after adding -x" in {
-      sat(ps) {
+      sat(Picosat) {
         solver =>
           {
             solver.add(x)
@@ -85,7 +84,7 @@ class PicosatTest extends Specification {
       rv0 must be equalTo (-1)
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
-      sat(ps) {
+      sat(Picosat) {
         solver =>
           {
             solver.add(x)
@@ -101,7 +100,7 @@ class PicosatTest extends Specification {
   }
   "the empty clause" should {
     "be satisfiable" in {
-      sat(ps) {
+      sat(Picosat) {
         s =>
           {
             s.add(Falsum())
@@ -113,7 +112,7 @@ class PicosatTest extends Specification {
   }
   "the empty formula" should {
     "be satisfiable" in {
-      sat(ps) {
+      sat(Picosat) {
         s =>
           {
             s.add(Verum())
@@ -126,7 +125,7 @@ class PicosatTest extends Specification {
   "the empty formula" should {
     "return true uppon sat checking" in {
       var model: Formula[PL] = null
-      sat(ps) {
+      sat(Picosat) {
         s =>
           {
             s.add(Verum())

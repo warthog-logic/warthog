@@ -35,7 +35,7 @@ import org.warthog.generic.formulas._
 /**
   * Solver Wrapper for Picosat
   */
-class Picosat extends Solver {
+object Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
   private val PSUNKNOWN = 0
@@ -48,18 +48,22 @@ class Picosat extends Solver {
   private var laststate = PSUNKNOWN
 
   override def init(): Unit = {
-    jps.picosat_init()
-    initialized = true
+    if (!initialized) {
+      jps.picosat_init()
+      initialized = true
+    }
   }
 
   override def reset(): Unit = {
-    jps.picosat_reset()
-    fmtovar.clear()
-    vartofm.clear()
-    clss = Nil
-    marks = Nil
-    laststate = PSUNKNOWN
-    initialized = false
+    if (initialized) {
+      jps.picosat_reset()
+      fmtovar.clear()
+      vartofm.clear()
+      clss = Nil
+      marks = Nil
+      laststate = PSUNKNOWN
+      initialized = false
+    }
   }
 
   override def add(fm: Formula[PL]): Unit = {
