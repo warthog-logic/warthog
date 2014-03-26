@@ -55,18 +55,23 @@ object TruthTable {
     v: Map[PLAtom, Boolean],
     ats: List[PLAtom]): Unit =
     ats match {
-      case Nil => getRow(sb, v, f.eval(v))
+      case Nil => getRow(sb, v, f)
       case p :: ps => {
         generateRows(sb, f, v + (p -> false), ps)
         generateRows(sb, f, v + (p -> true), ps)
       }
     }
 
-  private def getRow(sb: StringBuilder, v: Map[PLAtom, Boolean], r: Boolean): Unit = {
-    def b2n(a: Boolean) = if (a) 1 else 0
-    v.foreach({
-      case (x, b) => sb.append(("%" + (x.toString.length) + "d ").format(b2n(b)))
-    })
-    sb.append(" | %7d\n".format(b2n(r)))
+  private def b2n(a: Boolean) = if (a) 1 else 0
+
+  private def getRow(sb: StringBuilder, v: Map[PLAtom, Boolean], f: Formula[PL]): Unit = {
+    appendAtomValuation(sb, v, f.vars.asInstanceOf[List[PLAtom]])
+    sb.append(" | %7d\n".format(b2n(f.eval(v))))
+  }
+
+  private def appendAtomValuation(sb: StringBuilder, v: Map[PLAtom, Boolean], as: List[PLAtom]): Unit = {
+    as.foreach {
+      case a => sb.append(("%" + (a.toString.length) + "d ").format(b2n(v(a))))
+    }
   }
 }
