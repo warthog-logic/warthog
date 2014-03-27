@@ -115,7 +115,7 @@ case class DTreeLeaf(val clauseId: Int, val clause: Set[Int]) extends DTree {
     if (clauseIsSubsumed(operations))
       Set[Int]()
     else
-      clause.filter(operations.valueOfLit(_) == LBool.UNDEF)
+      varSet.filter(operations.valueOfVar(_) == LBool.UNDEF)
   }
 
   def currentClauseIds(operations: DNNFOperations) = {

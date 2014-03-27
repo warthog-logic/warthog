@@ -7,6 +7,7 @@ import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datas
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Steffen Hildebrandt
@@ -274,7 +275,8 @@ public class DNNFOperations extends MSJCoreProver {
   public List<Integer> newlyImplied() {
     List<Integer> rv = new ArrayList<Integer>();
     if (newlyImpliedDirty) {
-      for (int i = trail.size() - 1; i > trailLimits.last(); i--)
+      int limit = trailLimits.isEmpty() ? -1 : trailLimits.last();
+      for (int i = trail.size() - 1; i > limit; i--)
         rv.add(trail.get(i));
     }
     newlyImpliedDirty = false;
@@ -294,6 +296,28 @@ public class DNNFOperations extends MSJCoreProver {
   public MSJClause propagate() {
     newlyImpliedDirty = true;
     return super.propagate();
+  }
+
+  /**
+   * Sets up the solver, returns true if it worked.
+   * If the given clause set is unsatisfiable by unit propagation, it returns false.
+   * @param clauses The clause set for the DNNF
+   * @return true, if initialization worked, false otherwise
+   */
+  public boolean initSolver(List<Set<Integer>> clauses) {
+    int maxVar = -1;
+    for (Set<Integer> clause : clauses) {
+      IntVec solverClause = new IntVec();
+      for (Integer lit : clause) {
+        while (maxVar < var(lit)) {
+          newVar();
+          maxVar++;
+        }
+        solverClause.push(lit);
+      }
+      newClause(solverClause, false);
+    }
+    return propagate() == null;
   }
 
   /**

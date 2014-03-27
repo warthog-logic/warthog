@@ -52,7 +52,7 @@ package object dnnf {
   /**
     * Print information about the compilation process (recursive calls and cache hits)
     */
-  val verbose = true
+  val verbose = false
 
   sealed trait CompilerVersion
   case object Simple extends CompilerVersion
@@ -70,19 +70,18 @@ package object dnnf {
     val cnf = if (formula.isCNF) formula else formula.cnf
     val origClauses = CNFUtil.toList(cnf).map(_.toSet[Formula[PL]])
     var mapping = HashMap[String, Int]()
-    var nextLit: Int = 1
-    val clauses = origClauses.map(_.map(atom => atom match {
+    var nextVar: Int = 0
+    val clauses = origClauses.map(_.map {
       case PLAtom(name) => mapping.get(name) match {
         case Some(lit) => Lit(lit, true)
-        case None      => mapping += (name -> nextLit); nextLit += 1; Lit(nextLit - 1, true)
+        case None      => mapping += (name -> nextVar); nextVar += 1; Lit(nextVar - 1, true)
       }
       case Not(PLAtom(name)) => mapping.get(name) match {
         case Some(lit) => Lit(lit, false)
-        case None      => mapping += (name -> nextLit); nextLit += 1; Lit(nextLit - 1, false)
+        case None      => mapping += (name -> nextVar); nextVar += 1; Lit(nextVar - 1, false)
       }
       case _ => throw new Exception("This should not happen!!")
-    }))
-
+    })
     val dnnf = compile(version, clauses)
 
     DNNF.simplify(dnnf.substituteLits(mapping.map(_.swap)))

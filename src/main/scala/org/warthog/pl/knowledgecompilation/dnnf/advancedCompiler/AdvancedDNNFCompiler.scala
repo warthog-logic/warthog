@@ -31,7 +31,6 @@ import scala.collection.JavaConverters._
 import collection.mutable.{ WeakHashMap, HashMap => MutableHashMap }
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.core.MSJCoreProver
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.LBool
-import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.collections.nativeType.IntVec
 
 /**
   * An Advanced Compiler for d-DNNF (deterministic DNNF) according to the algorithm of
@@ -158,7 +157,7 @@ class AdvancedDNNFCompiler(numClauses: Int, numVariables: Int) {
     */
   private def terms(vs: Set[Int]): Set[DNNF] =
     operations.newlyImplied().asScala.toSet.map((x: java.lang.Integer) => x.toInt).
-      filter(x => vs.contains(x / 2)).map((x: Int) => Lit(x / 2, x % 2 == 1))
+      filter(x => vs.contains(MSJCoreProver.`var`(x))).map(x => Lit(MSJCoreProver.`var`(x), !MSJCoreProver.sign(x)))
 
   /**
     * Auxillary method for cnf to dnnf-compilation: generate dnnf for clauses
@@ -229,30 +228,19 @@ class AdvancedDNNFCompiler(numClauses: Int, numVariables: Int) {
 
     if (nonsubsumedClause.isDefined) {
       //clauseToDDNNFAux(nonsubsumedClause.get, Nil, Nil)
-      val lits = nonsubsumedClause.get.map(l => Lit(l / 2, (l % 2 == 1)))
+      val lits = nonsubsumedClause.get.map(l => Lit(MSJCoreProver.`var`(l), !MSJCoreProver.sign(l)))
       val ands = lits.foldLeft[List[List[Lit]]](List(List()))((as, lit) => as ++ List(as.takeRight(1).head ++ List(neg(lit))))
       Or(lits.zip(ands).map(t => And((List(t._1) ++ t._2))))
     } else
       True
   }
 
-  /*
-   * TODO:
-   * =====
-   *
-   *   Initialisation:
-   *     - Initialize SAT Solver with clause set
-   *     - Build a DTree from the clause set (optionally parse a externaly generated)
+  /**
+   * Sets up the solver, returns true if it worked.
+   * If the given clause set is unsatisfiable by unit propagation, it returns false.
+   * @param clauses The clause set for the DNNF
+   * @return true, if initialization worked, false otherwise
    */
-  def initSolver(clauses: List[Set[Int]]): Boolean = {
-    for (i <- 1 to numVariables)
-      operations.newVar()
-    for (clause <- clauses) {
-      val solverClause = new IntVec()
-      for (lit <- clause)
-        solverClause.push(lit)
-      operations.newClause(solverClause, false)
-    }
-    return operations.propagate() == null
-  }
+  def initSolver(clauses: List[Set[Int]]): Boolean =
+    operations.initSolver(clauses.map(_.map(int2Integer).asJava).asJava)
 }
