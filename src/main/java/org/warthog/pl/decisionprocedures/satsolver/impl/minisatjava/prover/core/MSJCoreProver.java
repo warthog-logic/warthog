@@ -19,7 +19,7 @@ public class MSJCoreProver {
   // The solver state //
   //////////////////////
   protected boolean ok = true;
-  private IVec<MSJClause> clauses = new Vec<MSJClause>();
+  protected IVec<MSJClause> clauses = new Vec<MSJClause>();
   protected IVec<MSJClause> learnts = new Vec<MSJClause>();
   protected IVec<MSJVariable> vars = new Vec<MSJVariable>();
   private HeapWithIndex<MSJVariable> varHeap = new HeapWithIndex<MSJVariable>();
