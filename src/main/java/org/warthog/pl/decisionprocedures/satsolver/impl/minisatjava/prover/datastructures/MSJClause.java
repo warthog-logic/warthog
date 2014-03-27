@@ -14,7 +14,9 @@ public class MSJClause {
   public final static Comparator<MSJClause> comp = new Comparator<MSJClause>() {
     @Override
     public int compare(MSJClause c1, MSJClause c2) {
-      if (c1.activity == c2.activity) { return 0; }
+      if (c1.activity == c2.activity) {
+        return 0;
+      }
       return c1.activity() < c2.activity() ? -1 : 1;
     }
   };
@@ -89,7 +91,9 @@ public class MSJClause {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) { return true; }
+    if (this == o) {
+      return true;
+    }
     if (o instanceof MSJClause) {
       MSJClause other = (MSJClause) o;
       return other.data.equals(data) && other.learnt == learnt && other.activity == activity;

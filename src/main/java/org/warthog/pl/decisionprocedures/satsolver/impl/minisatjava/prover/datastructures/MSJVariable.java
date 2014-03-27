@@ -89,8 +89,12 @@ public class MSJVariable implements ComparableWithIndex<MSJVariable> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) { return true; }
-    if (o instanceof MSJVariable) { return ((MSJVariable) o).num == num; }
+    if (this == o) {
+      return true;
+    }
+    if (o instanceof MSJVariable) {
+      return ((MSJVariable) o).num == num;
+    }
     return false;
   }
 }

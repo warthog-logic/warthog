@@ -196,7 +196,9 @@ public class LongVec {
   }
 
   public void set(int index, long elem) {
-    if (0 <= index) { myarray[index] = elem; }
+    if (0 <= index) {
+      myarray[index] = elem;
+    }
   }
 
   /**
@@ -220,7 +222,6 @@ public class LongVec {
    * indexer.
    *
    * @param index the indexer of the element in the vector
-   *
    * @return the former ith element of the vector that is now removed from the vector
    */
   public long delete(int index) {
@@ -279,7 +280,9 @@ public class LongVec {
     for (int i = 0; i < r.length; i++)
       if (i < myarray.length) {
         r[i] = (int) myarray[i];
-      } else { break; }
+      } else {
+        break;
+      }
     return r;
   }
 
@@ -311,10 +314,14 @@ public class LongVec {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) { return true; }
+    if (this == obj) {
+      return true;
+    }
     if (obj instanceof LongVec) {
       LongVec v = (LongVec) obj;
-      if (v.size() != size()) { return false; }
+      if (v.size() != size()) {
+        return false;
+      }
       for (int i = 0; i < size(); i++) {
         if (v.get(i) != get(i)) {
           return false;
@@ -349,7 +356,9 @@ public class LongVec {
   public boolean contains(long e) {
     for (int i = 0; i < nbelem; i++) {
       //if (myarray[i].equals(e)) // changed by MS
-      if (myarray[i] == e) { return true; }
+      if (myarray[i] == e) {
+        return true;
+      }
     }
     return false;
   }

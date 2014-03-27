@@ -8,23 +8,31 @@ public class HeapWithIndex<T extends ComparableWithIndex<T>> extends Heap<T> {
   }
 
   protected int find(T a, int index) {
-    if (a != null) { return a.index(); }
+    if (a != null) {
+      return a.index();
+    }
     return -1;
   }
 
   public void clear() {
     for (int i = 0; i < heapsize; i++)
-      if (heap[i] != null) { heap[i].setIndex(-1); }
+      if (heap[i] != null) {
+        heap[i].setIndex(-1);
+      }
     super.clear();
   }
 
   @SuppressWarnings("unchecked")
   public void insert(T a) {
-    if (maybe_inconsistent) { quickInsert(a); } else {
+    if (maybe_inconsistent) {
+      quickInsert(a);
+    } else {
       heapsize++;
       if (heap == null || heap.length < heapsize) {
         T[] _heap = (T[]) Array.newInstance(a.getClass(), (heap == null ? 2 : heap.length * 2));
-        if (heap != null) { System.arraycopy(heap, 0, _heap, 0, heap.length); }
+        if (heap != null) {
+          System.arraycopy(heap, 0, _heap, 0, heap.length);
+        }
         heap = _heap;
       }
       heap[heapsize - 1] = a;
@@ -55,10 +63,16 @@ public class HeapWithIndex<T extends ComparableWithIndex<T>> extends Heap<T> {
   }
 
   protected void quickDelete(int index) {
-    if (heapsize < 1 || index < 0 || heapsize <= index) { return; }
-    if (!maybe_inconsistent) { maybe_inconsistent = true; }
+    if (heapsize < 1 || index < 0 || heapsize <= index) {
+      return;
+    }
+    if (!maybe_inconsistent) {
+      maybe_inconsistent = true;
+    }
     heap[index].setIndex(-1);
-    if (index == heapsize - 1) { heapsize--; } else {
+    if (index == heapsize - 1) {
+      heapsize--;
+    } else {
       heap[index] = heap[heapsize - 1];
       heap[index].setIndex(index);
       heapsize--;
@@ -66,23 +80,37 @@ public class HeapWithIndex<T extends ComparableWithIndex<T>> extends Heap<T> {
   }
 
   protected void delete(int index) {
-    if (maybe_inconsistent) { quickDelete(index); } else {
-      if (heapsize < 1 || index < 0 || heapsize <= index) { return; }
+    if (maybe_inconsistent) {
+      quickDelete(index);
+    } else {
+      if (heapsize < 1 || index < 0 || heapsize <= index) {
+        return;
+      }
       heap[index].setIndex(-1);
-      if (index == heapsize - 1) { heapsize--; } else {
+      if (index == heapsize - 1) {
+        heapsize--;
+      } else {
         T old = heap[index];
         heap[index] = heap[heapsize - 1];
         heap[index].setIndex(index);
         if (heapsize > 1) {
           heapsize--;
-          if (heap[index].compareTo(old) > 0) { heapIncreaseKey(index); } else { heapDecreaseKey(index); }
-        } else { heapsize = 0; }
+          if (heap[index].compareTo(old) > 0) {
+            heapIncreaseKey(index);
+          } else {
+            heapDecreaseKey(index);
+          }
+        } else {
+          heapsize = 0;
+        }
       }
     }
   }
 
   public T heapExtractMax() {
-    if (heapsize < 1) { return null; }
+    if (heapsize < 1) {
+      return null;
+    }
     if (maybe_inconsistent) { /* restore heap property destroyed by quick_{delete,insert} */
       restoreHeapProperty();
       maybe_inconsistent = false;
@@ -94,7 +122,9 @@ public class HeapWithIndex<T extends ComparableWithIndex<T>> extends Heap<T> {
       heap[0].setIndex(0);
       heapsize--;
       heapDecreaseKey(0);
-    } else /* heapsize==1 */ { heapsize = 0; }
+    } else /* heapsize==1 */ {
+      heapsize = 0;
+    }
     return max;
   }
 }
