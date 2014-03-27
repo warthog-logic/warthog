@@ -14,7 +14,9 @@ public class Heap<T extends Comparable<T>> {
 
   public void clear() {
     try {
-      if (heap != null) { Arrays.fill(heap, 0, heapsize, null); }
+      if (heap != null) {
+        Arrays.fill(heap, 0, heapsize, null);
+      }
       heapsize = 0;
     } catch (Throwable t) {
       t.printStackTrace();
@@ -23,11 +25,15 @@ public class Heap<T extends Comparable<T>> {
 
   @SuppressWarnings("unchecked")
   public void insert(T a) {
-    if (maybe_inconsistent) { quickInsert(a); } else {
+    if (maybe_inconsistent) {
+      quickInsert(a);
+    } else {
       heapsize++;
       if (heap == null || heap.length < heapsize) {
         T[] _heap = (T[]) Array.newInstance(a.getClass(), (heap == null ? 2 : heap.length * 2));
-        if (heap != null) { System.arraycopy(heap, 0, _heap, 0, heap.length); }
+        if (heap != null) {
+          System.arraycopy(heap, 0, _heap, 0, heap.length);
+        }
         heap = _heap;
       }
       heap[heapsize - 1] = a;
@@ -37,11 +43,15 @@ public class Heap<T extends Comparable<T>> {
 
   @SuppressWarnings("unchecked")
   public void quickInsert(T a) {
-    if (!maybe_inconsistent) { maybe_inconsistent = true; }
+    if (!maybe_inconsistent) {
+      maybe_inconsistent = true;
+    }
     heapsize++;
     if (heap == null || heap.length < heapsize) {
       T[] _heap = (T[]) Array.newInstance(a.getClass(), (heap == null ? 2 : heap.length * 2));
-      if (heap != null) { System.arraycopy(heap, 0, _heap, 0, heap.length); }
+      if (heap != null) {
+        System.arraycopy(heap, 0, _heap, 0, heap.length);
+      }
       heap = _heap;
     }
     heap[heapsize - 1] = a;
@@ -49,9 +59,15 @@ public class Heap<T extends Comparable<T>> {
 
   /* might destroy heap property */
   protected void quickDelete(int index) {
-    if (heapsize < 1 || index < 0 || heapsize <= index) { return; }
-    if (!maybe_inconsistent) { maybe_inconsistent = true; }
-    if (index == heapsize - 1) { heapsize--; } else {
+    if (heapsize < 1 || index < 0 || heapsize <= index) {
+      return;
+    }
+    if (!maybe_inconsistent) {
+      maybe_inconsistent = true;
+    }
+    if (index == heapsize - 1) {
+      heapsize--;
+    } else {
       heap[index] = heap[heapsize - 1];
       heapsize--;
     }
@@ -66,22 +82,38 @@ public class Heap<T extends Comparable<T>> {
   }
 
   protected void delete(int index) {
-    if (maybe_inconsistent) { quickDelete(index); } else {
-      if (heapsize < 1 || index < 0 || heapsize <= index) { return; }
-      if (index == heapsize - 1) { heapsize--; } else {
+    if (maybe_inconsistent) {
+      quickDelete(index);
+    } else {
+      if (heapsize < 1 || index < 0 || heapsize <= index) {
+        return;
+      }
+      if (index == heapsize - 1) {
+        heapsize--;
+      } else {
         T old = heap[index];
         heap[index] = heap[heapsize - 1];
         if (heapsize > 1) {
           heapsize--;
-          if (heap[index].compareTo(old) > 0) { heapIncreaseKey(index); } else { heapDecreaseKey(index); }
-        } else { heapsize = 0; }
+          if (heap[index].compareTo(old) > 0) {
+            heapIncreaseKey(index);
+          } else {
+            heapDecreaseKey(index);
+          }
+        } else {
+          heapsize = 0;
+        }
       }
     }
   }
 
   protected int find(T a, int index) {
-    if (heapsize < 1 || a == null) { return -1; } else if (index < heapsize) {
-      if (heap[index] == a) { return index; } else {
+    if (heapsize < 1 || a == null) {
+      return -1;
+    } else if (index < heapsize) {
+      if (heap[index] == a) {
+        return index;
+      } else {
         /* additional checking hopefully speeds up searching in most cases */
         /* both branches don't apply */
         if (leftInd(index) < heapsize && left(index).compareTo(a) < 0
@@ -92,7 +124,7 @@ public class Heap<T extends Comparable<T>> {
         if (leftInd(index) < heapsize && left(index).compareTo(a) < 0) {
           return find(a, rightInd(index));
         }
-				/* right branch doesn't apply */
+        /* right branch doesn't apply */
         if (rightInd(index) < heapsize && right(index).compareTo(a) < 0) {
           return find(a, leftInd(index));
         }
@@ -105,8 +137,12 @@ public class Heap<T extends Comparable<T>> {
   }
 
   private boolean consistent(int i) {
-    if (leftInd(i) < heapsize && left(i).compareTo(heap[i]) > 0) { return false; }
-    if (rightInd(i) < heapsize && right(i).compareTo(heap[i]) > 0) { return false; }
+    if (leftInd(i) < heapsize && left(i).compareTo(heap[i]) > 0) {
+      return false;
+    }
+    if (rightInd(i) < heapsize && right(i).compareTo(heap[i]) > 0) {
+      return false;
+    }
     return true;
   }
 
@@ -115,7 +151,9 @@ public class Heap<T extends Comparable<T>> {
   }
 
   public T heapExtractMax() {
-    if (heapsize < 1) { return null; }
+    if (heapsize < 1) {
+      return null;
+    }
     if (maybe_inconsistent) { /* restore heap property destroyed by quick_{delete,insert} */
       restoreHeapProperty();
       maybe_inconsistent = false;
@@ -125,12 +163,16 @@ public class Heap<T extends Comparable<T>> {
       heap[0] = heap[heapsize - 1];
       heapsize--;
       heapDecreaseKey(0);
-    } else /* heapsize==1 */ { heapsize = 0; }
+    } else /* heapsize==1 */ {
+      heapsize = 0;
+    }
     return max;
   }
 
   public void heapIncreaseKey(T a) {
-    if (!maybe_inconsistent) { heapIncreaseKey(find(a)); }
+    if (!maybe_inconsistent) {
+      heapIncreaseKey(find(a));
+    }
   }
 
   protected void heapIncreaseKey(int index) {
@@ -142,7 +184,9 @@ public class Heap<T extends Comparable<T>> {
   }
 
   public void heapDecreaseKey(T a) {
-    if (!maybe_inconsistent) { heapDecreaseKey(find(a)); }
+    if (!maybe_inconsistent) {
+      heapDecreaseKey(find(a));
+    }
   }
 
   protected void heapDecreaseKey(int index) {
@@ -177,12 +221,18 @@ public class Heap<T extends Comparable<T>> {
   }
 
   private void maxHeapify(int index) {
-    if (index < 0) { return; }
+    if (index < 0) {
+      return;
+    }
     int largest;
-    if (leftInd(index) < heapsize && left(index).compareTo(heap[index]) > 0) { largest = leftInd(index); } else {
+    if (leftInd(index) < heapsize && left(index).compareTo(heap[index]) > 0) {
+      largest = leftInd(index);
+    } else {
       largest = index;
     }
-    if (rightInd(index) < heapsize && right(index).compareTo(heap[largest]) > 0) { largest = rightInd(index); }
+    if (rightInd(index) < heapsize && right(index).compareTo(heap[largest]) > 0) {
+      largest = rightInd(index);
+    }
     if (largest != index) {
       swap(index, largest);
       maxHeapify(largest);
@@ -198,7 +248,9 @@ public class Heap<T extends Comparable<T>> {
   }
 
   public T get(int i) {
-    if (i < heapsize) { return heap[i]; }
+    if (i < heapsize) {
+      return heap[i];
+    }
     return null;
   }
 

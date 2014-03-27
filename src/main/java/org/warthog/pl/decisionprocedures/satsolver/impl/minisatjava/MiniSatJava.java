@@ -49,9 +49,13 @@ public class MiniSatJava {
     while ((line = br.readLine()) != null) {
       lineNumber++;
       // ignore empty lines
-      if (line.length() == 0) { continue; }
+      if (line.length() == 0) {
+        continue;
+      }
       // ignore comments (line starts with c)
-      if (line.startsWith("c")) { continue; }
+      if (line.startsWith("c")) {
+        continue;
+      }
       // read preamble (line starts with p)
       if (line.startsWith("p")) {
         if (preambleRead) {
@@ -66,7 +70,9 @@ public class MiniSatJava {
             while (st.hasMoreTokens()) {
               count++;
               String t = st.nextToken();
-              if (count == 3) { numberOfVarsInPreamble = Integer.parseInt(t); }
+              if (count == 3) {
+                numberOfVarsInPreamble = Integer.parseInt(t);
+              }
             }
             preambleRead = true;
             for (int i = 0; i < numberOfVarsInPreamble; i++)
@@ -89,7 +95,11 @@ public class MiniSatJava {
               prover.newClause(clause, false);
               clauseCounter++;
               clause = new IntVec();
-            } else if (var < 0) { clause.push((((var * -1) - 1) * 2) ^ 1); } else { clause.push((var - 1) * 2); }
+            } else if (var < 0) {
+              clause.push((((var * -1) - 1) * 2) ^ 1);
+            } else {
+              clause.push((var - 1) * 2);
+            }
           }
         } catch (NumberFormatException e) {
           //System.err.println("Line " + lineNumber + ": Number format exception --> Skip literal and rest of line");

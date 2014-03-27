@@ -30,110 +30,110 @@ import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 public class JPicosat {
-    private static final String DIR = "/solvers/picosat";
-    private CPicosat INSTANCE;
+  private static final String DIR = "/solvers/picosat";
+  private CPicosat INSTANCE;
 
-    public interface CPicosat extends Library {
-        void picosat_init();
+  public interface CPicosat extends Library {
+    void picosat_init();
 
-        void picosat_reset();
+    void picosat_reset();
 
-        int picosat_sat(int to);
+    int picosat_sat(int to);
 
-        int picosat_variables();
+    int picosat_variables();
 
-        int picosat_deref(int int_lit);
+    int picosat_deref(int int_lit);
 
-        int picosat_coreclause(int cls);
+    int picosat_coreclause(int cls);
 
-        int picosat_add(int lit);
-    }
+    int picosat_add(int lit);
+  }
 
-    public JPicosat(String libdir) throws Exception {
-        if (libdir == null || libdir == "")
-            libdir="lib";
-        StringBuilder pref = new StringBuilder(libdir + DIR);
+  public JPicosat(String libdir) throws Exception {
+    if (libdir == null || libdir == "")
+      libdir = "lib";
+    StringBuilder pref = new StringBuilder(libdir + DIR);
 
-        if (Platform.isMac())
-            if (Platform.is64Bit())
-                pref.append("/macosx/64");
-            else
-                pref.append("/macosx/32");
-        else if (Platform.isLinux())
-            pref.append("/linux");
-        else if (Platform.isWindows())
-            if (Platform.is64Bit())
-                pref.append("/win/64");
-            else
-                pref.append("/win/32");
-        else
-            throw new Exception("JPicosat: Platform unsupported!");
+    if (Platform.isMac())
+      if (Platform.is64Bit())
+        pref.append("/macosx/64");
+      else
+        pref.append("/macosx/32");
+    else if (Platform.isLinux())
+      pref.append("/linux");
+    else if (Platform.isWindows())
+      if (Platform.is64Bit())
+        pref.append("/win/64");
+      else
+        pref.append("/win/32");
+    else
+      throw new Exception("JPicosat: Platform unsupported!");
 
-        System.setProperty("jna.library.path", pref.toString());
-        INSTANCE = (CPicosat) Native.loadLibrary("picosat", CPicosat.class);
-    }
+    System.setProperty("jna.library.path", pref.toString());
+    INSTANCE = (CPicosat) Native.loadLibrary("picosat", CPicosat.class);
+  }
 
-    public JPicosat() throws Exception {
-        this(System.getProperty("warthog.libs"));
-    }
+  public JPicosat() throws Exception {
+    this(System.getProperty("warthog.libs"));
+  }
 
-    public void picosat_init() {
-        INSTANCE.picosat_init();
-    }
+  public void picosat_init() {
+    INSTANCE.picosat_init();
+  }
 
-    public void picosat_reset() {
-        INSTANCE.picosat_reset();
-    }
+  public void picosat_reset() {
+    INSTANCE.picosat_reset();
+  }
 
-    public int picosat_sat(int to) {
-        return INSTANCE.picosat_sat(to);
-    }
+  public int picosat_sat(int to) {
+    return INSTANCE.picosat_sat(to);
+  }
 
-    public int picosat_variables() {
-        return INSTANCE.picosat_variables();
-    }
+  public int picosat_variables() {
+    return INSTANCE.picosat_variables();
+  }
 
-    public int picosat_deref(int int_lit) {
-        return INSTANCE.picosat_deref(int_lit);
-    }
+  public int picosat_deref(int int_lit) {
+    return INSTANCE.picosat_deref(int_lit);
+  }
 
-    public int picosat_coreclause(int cls) {
-        return INSTANCE.picosat_coreclause(cls);
-    }
+  public int picosat_coreclause(int cls) {
+    return INSTANCE.picosat_coreclause(cls);
+  }
 
-    public int picosat_add(int lit) {
-        return INSTANCE.picosat_add(lit);
-    }
+  public int picosat_add(int lit) {
+    return INSTANCE.picosat_add(lit);
+  }
 
 
-    public void test() {
-        picosat_init();
+  public void test() {
+    picosat_init();
 
-        picosat_add(-1);
-        picosat_add(0);
+    picosat_add(-1);
+    picosat_add(0);
 
-        picosat_add(1);
-        picosat_add(0);
+    picosat_add(1);
+    picosat_add(0);
 
-        System.out.println("p cnf 1 2\n-1 0\n1 0? "+picosat_sat(-1));
+    System.out.println("p cnf 1 2\n-1 0\n1 0? " + picosat_sat(-1));
 
-        picosat_reset();
+    picosat_reset();
 
-        picosat_init();
+    picosat_init();
 
-        picosat_add(1);
-        picosat_add(-2);
-        picosat_add(0);
+    picosat_add(1);
+    picosat_add(-2);
+    picosat_add(0);
 
-        System.out.println("p cnf 2 1\n1 -2 0? "+picosat_sat(-1));
+    System.out.println("p cnf 2 1\n1 -2 0? " + picosat_sat(-1));
 
-        picosat_reset();
-    }
+    picosat_reset();
+  }
 
-    public static void main(String[] args) throws Exception {
-        //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
-        JPicosat jps=new JPicosat();
-        jps.test();
-    }
+  public static void main(String[] args) throws Exception {
+    //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
+    JPicosat jps = new JPicosat();
+    jps.test();
+  }
 
 }

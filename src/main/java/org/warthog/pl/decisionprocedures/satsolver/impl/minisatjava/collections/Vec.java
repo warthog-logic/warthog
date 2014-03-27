@@ -193,7 +193,9 @@ public final class Vec<T> implements IVec<T> {
   }
 
   public void set(int index, T elem) {
-    if (0 <= index) { myarray[index] = elem; }
+    if (0 <= index) {
+      myarray[index] = elem;
+    }
   }
 
   /**
@@ -215,7 +217,6 @@ public final class Vec<T> implements IVec<T> {
    * indexer.
    *
    * @param index the indexer of the element in the vector
-   *
    * @return the former ith element of the vector that is now removed from the vector
    */
   public T delete(int index) {
@@ -272,7 +273,9 @@ public final class Vec<T> implements IVec<T> {
     for (int i = 0; i < r.length; i++)
       if (i < myarray.length) {
         r[i] = (T) myarray[i];
-      } else { break; }
+      } else {
+        break;
+      }
     return r;
   }
 
@@ -307,7 +310,9 @@ public final class Vec<T> implements IVec<T> {
   public void sortUnique(Comparator<T> cmp) {
     int i, j;
     T last;
-    if (nbelem == 0) { return; }
+    if (nbelem == 0) {
+      return;
+    }
     sort(cmp);
     i = 1;
     last = myarray[0];
@@ -327,10 +332,14 @@ public final class Vec<T> implements IVec<T> {
     */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) { return true; }
+    if (this == obj) {
+      return true;
+    }
     if (obj instanceof IVec) {
       IVec<?> v = (IVec<?>) obj;
-      if (v.size() != size()) { return false; }
+      if (v.size() != size()) {
+        return false;
+      }
       for (int i = 0; i < size(); i++) {
         if (!v.get(i).equals(get(i))) {
           return false;
@@ -364,7 +373,9 @@ public final class Vec<T> implements IVec<T> {
       }
 
       public T next() {
-        if (i == nbelem) { throw new NoSuchElementException(); }
+        if (i == nbelem) {
+          throw new NoSuchElementException();
+        }
         return myarray[i++];
       }
 
@@ -384,7 +395,9 @@ public final class Vec<T> implements IVec<T> {
   public boolean contains(T e) {
     for (int i = 0; i < nbelem; i++) {
       //if (myarray[i].equals(e)) // changed by MS
-      if (myarray[i] == e) { return true; }
+      if (myarray[i] == e) {
+        return true;
+      }
     }
     return false;
   }
@@ -393,12 +406,13 @@ public final class Vec<T> implements IVec<T> {
    * return index of element e, <0 otherwise
    *
    * @param e
-   *
    * @return
    */
   public int indexOf(T e) {
     for (int i = 0; i < nbelem; i++)
-      if (myarray[i] == e) { return i; }
+      if (myarray[i] == e) {
+        return i;
+      }
     return -1;
   }
 }

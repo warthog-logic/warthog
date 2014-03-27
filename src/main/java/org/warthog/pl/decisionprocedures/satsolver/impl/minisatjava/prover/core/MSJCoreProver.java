@@ -20,7 +20,7 @@ public class MSJCoreProver {
   //////////////////////
   protected boolean ok = true;
   private IVec<MSJClause> clauses = new Vec<MSJClause>();
-  private IVec<MSJClause> learnts = new Vec<MSJClause>();
+  protected IVec<MSJClause> learnts = new Vec<MSJClause>();
   protected IVec<MSJVariable> vars = new Vec<MSJVariable>();
   private HeapWithIndex<MSJVariable> varHeap = new HeapWithIndex<MSJVariable>();
   private IVec<IVec<MSJClause>> watches = new Vec<IVec<MSJClause>>();
@@ -67,7 +67,7 @@ public class MSJCoreProver {
     return vars.get(lit >> 1);
   }
 
-  private LBool value(int lit) {
+  protected LBool value(int lit) {
     return sign(lit) ? LBool.negate(v(lit).assignment()) : v(lit).assignment();
   }
 
@@ -86,16 +86,26 @@ public class MSJCoreProver {
   }
 
   public void newClause(IntVec clauseVec, boolean learnt) {
-    if (!ok) { return; }
+    if (!ok) {
+      return;
+    }
     IntVec simplifiedLearnt = null;
     if (!learnt) {
       simplifiedLearnt = simplifyProblemClause(clauseVec);
-      if (simplifiedLearnt == null) { return; }
+      if (simplifiedLearnt == null) {
+        return;
+      }
     }
     IntVec clause = learnt ? clauseVec : simplifiedLearnt;
-    if (clause.size() == 0) { ok = false; } else if (clause.size() == 1) {
-      if (!enqueue(clause.get(0), null)) { ok = false; }
-    } else if (clause.size() == 2) { addBinaryClause(clause, learnt); } else {
+    if (clause.size() == 0) {
+      ok = false;
+    } else if (clause.size() == 1) {
+      if (!enqueue(clause.get(0), null)) {
+        ok = false;
+      }
+    } else if (clause.size() == 2) {
+      addBinaryClause(clause, learnt);
+    } else {
       addNAryClause(clause, learnt);
     }
   }
@@ -105,12 +115,18 @@ public class MSJCoreProver {
     clauseVec.copyTo(clause);
     clause.sortUnique();
     for (int i = 0; i < clause.size() - 1; i++)
-      if (clause.get(i) == not(clause.get(i + 1))) { return null; }
+      if (clause.get(i) == not(clause.get(i + 1))) {
+        return null;
+      }
     for (int i = 0; i < clause.size(); i++)
-      if (value(clause.get(i)) == LBool.TRUE) { return null; }
+      if (value(clause.get(i)) == LBool.TRUE) {
+        return null;
+      }
     int i, j;
     for (i = j = 0; i < clause.size(); i++)
-      if (value(clause.get(i)) != LBool.FALSE) { clause.set(j++, clause.get(i)); }
+      if (value(clause.get(i)) != LBool.FALSE) {
+        clause.set(j++, clause.get(i));
+      }
     clause.shrink(i - j);
     return clause;
   }
@@ -121,7 +137,9 @@ public class MSJCoreProver {
     if (learnt) {
       enqueue(clauseVec.get(0), new MSJClause(1, not(clauseVec.get(1))));
       stats.learnts_literals += clauseVec.size();
-    } else { stats.clauses_literals += clauseVec.size(); }
+    } else {
+      stats.clauses_literals += clauseVec.size();
+    }
     stats.n_bin_clauses++;
   }
 
@@ -157,11 +175,17 @@ public class MSJCoreProver {
       removeWatch(watches.get(not(clause.get(0))), clause);
       removeWatch(watches.get(not(clause.get(1))), clause);
     }
-    if (clause.learnt()) { stats.learnts_literals -= clause.size(); } else { stats.clauses_literals -= clause.size(); }
+    if (clause.learnt()) {
+      stats.learnts_literals -= clause.size();
+    } else {
+      stats.clauses_literals -= clause.size();
+    }
   }
 
   private boolean removeWatch(IVec<MSJClause> watches, MSJClause clause) {
-    if (watches.size() == 0) { return false; }
+    if (watches.size() == 0) {
+      return false;
+    }
     int j;
     for (j = 0; !watches.get(j).equals(clause); j++)
       assert (j < watches.size()) : "There was a problem removing a watcher";
@@ -173,7 +197,9 @@ public class MSJCoreProver {
 
   private boolean locked(MSJClause clause) {
     MSJClause r = v(clause.get(0)).reason();
-    if (r == null) { return false; }
+    if (r == null) {
+      return false;
+    }
     return !r.isLit() && r == clause;
   }
 
@@ -181,7 +207,9 @@ public class MSJCoreProver {
   // Main CDCL functions //
   /////////////////////////
   private LBool search(int nof_conflicts) {
-    if (!ok) { return LBool.FALSE; }
+    if (!ok) {
+      return LBool.FALSE;
+    }
     stats.starts++;
     int conflCount = 0;
     model.clear();
@@ -198,7 +226,9 @@ public class MSJCoreProver {
         int backtrackLevel = analyze(confl, learntClause);
         cancelUntil(backtrackLevel > rootLevel ? backtrackLevel : rootLevel);
         newClause(learntClause, true);
-        if (learntClause.size() == 1) { v(learntClause.get(0)).setLevel(0); }
+        if (learntClause.size() == 1) {
+          v(learntClause.get(0)).setLevel(0);
+        }
         claDecayActivity();
         if (--learntsize_adjust_cnt == 0) {
           learntsize_adjust_confl *= learntsize_adjust_inc;
@@ -219,10 +249,16 @@ public class MSJCoreProver {
           cancelUntil(rootLevel);
           return LBool.UNDEF;
         }
-        if (decisionLevel() == 0) { simplifyDB(); }
-        if (learnts.size() - trail.size() >= max_learnts) { reduceDB(); }
+        if (decisionLevel() == 0) {
+          simplifyDB();
+        }
+        if (learnts.size() - trail.size() >= max_learnts) {
+          reduceDB();
+        }
         stats.decisions++;
-        if (stats.decisions % params.var_decay_rate == 0) { decayVarActivity(); }
+        if (stats.decisions % params.var_decay_rate == 0) {
+          decayVarActivity();
+        }
         int next = pickBranchLit();
         if (next == -1) {
           for (int i = 0; i < vars.size(); i++)
@@ -248,14 +284,18 @@ public class MSJCoreProver {
         if (watchers.get(i).isLit()) {
           MSJClause unitClause = watchers.get(i);
           if (!enqueue(unitClause.lit(), new MSJClause(1, propLit))) {
-            if (decisionLevel() == 0) { ok = false; }
+            if (decisionLevel() == 0) {
+              ok = false;
+            }
             confl = new MSJClause(2);
             confl.set(1, not(propLit));
             confl.set(0, unitClause.lit());
             qhead = trail.size();
             while (i < watchers.size())
               watchers.set(j++, watchers.get(i++));
-          } else { watchers.set(j++, watchers.get(i++)); }
+          } else {
+            watchers.set(j++, watchers.get(i++));
+          }
         } else {
           MSJClause c = watchers.get(i);
           i++;
@@ -267,7 +307,9 @@ public class MSJCoreProver {
           }
           // If 0th watch is true, then clause is already satisfied.
           int first = c.get(0);
-          if (value(first) == LBool.TRUE) { watchers.set(j++, c); } else {
+          if (value(first) == LBool.TRUE) {
+            watchers.set(j++, c);
+          } else {
             // Look for new watch:
             boolean foundWatch = false;
             for (int k = 2; k < c.size() && !foundWatch; k++)
@@ -281,7 +323,9 @@ public class MSJCoreProver {
             if (!foundWatch) {
               watchers.set(j++, c);
               if (!enqueue(first, c)) {
-                if (decisionLevel() == 0) { ok = false; }
+                if (decisionLevel() == 0) {
+                  ok = false;
+                }
                 confl = c;
                 qhead = trail.size();
                 while (i < watchers.size())
@@ -296,7 +340,7 @@ public class MSJCoreProver {
     return confl;
   }
 
-  private int analyze(MSJClause conflictClause, IntVec learntVec) {
+  protected int analyze(MSJClause conflictClause, IntVec learntVec) {
     MSJClause confl = conflictClause;
     int pathCounter = 0;
     int conflictLit = litUndef;
@@ -305,15 +349,21 @@ public class MSJCoreProver {
     int index = trail.size() - 1;
     MSJClause temp = new MSJClause(2);
     do {
-      if (confl.isLit()) { temp.set(1, confl.lit()); }
+      if (confl.isLit()) {
+        temp.set(1, confl.lit());
+      }
       MSJClause c = confl.isLit() ? temp : confl;
-      if (c.learnt()) { claBumpActivity(c); }
+      if (c.learnt()) {
+        claBumpActivity(c);
+      }
       for (int j = (conflictLit == litUndef) ? 0 : 1; j < c.size(); j++) {
         int q = c.get(j);
         if (!seen.get(var(q)) && v(q).level() > 0) {
           v(q).bumpActivity();
           seen.set(var(q), true);
-          if (v(q).level() == decisionLevel()) { pathCounter++; } else {
+          if (v(q).level() == decisionLevel()) {
+            pathCounter++;
+          } else {
             learntVec.push(q);
             backtrackLevel = backtrackLevel > v(q).level() ? backtrackLevel : v(q).level();
           }
@@ -346,9 +396,13 @@ public class MSJCoreProver {
       learntVec.copyTo(toClear);
       for (i = j = 1; i < learntVec.size(); i++) {
         MSJClause r = v(learntVec.get(i)).reason();
-        if (r == null) { learntVec.set(j++, learntVec.get(i)); } else if (r.isLit()) {
+        if (r == null) {
+          learntVec.set(j++, learntVec.get(i));
+        } else if (r.isLit()) {
           int q = r.lit();
-          if (!seen.get(var(q)) && v(q).level() != 0) { learntVec.set(j++, learntVec.get(i)); }
+          if (!seen.get(var(q)) && v(q).level() != 0) {
+            learntVec.set(j++, learntVec.get(i));
+          }
         } else {
           MSJClause c = r;
           for (int k = 1; k < c.size(); k++)
@@ -375,7 +429,9 @@ public class MSJCoreProver {
       assert (v(stack.last()).reason() != null);
       MSJClause r = v(stack.last()).reason();
       stack.pop();
-      if (r.isLit()) { temp.set(1, r.lit()); }
+      if (r.isLit()) {
+        temp.set(1, r.lit());
+      }
       MSJClause c = r.isLit() ? temp : r;
       for (int i = 1; i < c.size(); i++) {
         int p1 = c.get(i);
@@ -398,10 +454,14 @@ public class MSJCoreProver {
 
   private void analyzeFinal(MSJClause confl, boolean skipFirst) {
     conflict.clear();
-    if (rootLevel == 0) { return; }
+    if (rootLevel == 0) {
+      return;
+    }
     for (int i = skipFirst ? 1 : 0; i < confl.size(); i++) {
       int x = var(confl.get(i));
-      if (v(x).level() > 0) { seen.set(x, true); }
+      if (v(x).level() > 0) {
+        seen.set(x, true);
+      }
     }
     int start = (rootLevel >= trailLimits.size()) ? trail.size() - 1 : trailLimits.get(rootLevel);
     for (int i = start; i >= trailLimits.get(0); i--) {
@@ -415,11 +475,15 @@ public class MSJCoreProver {
         } else {
           if (r.isLit()) {
             int p = r.lit();
-            if (v(var).level() > 0) { seen.set(var(p), true); }
+            if (v(var).level() > 0) {
+              seen.set(var(p), true);
+            }
           } else {
             MSJClause c = r;
             for (int j = 1; j < c.size(); j++)
-              if (v(c.get(j)).level() > 0) { seen.set(var(c.get(j)), true); }
+              if (v(c.get(j)).level() > 0) {
+                seen.set(var(c.get(j)), true);
+              }
           }
         }
         seen.set(var, false);
@@ -434,7 +498,9 @@ public class MSJCoreProver {
         var.assign(LBool.UNDEF);
         var.setReason(null);
         var.setPolarity(sign(trail.get(c)));
-        if (varHeap.find(var) == -1) { varHeap.insert(var); }
+        if (varHeap.find(var) == -1) {
+          varHeap.insert(var);
+        }
       }
       trail.shrink(trail.size() - trailLimits.get(level));
       trailLimits.shrink(trailLimits.size() - level);
@@ -445,7 +511,9 @@ public class MSJCoreProver {
   private int pickBranchLit() {
     while (!varHeap.isEmpty()) {
       MSJVariable next = varHeap.heapExtractMax();
-      if (next.assignment() == LBool.UNDEF) { return mkLit(next.num(), next.polarity()); }
+      if (next.assignment() == LBool.UNDEF) {
+        return mkLit(next.num(), next.polarity());
+      }
     }
     return -1;
   }
@@ -456,7 +524,9 @@ public class MSJCoreProver {
   }
 
   protected boolean enqueue(int lit, MSJClause reason) {
-    if (value(lit) != LBool.UNDEF) { return value(lit) != LBool.FALSE; } else {
+    if (value(lit) != LBool.UNDEF) {
+      return value(lit) != LBool.FALSE;
+    } else {
       MSJVariable var = v(lit);
       var.assign(LBool.fromBool(!sign(lit)));
       var.setLevel(decisionLevel());
@@ -474,29 +544,39 @@ public class MSJCoreProver {
     double limit = params.cla_inc / learnts.size();
     learnts.sort(MSJClause.comp);
     for (i = j = 0; i < learnts.size() / 2; i++)
-      if (learnts.get(i).size() > 2 && !locked(learnts.get(i))) { remove(learnts.get(i)); } else {
+      if (learnts.get(i).size() > 2 && !locked(learnts.get(i))) {
+        remove(learnts.get(i));
+      } else {
         learnts.set(j++, learnts.get(i));
       }
     for (; i < learnts.size(); i++)
       if (learnts.get(i).size() > 2 && !locked(learnts.get(i)) && learnts.get(i).activity() < limit) {
         remove(learnts.get(i));
-      } else { learnts.set(j++, learnts.get(i)); }
+      } else {
+        learnts.set(j++, learnts.get(i));
+      }
     learnts.shrink(i - j);
   }
 
   private void simplifyDB() {
-    if (!ok) { return; }
+    if (!ok) {
+      return;
+    }
     if (propagate() != null) {
       ok = false;
       return;
     }
-    if (trail.size() == stats.simpDBAssigns || stats.simpDBProps > 0) { return; }
+    if (trail.size() == stats.simpDBAssigns || stats.simpDBProps > 0) {
+      return;
+    }
     for (int i = stats.simpDBAssigns; i < trail.size(); i++) {
       int p = trail.get(i);
       IVec<MSJClause> watchers = watches.get(not(p));
       for (int j = 0; j < watchers.size(); j++)
         if (watchers.get(j).isLit()) {
-          if (removeWatch(this.watches.get(not(watchers.get(j).lit())), new MSJClause(1, p))) { stats.n_bin_clauses--; }
+          if (removeWatch(this.watches.get(not(watchers.get(j).lit())), new MSJClause(1, p))) {
+            stats.n_bin_clauses--;
+          }
         }
       this.watches.get(p).clear();
       this.watches.get(not(p)).clear();
@@ -506,7 +586,11 @@ public class MSJCoreProver {
       IVec<MSJClause> cs = type == 1 ? learnts : clauses;
       int j = 0;
       for (int i = 0; i < cs.size(); i++) {
-        if (!locked(cs.get(i)) && canBeSimplified(cs.get(i))) { remove(cs.get(i)); } else { cs.set(j++, cs.get(i)); }
+        if (!locked(cs.get(i)) && canBeSimplified(cs.get(i))) {
+          remove(cs.get(i));
+        } else {
+          cs.set(j++, cs.get(i));
+        }
       }
       cs.shrink(cs.size() - j);
     }
@@ -516,7 +600,9 @@ public class MSJCoreProver {
 
   private boolean canBeSimplified(MSJClause c) {
     for (int i = 0; i < c.size(); i++) {
-      if (value(c.get(i)) == LBool.TRUE) { return true; }
+      if (value(c.get(i)) == LBool.TRUE) {
+        return true;
+      }
     }
     return false;
   }
@@ -534,7 +620,9 @@ public class MSJCoreProver {
 
   private void claBumpActivity(MSJClause clause) {
     clause.bumpActivity(params.cla_inc);
-    if (clause.activity() > 1e20) { claRescaleActivity(); }
+    if (clause.activity() > 1e20) {
+      claRescaleActivity();
+    }
   }
 
   private void claDecayActivity() {
@@ -574,7 +662,9 @@ public class MSJCoreProver {
   //////////////////////////////////
   public boolean solve(IntVec assumps) {
     simplifyDB();
-    if (!ok) { return false; }
+    if (!ok) {
+      return false;
+    }
     max_learnts = nClauses() * learntsize_factor;
     learntsize_adjust_confl = learntsize_adjust_start_confl;
     learntsize_adjust_cnt = (int) learntsize_adjust_confl;
@@ -591,7 +681,9 @@ public class MSJCoreProver {
             confl = new MSJClause(2);
             confl.set(1, not(p));
             confl.set(0, r.lit());
-          } else { confl = r; }
+          } else {
+            confl = r;
+          }
           analyzeFinal(confl, true);
           conflict.push(not(p));
         } else {
@@ -621,7 +713,9 @@ public class MSJCoreProver {
       status = search((int) (rest_base * restart_first));
       curr_restarts++;
     }
-    if (params.log) { System.out.print("===================================================================\n"); }
+    if (params.log) {
+      System.out.print("===================================================================\n");
+    }
     cancelUntil(0);
     return status == LBool.TRUE;
   }
