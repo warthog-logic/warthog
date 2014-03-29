@@ -23,11 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package pl.parsers
+package org.warthog.pl.parsers
 
-import pl.F
+import org.warthog.pl.F
 import org.specs2.mutable._
-import org.warthog.pl.parsers._
 import org.warthog.pl.knowledgecompilation.dnnf._
 
 /**

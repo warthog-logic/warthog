@@ -23,13 +23,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package pl.knowledgecompilation.dnnf
+package org.warthog.pl.knowledgecompilation.dnnf
 
 import org.warthog.generic.formulas.{Xor, Formula}
-import org.warthog.pl.formulas.PL
-import org.warthog.pl.knowledgecompilation.dnnf._
+import org.warthog.pl.formulas.{PLFormula, PL}
 import org.warthog.pl.parsers._
-import pl.F
+import org.warthog.pl.F
 import org.specs2.mutable._
 import org.specs2.specification._
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
@@ -39,14 +38,14 @@ import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, sat}
   * Tests for DNNF-Compilation and Operations
   */
 
-class DNNFCompilationTests extends Specification {
+class DNNFCompilationTest extends Specification {
 
   val ps = new Picosat
 
   args(sequential = true)
 
   def checkEquality(formula: Formula[PL], dnnf: DNNF, ps: Picosat, duration: Long = -1): Int = {
-    val checkFormula = Xor(formula, dnnf.asPLFormula).tseitinCNF
+    val checkFormula = new PLFormula(Xor(formula, dnnf.asPLFormula)).tseitinCNF
     var result = 0
     sat(ps) {
       solver =>
