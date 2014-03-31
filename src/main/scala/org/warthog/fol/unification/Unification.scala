@@ -50,21 +50,19 @@ object Unification {
   def unify(eqs: List[(FOLTerm, FOLTerm)], sub: Map[FOLVariable, FOLTerm]): Map[FOLVariable, FOLTerm] =
     eqs match {
       case Nil => sub
-
       case (v@FOLVariable(x), t) :: rest =>
         if (v == t)
           unify(rest, sub)
         else
           elim(v, t, rest, sub.map(x => (x._1, x._2.tsubst(Map(v -> t)))) + (v -> t))
-
       case (t, v@FOLVariable(x)) :: rest =>
         elim(v, t, rest, sub.map(x => (x._1, x._2.tsubst(Map(v -> t)))) + (v -> t))
-
       case (FOLFunction(f, fargs@_*), FOLFunction(g, gargs@_*)) :: rest =>
         if (f == g && fargs.length == gargs.length)
           unify(fargs.zip(gargs).toList ::: rest, sub)
         else
           throw new UnunifiableException
+      case _ => throw new UnunifiableException
     }
 
   def unify(tm0: FOLTerm, tm1: FOLTerm): Map[FOLVariable, FOLTerm] =
@@ -85,7 +83,7 @@ object Unification {
       unify(eqs, Map.empty[FOLVariable, FOLTerm])
       true
     } catch {
-      case _ => false
+      case _: Throwable => false
     }
 
   def unifyable(lit0: Formula[FOL], lit1: Formula[FOL]): Boolean = {

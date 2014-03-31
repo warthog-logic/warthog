@@ -27,7 +27,7 @@ package org.warthog.pl.knowledgecompilation
 
 import org.specs2.mutable._
 import org.warthog.pl.knowledgecompilation.bdd.BDDManager
-import org.warthog.pl.parsers._
+import org.warthog.pl.parsers.tptp._
 import org.warthog.pl.formulas.PLAtom
 
 /**

@@ -29,15 +29,18 @@ import util.parsing.combinator.{ PackratParsers, RegexParsers }
 import org.warthog.fol.formulas._
 import org.warthog.generic.formulas._
 import org.warthog.generic.parsers.RunParser
+import scala.language.implicitConversions
 
 /**
   * A parser for TPTP
   */
-class TPTP(fm: String) {
-  def fol: Formula[FOL] = new TPTPfofParser().run(fm).getOrElse(throw new Exception("Parsing Error!"))
+class TPTPFOL(fm: String) {
+  def fol: Formula[FOL] = new FOLParser().run(fm).getOrElse(throw new Exception("Parsing Error!")).f
 }
 
-class TPTPfofParser extends RegexParsers with PackratParsers with RunParser {
+class FOLParser extends RegexParsers with PackratParsers with RunParser {
+  implicit def folFormulaToFormulaFOL(fm: FOLFormula): Formula[FOL] = fm.f
+
   override type Elem = Char
 
   val allQuant = "!"
@@ -45,9 +48,9 @@ class TPTPfofParser extends RegexParsers with PackratParsers with RunParser {
 
   def infixPred: Parser[String] = """[=<>]""".r
 
-  def definedProp: PackratParser[Formula[FOL]] = ("$true" | "$false") ^^ {
-    case "$true"  => Verum()
-    case "$false" => Falsum()
+  def definedProp: PackratParser[FOLFormula] = ("$true" | "$false") ^^ {
+    case "$true"  => new FOLFormula(Verum())
+    case "$false" => new FOLFormula(Falsum())
   }
 
   def variable: PackratParser[FOLVariable] = """[A-Z][A-Za-z0-9_]*""".r ^^ (FOLVariable(_))
@@ -65,51 +68,51 @@ class TPTPfofParser extends RegexParsers with PackratParsers with RunParser {
         case functor ~ _           => FOLFunction(functor)
       }
 
-  def predicate: PackratParser[FOLPredicate] =
-    term ~ infixPred ~ term ^^ { case tm1 ~ inf ~ tm2 => FOLPredicate(inf, tm1, tm2) } |
+  def predicate: PackratParser[FOLFormula] =
+    term ~ infixPred ~ term ^^ { case tm1 ~ inf ~ tm2 => new FOLFormula(FOLPredicate(inf, tm1, tm2)) } |
       termName ~ opt("(" ~> rep1sep(term, ",") <~ ")") ^^ {
-        case functor ~ Some(terms) => FOLPredicate(functor, terms: _*)
-        case functor ~ _           => FOLPredicate(functor)
+        case functor ~ Some(terms) => new FOLFormula(FOLPredicate(functor, terms: _*))
+        case functor ~ _           => new FOLFormula(FOLPredicate(functor))
       }
 
   def variableList: PackratParser[List[FOLVariable]] =
-    "[" ~> rep1sep(variable, ",") <~ "]" ^^ (_.asInstanceOf[List[FOLVariable]])
+    "[" ~> rep1sep(variable, ",") <~ "]"
 
   def quantifier: PackratParser[String] = allQuant | exQuant
 
-  def quantifiedFormula: PackratParser[Formula[FOL]] = quantifier ~ variableList ~ ":" ~ formula ^^ {
-    case `allQuant` ~ variables ~ ":" ~ fm => FOLForAll(Set(variables: _*), fm)
-    case `exQuant` ~ variables ~ ":" ~ fm  => FOLExists(Set(variables: _*), fm)
+  def quantifiedFormula: PackratParser[FOLFormula] = quantifier ~ variableList ~ ":" ~ formula ^^ {
+    case `allQuant` ~ variables ~ ":" ~ fm => new FOLFormula(FOLForAll(Set(variables: _*), fm))
+    case `exQuant` ~ variables ~ ":" ~ fm  => new FOLFormula(FOLExists(Set(variables: _*), fm))
   }
 
-  lazy val literal: PackratParser[Formula[FOL]] =
-    ("~" ~ simp | simp) ^^ { case "~" ~ (n: Formula[FOL]) => -n; case n: Formula[FOL] => n }
+  lazy val literal: PackratParser[FOLFormula] =
+    ("~" ~ simp | simp) ^^ { case "~" ~ (n: FOLFormula) => new FOLFormula(-n); case n: FOLFormula => n }
 
-  lazy val conj: PackratParser[Formula[FOL]] = rep1sep(literal, "&") ^^ { _.reduceLeft(And(_, _)) }
+  lazy val conj: PackratParser[FOLFormula] = rep1sep(literal, "&") ^^ { _.reduceLeft(And(_, _)) }
 
-  lazy val disj: PackratParser[Formula[FOL]] = rep1sep(conj, "|") ^^ { _.reduceLeft(Or(_, _)) }
+  lazy val disj: PackratParser[FOLFormula] = rep1sep(conj, "|") ^^ { _.reduceLeft(Or(_, _)) }
 
-  lazy val simp: PackratParser[Formula[FOL]] =
+  lazy val simp: PackratParser[FOLFormula] =
     predicate |||
       definedProp |||
       quantifiedFormula |||
       ("(" ~ formula ~ ")" ^^ { case "(" ~ e ~ ")" => e })
 
-  lazy val impl: PackratParser[Formula[FOL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
-    case (e0: Formula[FOL]) ~ "=>" ~ (e1: Formula[FOL]) => Implication(e0, e1)
-    case (e0: Formula[FOL]) ~ "<=" ~ (e1: Formula[FOL]) => Implication(e1, e0)
-    case d: Formula[FOL]                                => d
+  lazy val impl: PackratParser[FOLFormula] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
+    case (e0: FOLFormula) ~ "=>" ~ (e1: FOLFormula) => new FOLFormula(Implication(e0, e1))
+    case (e0: FOLFormula) ~ "<=" ~ (e1: FOLFormula) => new FOLFormula(Implication(e1, e0))
+    case d: FOLFormula                                => d
   }
 
-  lazy val equiv: PackratParser[Formula[FOL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
-    case (e0: Formula[FOL]) ~ "<=>" ~ (e1: Formula[FOL]) => Equiv(e0, e1)
-    case (e0: Formula[FOL]) ~ "<~>" ~ (e1: Formula[FOL]) => Xor(e0, e1)
-    case d: Formula[FOL]                                 => d
+  lazy val equiv: PackratParser[FOLFormula] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
+    case (e0: FOLFormula) ~ "<=>" ~ (e1: FOLFormula) => new FOLFormula(Equiv(e0, e1))
+    case (e0: FOLFormula) ~ "<~>" ~ (e1: FOLFormula) => new FOLFormula(Xor(e0, e1))
+    case d: FOLFormula                                 => d
   }
 
-  lazy val formula: PackratParser[Formula[FOL]] = equiv
+  lazy val formula: PackratParser[FOLFormula] = equiv
 
-  type RootType = Formula[FOL]
+  type RootType = FOLFormula
 
   def root = formula
 }

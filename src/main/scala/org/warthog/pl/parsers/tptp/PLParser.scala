@@ -23,62 +23,65 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.parsers
+package org.warthog.pl.parsers.tptp
 
 import util.parsing.combinator._
-import org.warthog.pl.formulas.{ PL, PLAtom }
+import org.warthog.pl.formulas.{PLFormula, PL, PLAtom}
 import org.warthog.generic.formulas._
 import org.warthog.generic.parsers.RunParser
+import scala.language.implicitConversions
 
 /**
   * A parser for a TPTP oriented syntax of propositional logic
   */
 class TPTPPL(fm: String) {
-  def pl: Formula[PL] = new PLParser().run(fm).getOrElse(throw new Exception("Parsing Error!"))
+  def pl: Formula[PL] = new PLParser().run(fm).getOrElse(throw new Exception("Parsing Error!")).f
 }
 
 class PLParser extends RegexParsers with PackratParsers with RunParser {
+  implicit def folFormulaToFormulaFOL(fm: PLFormula): Formula[PL] = fm.f
+
   override type Elem = Char
 
-  lazy val variable: PackratParser[Formula[PL]] = """([A-Za-z0-9_]+)""".r ^^ (PLAtom(_))
+  lazy val variable: PackratParser[PLFormula] = """([A-Za-z0-9_]+)""".r ^^ (v => new PLFormula(PLAtom(v)))
 
-  lazy val const: PackratParser[Formula[PL]] = ("$true" | "$false") ^^ {
-    case "$true"  => Verum();
-    case "$false" => Falsum()
+  lazy val const: PackratParser[PLFormula] = ("$true" | "$false") ^^ {
+    case "$true"  => new PLFormula(Verum())
+    case "$false" => new PLFormula(Falsum())
   }
 
-  lazy val literal: PackratParser[Formula[PL]] = ("~" ~ simp | simp) ^^ {
-    case "~" ~ (n: Formula[PL]) => -n;
-    case n: Formula[PL]         => n
+  lazy val literal: PackratParser[PLFormula] = ("~" ~ simp | simp) ^^ {
+    case "~" ~ (n: PLFormula) => new PLFormula(-n)
+    case n: PLFormula         => n
   }
 
-  lazy val conj: PackratParser[Formula[PL]] = rep1sep(literal, "&") ^^ {
+  lazy val conj: PackratParser[PLFormula] = rep1sep(literal, "&") ^^ {
     _.reduceLeft(And(_, _))
   }
 
-  lazy val disj: PackratParser[Formula[PL]] = rep1sep(conj, "|") ^^ {
+  lazy val disj: PackratParser[PLFormula] = rep1sep(conj, "|") ^^ {
     _.reduceLeft(Or(_, _))
   }
 
-  lazy val simp: PackratParser[Formula[PL]] = variable ||| const ||| ("(" ~ expr ~ ")" ^^ {
+  lazy val simp: PackratParser[PLFormula] = variable ||| const ||| ("(" ~ expr ~ ")" ^^ {
     case "(" ~ e ~ ")" => e
   })
 
-  lazy val impl: PackratParser[Formula[PL]] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
-    case (e0: Formula[PL]) ~ "=>" ~ (e1: Formula[PL]) => Implication(e0, e1)
-    case (e0: Formula[PL]) ~ "<=" ~ (e1: Formula[PL]) => Implication(e1, e0)
-    case d: Formula[PL]                               => d
+  lazy val impl: PackratParser[PLFormula] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
+    case (e0: PLFormula) ~ "=>" ~ (e1: PLFormula) => new PLFormula(Implication(e0, e1))
+    case (e0: PLFormula) ~ "<=" ~ (e1: PLFormula) => new PLFormula(Implication(e1, e0))
+    case d: PLFormula                               => d
   }
 
-  lazy val equiv: PackratParser[Formula[PL]] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
-    case (e0: Formula[PL]) ~ "<=>" ~ (e1: Formula[PL]) => Equiv(e0, e1)
-    case (e0: Formula[PL]) ~ "<~>" ~ (e1: Formula[PL]) => Xor(e0, e1)
-    case d: Formula[PL]                                => d
+  lazy val equiv: PackratParser[PLFormula] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
+    case (e0: PLFormula) ~ "<=>" ~ (e1: PLFormula) => new PLFormula(Equiv(e0, e1))
+    case (e0: PLFormula) ~ "<~>" ~ (e1: PLFormula) => new PLFormula(Xor(e0, e1))
+    case d: PLFormula                                => d
   }
 
-  lazy val expr: PackratParser[Formula[PL]] = equiv
+  lazy val expr: PackratParser[PLFormula] = equiv
 
-  type RootType = Formula[PL]
+  type RootType = PLFormula
 
   def root = expr
 }

@@ -17,14 +17,14 @@ resolvers ++= Seq(
 
 scalaVersion := "2.10.4"
 
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
+
 parallelExecution in Test := false
 
 initialCommands in console := """
     import org.warthog.generic.formulas._
     import org.warthog.pl.formulas._
     import org.warthog.fol.formulas._
-    import org.warthog.pl.parsers._
+    import org.warthog.pl.parsers.tptp._
     import org.warthog.fol.parsers.tptp._
 """
-
-//scalacOptions ++= Seq("-unchecked", "-deprecation")

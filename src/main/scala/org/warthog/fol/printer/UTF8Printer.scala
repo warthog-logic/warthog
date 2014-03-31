@@ -34,7 +34,7 @@ import org.warthog.fol.formulas._
   */
 object UTF8Printer extends SuperPrinter[FOL] {
   override def print[T <: FOL](f: Formula[T]) = f match {
-    case p: Quantifier[FOL] => {
+    case p: Quantifier[_] => {
       val form = if (p.priority == p.arg.priority)
         "%s%s".format(printTerm(p.x.asInstanceOf[FOLTerm]), print(p.arg))
       else
