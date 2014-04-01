@@ -48,9 +48,9 @@ object PigeonHoleGenerator {
     case 1 => And(PLAtom("v1"), PLAtom("v2"))
     case _ => And((for {
       i <- 1 to n + 1
-      val or = Or((for {
+      or = Or((for {
         j <- 1 to n
-        val v = PLAtom("v" + (n * (i - 1) + j))
+        v = PLAtom("v" + (n * (i - 1) + j))
       } yield v): _*)
     } yield or): _*)
   }
@@ -61,7 +61,7 @@ object PigeonHoleGenerator {
       j <- 1 to n
       i <- 1 to n
       k <- i + 1 to n + 1
-      val or = -PLAtom("v" + (n * (i - 1) + j)) || -PLAtom("v" + (n * (k - 1) + j))
+      or = -PLAtom("v" + (n * (i - 1) + j)) || -PLAtom("v" + (n * (k - 1) + j))
     } yield or): _*)
   }
 }

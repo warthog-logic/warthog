@@ -26,7 +26,7 @@
 package org.warthog.pl.datastructures
 
 import org.specs2.mutable.Specification
-import org.warthog.pl.parsers._
+import org.warthog.pl.parsers.tptp._
 import org.warthog.pl.datastructures.cnf.{ PLLiteral, MutablePLClause => Clause }
 
 /**

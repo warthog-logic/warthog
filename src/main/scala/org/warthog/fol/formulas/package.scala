@@ -28,6 +28,7 @@ package org.warthog.fol
 import org.warthog.generic.formulas.Formula
 import printer.UTF8Printer
 import unification.Unification
+import scala.language.implicitConversions
 
 /**
   * Package object for first order logic

@@ -25,6 +25,8 @@
 
 package org.warthog.pl.decisionprocedures
 
+import scala.language.implicitConversions
+
 /**
   * Package Object for SAT Solvers
   */

@@ -23,13 +23,15 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl
+package org.warthog.pl.parsers
+
+import scala.language.implicitConversions
 
 /**
   * Package object for the TPTP PL parser
   * (implicit conversion of Strings)
   */
-package object parsers {
+package object tptp {
   implicit def stringToPL(fm: String) = new TPTPPL(fm)
   implicit def stringToDNNF(fm: String) = new TPTPDNNF(fm)
 }

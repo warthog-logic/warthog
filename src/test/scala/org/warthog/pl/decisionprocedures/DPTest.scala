@@ -27,7 +27,7 @@ package org.warthog.pl.decisionprocedures
 
 import org.specs2.mutable.Specification
 import org.warthog.pl.F
-import org.warthog.pl.parsers._
+import org.warthog.pl.parsers.tptp._
 import org.warthog.pl.decisionprocedures.dpll.DPLL
 import org.warthog.pl.generators.PigeonHoleGenerator
 

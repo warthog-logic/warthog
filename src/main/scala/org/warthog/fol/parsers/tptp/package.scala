@@ -25,10 +25,12 @@
 
 package org.warthog.fol.parsers
 
+import scala.language.implicitConversions
+
 /**
   * Package object for the TPTP parser
   * (implicit conversion of Strings)
   */
 package object tptp {
-  implicit def stringToTPTP(fm: String) = new TPTP(fm)
+  implicit def stringToTPTP(fm: String) = new TPTPFOL(fm)
 }

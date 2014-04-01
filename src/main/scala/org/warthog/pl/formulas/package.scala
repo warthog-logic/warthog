@@ -27,6 +27,7 @@ package org.warthog.pl
 
 import org.warthog.pl.printer.UTF8Printer
 import org.warthog.generic.formulas.Formula
+import scala.language.implicitConversions
 
 /**
   * Package object for propositional logic

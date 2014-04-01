@@ -214,6 +214,7 @@ object cardinality {
     def lt(p: Int) = (new CardinalityNetwork(p - 1)) <= (list, "dummy_" + name, "aux_" + name)
   }
 
+  import scala.language.implicitConversions
   implicit def toFoo(name: String) = new CardinalityBuilder(name)
 
   def apply(f: => (List[PLAtom], List[Formula[PL]])) = f

@@ -27,7 +27,7 @@ package org.warthog.pl.transformations
 
 import org.specs2.mutable._
 import org.warthog.pl.formulas.PLAtom
-import org.warthog.pl.parsers._
+import org.warthog.pl.parsers.tptp._
 
 /**
   * Basic tests for propositional generic
