@@ -28,6 +28,7 @@ package org.warthog.pl.parsers
 import org.warthog.pl.F
 import org.specs2.mutable._
 import org.warthog.pl.knowledgecompilation.dnnf._
+import org.warthog.pl.parsers.tptp._
 
 /**
  * Test cases for the propositional logic parser

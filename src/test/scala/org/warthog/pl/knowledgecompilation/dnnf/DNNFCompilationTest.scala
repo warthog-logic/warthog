@@ -27,7 +27,7 @@ package org.warthog.pl.knowledgecompilation.dnnf
 
 import org.warthog.generic.formulas.{Xor, Formula}
 import org.warthog.pl.formulas.{PLFormula, PL}
-import org.warthog.pl.parsers._
+import org.warthog.pl.parsers.tptp._
 import org.warthog.pl.F
 import org.specs2.mutable._
 import org.specs2.specification._

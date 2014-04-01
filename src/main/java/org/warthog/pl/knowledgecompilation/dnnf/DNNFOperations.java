@@ -30,7 +30,14 @@ public class DNNFOperations extends MSJCoreProver {
 
   protected void handleConflict(MSJClause conflict) {
     IntVec learntClause = new IntVec();
-    int backtrackLevel = analyze(conflict, learntClause);
+    int backtrackLevel;
+    try {
+      backtrackLevel = analyze(conflict, learntClause);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      System.out.println("Conflict: " + conflict);
+      System.out.println("learnt clause: " + learntClause);
+      throw e;
+    }
         /*
         // compute new assertionLevel
         int highestLevel = learntClause.get(0);
@@ -327,6 +334,8 @@ public class DNNFOperations extends MSJCoreProver {
    * @return True, if the solver state is satisfiable, false otherwise
    */
   public boolean recursiveSolve() {
+    if (!ok)
+      return false;
     int i = 0;
     while (i < vars.size() && vars.get(i).assignment() != LBool.UNDEF) i++;
     if (i >= vars.size())

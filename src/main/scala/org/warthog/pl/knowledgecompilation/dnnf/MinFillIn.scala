@@ -206,6 +206,7 @@ object MinFillIn {
     val cliques = g.allPotMaxCliques
     //val cliquesWithAssiciatedBlocks = cliques.map(c => g.fullComponents(c, c))
 
+    import scala.language.implicitConversions
     implicit def optionToInt(x: Option[Int]) = x.getOrElse(Int.MaxValue)
     def optionAdd(a: Option[Int], b: Option[Int]) = if (a == None || b == None) None else Some(a.get + b.get)
     def blockInclusionMinimal(b: Block[T]) = !blocks.exists(b1 => b.minSep.intersect(b1.minSep) == b && b != b1)

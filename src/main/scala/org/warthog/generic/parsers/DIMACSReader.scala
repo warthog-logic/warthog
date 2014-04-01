@@ -26,7 +26,7 @@
 package org.warthog.generic.parsers
 
 import org.warthog.generic.formulas._
-import org.warthog.pl.formulas.{ PLAtom, PL }
+import org.warthog.pl.formulas.PL
 import org.warthog.pl.datastructures.cnf.{ PLLiteral, ImmutablePLClause }
 import org.warthog.fol.formulas._
 import org.warthog.fol.datastructures.cnf.{ FOLLiteral, ImmutableFOLClause }
@@ -43,6 +43,8 @@ import org.warthog.pl.formulas.PLAtom
   *
   * - a Formula[FOL]
   * - a (List[(String, Set[Int])], List[ImmutableFOLClause])
+  *
+  * TODO: Read also dnf
   */
 object DIMACSReader {
 
@@ -135,14 +137,13 @@ object DIMACSReader {
     var preambleRead = false
     var numberOfClausesInPreamble = 0
     var numberOfVarsInPreamble = 0
-    var clauseCounter = 0
-    var varCounter = Set[Int]()
 
     val lines = io.Source.fromFile(path).getLines()
     var lineNumber = 0
 
     var quantifiers = List[(String, Set[Int])]()
 
+    var vars = Set[Int]()
     var clauses = List[Set[Int]]()
     var currentClause = Set[Int]()
 
@@ -157,14 +158,21 @@ object DIMACSReader {
             if (preambleRead)
               System.err.println("Line " + lineNumber + ": More than one preamble --> Use the first")
             else {
-              preambleRead = true
               val tokens = line.split(" ")
               if (tokens.size == 4) {
-                try {
-                  numberOfVarsInPreamble = tokens(2).toInt
-                  numberOfClausesInPreamble = tokens(3).toInt
-                } catch {
-                  case e: NumberFormatException => System.err.println("Line " + lineNumber + ": Number format exception in preamble --> Skip line")
+                if (tokens(1).toLowerCase == "cnf")
+                  try {
+                    numberOfVarsInPreamble = tokens(2).toInt
+                    numberOfClausesInPreamble = tokens(3).toInt
+                    preambleRead = true
+                  } catch {
+                    case e: NumberFormatException =>
+                      System.err.println("Line " + lineNumber + ": Number format exception in preamble --> Skip line")
+                      numberOfClausesInPreamble = 0
+                      numberOfVarsInPreamble = 0
+                  }
+                else {
+                  System.err.println("Line " + lineNumber + ": No cnf specified --> Skip line")
                 }
               } else
                 System.err.println("Line " + lineNumber + ": Not 4 tokens in preamble --> Skip line")
@@ -180,9 +188,8 @@ object DIMACSReader {
               case e: NumberFormatException => System.err.println("Line " + lineNumber + ": Number format exception --> Skip literal and rest of line")
             }
             if (currentClause.contains(0)) {
-              clauseCounter += 1
               currentClause = currentClause.filterNot(_ == 0)
-              varCounter ++= currentClause.map(_.abs)
+              vars ++= currentClause.map(_.abs)
               clauses :+= currentClause
               currentClause = Set[Int]()
             }
@@ -191,16 +198,16 @@ object DIMACSReader {
     }
 
     if (preambleRead) {
-      if (numberOfClausesInPreamble != clauseCounter)
-        System.err.println("Number of Clauses in Preamble: " + numberOfClausesInPreamble + ", " + "Number of computed Clauses: " + clauseCounter)
-      if (numberOfVarsInPreamble != varCounter.size)
-        System.err.println("Number of Vars in Preamble: " + numberOfVarsInPreamble + ", " + "Number of computed Vars: " + varCounter.size)
+      if (numberOfClausesInPreamble != clauses.size)
+        System.err.println("Number of Clauses in Preamble: " + numberOfClausesInPreamble + ", " + "Number of computed Clauses: " + clauses.size)
+      if (numberOfVarsInPreamble != vars.size)
+        System.err.println("Number of Vars in Preamble: " + numberOfVarsInPreamble + ", " + "Number of computed Vars: " + vars.size)
     }
 
     if (quantifiers.isEmpty) // dimacs
       (None, clauses)
     else { //qdimacs
-      val unquantified = varCounter filterNot (quantifiers.map(_._2).flatten.contains(_))
+      val unquantified = vars filterNot (quantifiers.map(_._2).flatten.contains(_))
       if (!unquantified.isEmpty) quantifiers +:= (Formula.EXISTS, unquantified) // prepend
 
       (Some(quantifiers), clauses)
@@ -212,16 +219,16 @@ object DIMACSReader {
     * @param path The path to the dimacs-file
     * @return A tupel (#Variables,#Clauses)
     */
-  def numberOfVariablesAndClauses(path: String): (Int, Int) = {
+  def numberOfVariablesAndClauses(path: String): Option[(Int, Int)] = {
     val lines = io.Source.fromFile(path).getLines()
     lines.find(_(0) == 'p') match {
-      case None => (-1, -1)
+      case None => None
       case Some(line) =>
         val tokens = line.trim.replaceAll("\\s+", " ").split(" ")
         try {
-          (tokens(2).toInt, tokens(3).toInt)
+          Some(tokens(2).toInt, tokens(3).toInt)
         } catch {
-          case _ => (-1, -1)
+          case _: Throwable => None
         }
     }
   }

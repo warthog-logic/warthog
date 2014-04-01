@@ -177,7 +177,7 @@ package object dnnf {
       println("Time: " + (end - start) + "ms")
       println("Nodes: " + DNNF.nodeCount(dnnf))
       println("Nodes2: " + DNNF.nodeCount2(dnnf))
-      if (DNNF.nodeCount2(dnnf) < 1000000 || forceCounting) println("Models: " + DNNF.countModels(dnnf, DIMACSReader.numberOfVariablesAndClauses(dimacsFile)._1))
+      if (DNNF.nodeCount2(dnnf) < 1000000 || forceCounting) println("Models: " + DNNF.countModels(dnnf, DIMACSReader.numberOfVariablesAndClauses(dimacsFile).getOrElse(-1,-1)._1))
   }
 
   def getSimpleDTree(formula: Formula[PL]) = {
