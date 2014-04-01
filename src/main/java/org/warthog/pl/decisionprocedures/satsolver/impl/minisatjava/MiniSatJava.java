@@ -11,14 +11,14 @@ import java.util.StringTokenizer;
  * Command line interface for MiniSATJava
  */
 public class MiniSatJava {
-  static MSJCoreProver prover = new MSJCoreProver();
 
   public static void main(String[] args) {
     assert args.length > 1 : "Not enough arguments";
     try {
+      MSJCoreProver prover = new MSJCoreProver();
       FileReader reader = new FileReader(args[0]);
       BufferedReader in = new BufferedReader(reader);
-      readDimacs(in);
+      readDimacs(in, prover);
       long start = System.currentTimeMillis();
       boolean res = prover.solve();
       long end = System.currentTimeMillis();
@@ -39,7 +39,15 @@ public class MiniSatJava {
     }
   }
 
-  private static void readDimacs(BufferedReader br) throws Exception {
+  public static boolean solve(String file) throws Exception {
+    MSJCoreProver prover = new MSJCoreProver();
+    FileReader reader = new FileReader(file);
+    BufferedReader in = new BufferedReader(reader);
+    readDimacs(in, prover);
+    return prover.solve();
+  }
+
+  private static void readDimacs(BufferedReader br, MSJCoreProver prover) throws Exception {
     int numberOfVarsInPreamble = 0;
     boolean preambleRead = false;
     IntVec clause = new IntVec();

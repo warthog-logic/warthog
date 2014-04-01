@@ -9,5 +9,5 @@ public class SearchParams {
   public double cla_decay = 1;
   public int var_decay = 4;
   public int var_decay_rate = 256;
-  public boolean log = true;
+  public boolean log = false;
 }

@@ -1,0 +1,16 @@
+c
+c This is a simple CNF formula in DIMACS Format
+c SAT: false
+c Optimum: 5
+c
+p cnf 5 10
+1 0
+2 0
+3 0
+4 0
+5 0
+-1 0
+-2 0
+-3 0
+-4 0
+-5 0

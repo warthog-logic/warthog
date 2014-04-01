@@ -79,7 +79,7 @@ public class MSJVariable implements ComparableWithIndex<MSJVariable> {
 
   @Override
   public String toString() {
-    return "" + num;
+    return "" + num + assignment();
   }
 
   @Override
