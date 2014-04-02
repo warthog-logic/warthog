@@ -29,14 +29,15 @@ public class DNNFOperations extends MSJCoreProver {
   }
 
   protected void handleConflict(MSJClause conflict) {
-    IntVec learntClause = new IntVec();
-    int backtrackLevel;
-    try {
-      backtrackLevel = analyze(conflict, learntClause);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      System.out.println("Conflict: " + conflict);
-      System.out.println("learnt clause: " + learntClause);
-      throw e;
+    if (decisionLevel() > 0) {
+      IntVec learntClause = new IntVec();
+      assertionLevel = analyze(conflict, learntClause);
+      lastLearnt = learntClause;
+    } else {
+      // solver unsat
+      analyzeFinal(conflict, false);
+      lastLearnt = null;
+      assertionLevel = -1;
     }
         /*
         // compute new assertionLevel
@@ -53,8 +54,6 @@ public class DNNFOperations extends MSJCoreProver {
         }
         assertionLevel = sndHighestLevel;
         */
-    lastLearnt = learntClause;
-    assertionLevel = backtrackLevel;
 
     //      LearntClause learnt=new LearntClause(this);
     //      int i=trail.size()-1,
@@ -237,7 +236,6 @@ public class DNNFOperations extends MSJCoreProver {
       throw new RuntimeException("assertCdLiteral called though not at assertion level!");
 
     int propLit = lastLearnt.get(0);
-    boolean failure = false;
 
     //System.out.println(lastLearnt);
     newClause(lastLearnt, true);

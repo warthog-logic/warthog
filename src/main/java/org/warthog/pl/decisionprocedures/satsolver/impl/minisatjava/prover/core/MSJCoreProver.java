@@ -452,7 +452,7 @@ public class MSJCoreProver {
     return true;
   }
 
-  private void analyzeFinal(MSJClause confl, boolean skipFirst) {
+  protected void analyzeFinal(MSJClause confl, boolean skipFirst) {
     conflict.clear();
     if (rootLevel == 0) {
       return;
