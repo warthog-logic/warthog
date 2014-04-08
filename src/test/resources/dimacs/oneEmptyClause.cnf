@@ -1,0 +1,7 @@
+c
+c A formula with one empty clause
+c SAT: false
+c Optimum: 1
+c
+p cnf 0 1
+0
