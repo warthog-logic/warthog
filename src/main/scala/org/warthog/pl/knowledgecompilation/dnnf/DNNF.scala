@@ -385,6 +385,9 @@ object DNNF {
     * @return The number of models of the specified d-DNNF
     */
   def countModels(dnnf: DNNF, vars: Int): BigInt = {
+    if(dnnf == False)
+      return BigInt(0)
+
     val seen = JavaConversions.mapAsScalaMap[DNNF, BigInt](new IdentityHashMap[DNNF, BigInt])
     def count(dnnf: DNNF): BigInt = seen.getOrElseUpdate(dnnf, dnnf match {
       case Or(args)        => args.foldLeft(BigInt(0))(_ + count(_))
@@ -393,6 +396,7 @@ object DNNF {
       case Lit(_, _)       => BigInt(1)
       case _               => throw new Exception("DNNF still contains boolean constants, please simplify before counting models!")
     })
+
     val smoothed = smooth(dnnf)
     //if (!isSmooth(smoothed)) println("Not smooth!!")  /* Debugging */
     count(smoothed) * BigInt(2).pow(vars - DNNF.varSet(smoothed).size)

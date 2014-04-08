@@ -87,8 +87,21 @@ object C2DDTreeGenerator extends Generator {
    * @param dimacsFile The dimacs-File. Each clause in this file MUST be defined in just ONE line!
    * @return The dtree
    */
-  def generateDTree(dimacsFile: String) = {
-    val dTreeLines = createDTreeWithC2D(dimacsFile)
+  def generateDTree(dimacsFile: String): DTree = {
+    val dtreeFile = dimacsFile + ".dtree"
+    if (!new File(dtreeFile).exists())
+      createDTreeWithC2D(dimacsFile)
+    readFromC2DFile(dimacsFile)
+  }
+
+  /**
+   * Reads a c2dDtreeFile that it assumes to be called @code{dimacsFile + ".dtree"}
+   * @param dimacsFile The dimacsFile. The corresponding c2dDTreeFile is assumed to be called @code{dimacsFile + ".dtree"}
+   * @return The dtree
+   */
+  def readFromC2DFile(dimacsFile: String): DTree = {
+    val dtreeFile = dimacsFile + ".dtree"
+    val dTreeLines = io.Source.fromFile(dtreeFile).getLines.drop(1).toArray
     val dimacsLines = io.Source.fromFile(dimacsFile).getLines.
       map(_.trim).map(_.replaceAll("\\s+", " ")).
       filterNot(l => l.isEmpty | l.startsWith("c") | l.startsWith("p")).
@@ -105,22 +118,21 @@ object C2DDTreeGenerator extends Generator {
           DTreeNode(dTreeTmp(ns(1).toInt), dTreeTmp(ns(2).toInt))
         case _ => throw new Exception("")
       }
-
     dTreeTmp.last
   }
 
   /**
    * Uses the c2d-Compiler to produce a DTree-file from the specified dimacs-file
-   * The lines of the resulting file will be returned as an array of strings
+   * The resulting file will be in "'dimacsFile'.dtree"
    * (The c2d-Compiler will be interrupted after having created the dtree,
    * since there is no way to only produce the dtree-file without computing the dnnf)
    * @param dimacsFile The dimacs-file for which the dtree should be created
    * @param method The method to use for DTree-Generation, the default value is 0 which will usually yield the best results
    *               Further information can be accessed in the c2d-manual
-   * @return An array of strings of the file created by the c2d-compiler
+   * @return Unit -- the resulting file will be in "'dimacsFile'.dtree"
    */
   /* TODO: Test this method on linux */
-  def createDTreeWithC2D(dimacsFile: String, method: Int = 0): Array[String] = {
+  def createDTreeWithC2D(dimacsFile: String, method: Int = 4): Unit = {
     var p: Process = null
     var dtreeCreated = false
     val log = new StringBuilder
@@ -137,7 +149,8 @@ object C2DDTreeGenerator extends Generator {
 
     // Create the path to the c2d-compiler
     val sep = "/"
-    val lib = System.getProperty("warthog.libs") + sep + "dnnf" + sep + "c2d" + sep
+    //val lib = System.getProperty("warthog.libs") + sep + "dnnf" + sep + "c2d" + sep
+    val lib = "lib/dnnf/c2d/"
     val c2d =
       if (Platform.isLinux())
         lib + "linux" + sep + "c2d"
@@ -155,13 +168,6 @@ object C2DDTreeGenerator extends Generator {
     if (!dtreeCreated)
       throw new Exception("DTree could not be created! Exit-Value " + exit + "\n\n c2d-output:\n" + log)
     else if (verbose) println("DTree created.")
-
-    val dtreeFile = dimacsFile + ".dtree"
-    // c2d-compiler will always store the dtree in file "<dimacsFile>.dtree"
-    val result = io.Source.fromFile(dtreeFile).getLines.drop(1).toArray
-    if (!new File(dtreeFile).delete)
-      println("Note: The dtree-file produced by c2d at " + dtreeFile + " could not be deleted!")
-    result
   }
 
 }

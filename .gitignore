@@ -3,3 +3,5 @@ target
 warthog.iml
 .idea
 .idea_modules
+src/test/resources/automotiveFormulas/
+lib/dnnf/c2d/

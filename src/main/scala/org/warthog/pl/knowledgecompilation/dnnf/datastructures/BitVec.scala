@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.knowledgecompilation.dnnf
+package org.warthog.pl.knowledgecompilation.dnnf.datastructures
 
 /**
   * Representation of a Bit Vector

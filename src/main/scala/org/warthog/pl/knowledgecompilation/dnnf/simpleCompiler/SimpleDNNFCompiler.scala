@@ -29,6 +29,7 @@ import dtree._
 import org.warthog.pl.knowledgecompilation.dnnf._
 import org.warthog.pl.knowledgecompilation.dnnf.DNNF._
 import collection.mutable.{ WeakHashMap, HashMap => MutableHashMap }
+import org.warthog.pl.knowledgecompilation.dnnf.datastructures.BitVec
 
 /**
   * A Simple Compiler for d-DNNF (deterministic DNNF) according to the algorithm of

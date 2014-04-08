@@ -31,6 +31,7 @@ import scala.collection.JavaConverters._
 import collection.mutable.{ WeakHashMap, HashMap => MutableHashMap }
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.core.MSJCoreProver
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.LBool
+import org.warthog.pl.knowledgecompilation.dnnf.datastructures.BitVec
 
 /**
   * An Advanced Compiler for d-DNNF (deterministic DNNF) according to the algorithm of

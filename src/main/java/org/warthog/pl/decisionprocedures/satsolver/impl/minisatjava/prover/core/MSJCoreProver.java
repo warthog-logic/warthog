@@ -131,7 +131,7 @@ public class MSJCoreProver {
     return clause;
   }
 
-  private void addBinaryClause(IntVec clauseVec, boolean learnt) {
+  protected void addBinaryClause(IntVec clauseVec, boolean learnt) {
     watches.get(not(clauseVec.get(0))).push(new MSJClause(1, clauseVec.get(1)));
     watches.get(not(clauseVec.get(1))).push(new MSJClause(1, clauseVec.get(0)));
     if (learnt) {
@@ -143,7 +143,7 @@ public class MSJCoreProver {
     stats.n_bin_clauses++;
   }
 
-  private void addNAryClause(IntVec clauseVec, boolean learnt) {
+  protected void addNAryClause(IntVec clauseVec, boolean learnt) {
     MSJClause clause = new MSJClause(learnt, clauseVec);
     if (learnt) {
       int sndMax = 1;

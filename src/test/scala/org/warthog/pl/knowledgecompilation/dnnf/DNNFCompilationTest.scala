@@ -33,6 +33,10 @@ import org.specs2.mutable._
 import org.specs2.specification._
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, sat}
+import org.warthog.generic.parsers.DIMACSReader
+import org.warthog.pl.knowledgecompilation.dnnf.DNNFCompilation._
+import java.io.File
+import org.specs2.control.IncludeExcludeStackTraceFilter
 
 /**
   * Tests for DNNF-Compilation and Operations
@@ -40,9 +44,23 @@ import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, sat}
 
 class DNNFCompilationTest extends Specification {
 
-  val ps = new Picosat
+  /**
+   * Execute time expensive tests
+   */
+  val expensiveTests = false
+
+  object MyStackTraceFilter extends IncludeExcludeStackTraceFilter(
+    Seq(),
+    Seq("org.specs2", "scalaz\\.", "scala\\.", "sbt\\.", "^java\\.", "com.intellij", "org.junit", "org.eclipse.jdt"))
+
+  args.report(traceFilter = MyStackTraceFilter)
 
   args(sequential = true)
+
+  val ps = new Picosat
+
+  private def getFileString(file: String, kind: String) =
+    List("src", "test", "resources", kind, file).mkString(File.separator)
 
   def checkEquality(formula: Formula[PL], dnnf: DNNF, ps: Picosat, duration: Long = -1): Int = {
     val checkFormula = new PLFormula(Xor(formula, dnnf.asPLFormula)).tseitinCNF
@@ -69,10 +87,10 @@ class DNNFCompilationTest extends Specification {
 
   def picoCheck(f: Formula[PL]): Fragments =
     "Checking equality of " + f + " and its compiled DNNF using Picosat" should {
-      ("return true using the Simple Compiler") in {
+      "return true using the Simple Compiler" in {
         checkEquality(f, compile(Simple, f), ps) must be greaterThan 0
       }
-      ("return true using the Advanced Compiler") in {
+      "return true using the Advanced Compiler" in {
         checkEquality(f, compile(Advanced, f), ps) must be greaterThan 0
       }
     }
@@ -96,4 +114,32 @@ class DNNFCompilationTest extends Specification {
   picoCheck(F.nxoyoz.pl)
   picoCheck(F.xyoz_br.pl)
   picoCheck(F.xorequiv1_br.pl)
+
+  "Model count" should {
+    "be 1511104 for formula uf150-010.dnf" in {
+      val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-010.cnf", "dimacs"))
+      val vars = formula.vars.size
+      DNNF.countModels(compile(Advanced, formula), vars) must be equalTo BigInt("1511104")
+    }
+    "be 67584 for formula uf150-027.dnf" in {
+      val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-027.cnf", "dimacs"))
+      val vars = formula.vars.size
+      DNNF.countModels(compile(Advanced, formula), vars) must be equalTo BigInt("67584")
+    }
+  }
+
+  if (expensiveTests && (new File(getFileString("", "automotiveFormulas")) exists ())) {
+    "Model count" should {
+      "be 30401807433546007798154659399137233759263265705164800 for formula bmw_00004_sat.cnf" in {
+        val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00004_sat.cnf", "automotiveFormulas")).vars.size
+        DNNF.countModels(compileWithC2DDTree(getFileString("bmw_00004_sat.cnf", "automotiveFormulas")), vars) must
+          be equalTo BigInt("30401807433546007798154659399137233759263265705164800")
+      }
+      "be 0 for formula bmw_00052_unsat.cnf" in {
+        val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00052_unsat.cnf", "automotiveFormulas")).vars.size
+        DNNF.countModels(compileWithC2DDTree(getFileString("bmw_00052_unsat.cnf", "automotiveFormulas")), vars) must
+          be equalTo BigInt("0")
+      }
+    }
+  }
 }
