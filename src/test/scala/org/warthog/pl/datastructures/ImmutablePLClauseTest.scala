@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2011, Andreas J. Kuebler & Christoph Zengler
+* Copyright (c) 2011-2014, Andreas J. Kuebler & Christoph Zengler
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
