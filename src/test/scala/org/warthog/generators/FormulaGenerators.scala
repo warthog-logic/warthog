@@ -78,7 +78,7 @@ object FormulaGenerators {
           FOLPredicate(name, terms: _*)
 
       def genAtom(termDepth: Int): Gen[Formula[FOL]] = Gen.oneOf(
-        genPredicate(termDepth), Gen.value(Verum()), Gen.value(Falsum())
+        genPredicate(termDepth), Gen.const(Verum()), Gen.const(Falsum())
       )
 
       def genNary(depth: Int): Gen[Formula[FOL]] =
