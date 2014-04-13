@@ -163,12 +163,16 @@ object DNNF {
     * @param dnnf The dnnf
     * @return The variable set of the dnnf
     */
-  def varSet(dnnf: DNNF): Set[String] = dnnf match {
-    case And(args)       => args.map(varSet).foldLeft(Set[String]())((a, b) => a union b)
-    case Or(args)        => args.map(varSet).foldLeft(Set[String]())((a, b) => a union b)
-    case Lit(v, _)       => Set(v.toString)
-    case StringLit(v, _) => Set(v)
-    case _               => Set()
+  def varSet(dnnf: DNNF): Set[String] = {
+    val seen = JavaConversions.mapAsScalaMap[DNNF, Set[String]](new IdentityHashMap[DNNF, Set[String]])
+    def vs(dnnf: DNNF): Set[String] = seen.getOrElseUpdate(dnnf, dnnf match {
+      case And(args)       => args.map(vs).foldLeft(Set[String]())((a, b) => a union b)
+      case Or(args)        => args.map(vs).foldLeft(Set[String]())((a, b) => a union b)
+      case Lit(v, _)       => Set(v.toString)
+      case StringLit(v, _) => Set(v)
+      case _               => Set()
+    })
+    vs(dnnf)
   }
 
   /**
@@ -177,12 +181,16 @@ object DNNF {
     * @param dnnf The dnnf
     * @return The variable set of the dnnf
     */
-  def intVarSet(dnnf: DNNF): Set[Int] = dnnf match {
-    case And(args)       => args.map(intVarSet).foldLeft(Set[Int]())((a, b) => a union b)
-    case Or(args)        => args.map(intVarSet).foldLeft(Set[Int]())((a, b) => a union b)
-    case Lit(v, _)       => Set(v)
-    case StringLit(v, _) => throw new Exception("StringLit found!")
-    case _               => Set()
+  def intVarSet(dnnf: DNNF): Set[Int] = {
+    val seen = JavaConversions.mapAsScalaMap[DNNF, Set[Int]](new IdentityHashMap[DNNF, Set[Int]])
+    def vs(dnnf: DNNF): Set[Int] = seen.getOrElseUpdate(dnnf, dnnf match {
+      case And(args)       => args.map(vs).foldLeft(Set[Int]())((a, b) => a union b)
+      case Or(args)        => args.map(vs).foldLeft(Set[Int]())((a, b) => a union b)
+      case Lit(v, _)       => Set(v)
+      case StringLit(v, _) => throw new Exception("StringLit found!")
+      case _               => Set()
+    })
+    vs(dnnf)
   }
 
   /**
@@ -361,8 +369,8 @@ object DNNF {
     def smoo(dnnf: DNNF): DNNF = seen.getOrElseUpdate(dnnf, dnnf match {
       case Or(args) =>
         val atoms = varSet(dnnf)
-        Or(args.map(arg =>
-          smoo(And(List(arg) ++ (atoms -- varSet(arg)).map(a => Or(List(StringLit(a, true), StringLit(a, false))))))))
+        Or(args.map(smoo).map(arg =>
+          And(arg :: (atoms -- varSet(arg)).map(a => Or(List(StringLit(a, true), StringLit(a, false)))).toList)))
       case And(args) => And(args.map(smoo))
       case other     => other
     })
@@ -391,14 +399,14 @@ object DNNF {
     val seen = JavaConversions.mapAsScalaMap[DNNF, BigInt](new IdentityHashMap[DNNF, BigInt])
     def count(dnnf: DNNF): BigInt = seen.getOrElseUpdate(dnnf, dnnf match {
       case Or(args)        => args.foldLeft(BigInt(0))(_ + count(_))
-      case And(args)       => if (args.isEmpty) BigInt(0) else args.foldLeft(BigInt(1))(_ * count(_))
+      case And(args)       => args.foldLeft(BigInt(1))(_ * count(_))
       case StringLit(_, _) => BigInt(1)
       case Lit(_, _)       => BigInt(1)
       case _               => throw new Exception("DNNF still contains boolean constants, please simplify before counting models!")
     })
 
     val smoothed = smooth(dnnf)
-    //if (!isSmooth(smoothed)) println("Not smooth!!")  /* Debugging */
+    //  correct: assert(isSmooth(smoothed))
     count(smoothed) * BigInt(2).pow(vars - DNNF.varSet(smoothed).size)
   }
 

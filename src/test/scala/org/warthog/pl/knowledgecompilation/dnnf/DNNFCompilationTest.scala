@@ -39,15 +39,15 @@ import java.io.File
 import org.specs2.control.IncludeExcludeStackTraceFilter
 
 /**
-  * Tests for DNNF-Compilation and Operations
-  */
+ * Tests for DNNF-Compilation and Operations
+ */
 
 class DNNFCompilationTest extends Specification {
 
   /**
    * Execute time expensive tests
    */
-  val expensiveTests = false
+  val expensiveTests = true
 
   object MyStackTraceFilter extends IncludeExcludeStackTraceFilter(
     Seq(),
@@ -66,8 +66,7 @@ class DNNFCompilationTest extends Specification {
     val checkFormula = new PLFormula(Xor(formula, dnnf.asPLFormula)).tseitinCNF
     var result = 0
     sat(ps) {
-      solver =>
-      {
+      solver => {
         solver.add(checkFormula)
         result = -solver.sat(if (duration > 0) new Duration(duration) else Infinity)
       }
@@ -124,16 +123,17 @@ class DNNFCompilationTest extends Specification {
     "be 67584 for formula uf150-027.dnf" in {
       val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-027.cnf", "dimacs"))
       val vars = formula.vars.size
-      DNNF.countModels(compile(Advanced, formula), vars) must be equalTo BigInt("67584")
+      val dnnf = compile(Advanced, formula)
+      DNNF.countModels(dnnf, vars) must be equalTo BigInt("67584")
     }
   }
 
-  if (expensiveTests && (new File(getFileString("", "automotiveFormulas")) exists ())) {
+  if (expensiveTests && (new File(getFileString("", "automotiveFormulas")) exists())) {
     "Model count" should {
       "be 30401807433546007798154659399137233759263265705164800 for formula bmw_00004_sat.cnf" in {
         val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00004_sat.cnf", "automotiveFormulas")).vars.size
-        DNNF.countModels(compileWithC2DDTree(getFileString("bmw_00004_sat.cnf", "automotiveFormulas")), vars) must
-          be equalTo BigInt("30401807433546007798154659399137233759263265705164800")
+        val dnnf = compileWithC2DDTree(getFileString("bmw_00004_sat.cnf", "automotiveFormulas"))
+        DNNF.countModels(dnnf, vars) must be equalTo BigInt("30401807433546007798154659399137233759263265705164800")
       }
       "be 0 for formula bmw_00052_unsat.cnf" in {
         val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00052_unsat.cnf", "automotiveFormulas")).vars.size

@@ -153,8 +153,8 @@ object DNNFPrinter {
   val visitedNodes = JavaConversions.mapAsScalaMap[DNNF, Long](new IdentityHashMap[DNNF, Long])
 
   /**
-    * Prints a DNNF to out
-    * @param dnnf The dtree to print
+    * Prints a DNNF to out in the dot format
+    * @param dnnf The dnnf to print
     * @param out Optional parameter for the printstream, default is System.out
     */
   def print(dnnf: DNNF, out: PrintStream = System.out) = {
