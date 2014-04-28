@@ -199,9 +199,11 @@ object DIMACSReader {
 
     if (preambleRead) {
       if (numberOfClausesInPreamble != clauses.size)
-        System.err.println("Number of Clauses in Preamble: " + numberOfClausesInPreamble + ", " + "Number of computed Clauses: " + clauses.size)
+        System.err.println("WARNING: Number of Clauses in Preamble: " + numberOfClausesInPreamble + ", "
+          + "Number of Clauses found: " + clauses.size)
       if (numberOfVarsInPreamble != vars.size)
-        System.err.println("Number of Vars in Preamble: " + numberOfVarsInPreamble + ", " + "Number of computed Vars: " + vars.size)
+        System.err.println("WARNING: Number of Vars in Preamble: " + numberOfVarsInPreamble + ", "
+          + "Number of Vars found: " + vars.size)
     }
 
     if (quantifiers.isEmpty) // dimacs

@@ -30,6 +30,7 @@ import scala.sys.process.{ProcessLogger, Process}
 import com.sun.jna.Platform
 import java.io.File
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.core.MSJCoreProver
+import org.warthog.generic.parsers.DIMACSReader
 
 /**
  * Contains methods for generating DTrees (advanced compiler)
@@ -106,19 +107,25 @@ object C2DDTreeGenerator extends Generator {
       map(_.trim).map(_.replaceAll("\\s+", " ")).
       filterNot(l => l.isEmpty | l.startsWith("c") | l.startsWith("p")).
       toArray
+    val collectedClauses = collection.mutable.Set[Int]()
 
     val dTreeTmp = new Array[DTree](dTreeLines.size)
     for (i <- 0 until dTreeLines.size)
       dTreeTmp(i) = dTreeLines(i)(0) match {
         case 'L' =>
           val n = dTreeLines(i).split(" ")(1).toInt
+          collectedClauses.add(n)
           DTreeLeaf(n, dimacsLines(n).split(" ").map(_.toInt).filterNot(_ == 0).map(v => MSJCoreProver.mkLit(math.abs(v), v < 0)).toSet)
         case 'I' =>
           val ns = dTreeLines(i).split(" ")
           DTreeNode(dTreeTmp(ns(1).toInt), dTreeTmp(ns(2).toInt))
         case _ => throw new Exception("")
       }
-    dTreeTmp.last
+
+    // For whatever reason, C2D-DTree doesn't contain all Unit-Clauses
+    ((1 until dimacsLines.size).toSet -- collectedClauses).foldLeft(dTreeTmp.last)((dt, v) =>
+          DTreeNode(dt, DTreeLeaf(v, dimacsLines(v).split(" ").map(_.toInt).filterNot(_ == 0).
+            map(v => MSJCoreProver.mkLit(math.abs(v), v < 0)).toSet)))
   }
 
   /**

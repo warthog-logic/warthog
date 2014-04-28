@@ -115,12 +115,12 @@ class DNNFCompilationTest extends Specification {
   picoCheck(F.xorequiv1_br.pl)
 
   "Model count" should {
-    "be 1511104 for formula uf150-010.dnf" in {
+    "be 1511104 for formula uf150-010.cnf" in {
       val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-010.cnf", "dimacs"))
       val vars = formula.vars.size
       DNNF.countModels(compile(Advanced, formula), vars) must be equalTo BigInt("1511104")
     }
-    "be 67584 for formula uf150-027.dnf" in {
+    "be 67584 for formula uf150-027.cnf" in {
       val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-027.cnf", "dimacs"))
       val vars = formula.vars.size
       val dnnf = compile(Advanced, formula)

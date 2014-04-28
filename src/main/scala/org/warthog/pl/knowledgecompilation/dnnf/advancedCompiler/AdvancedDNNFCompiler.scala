@@ -170,7 +170,6 @@ class AdvancedDNNFCompiler(numClauses: Int, numVariables: Int) {
   private def cnfAux(t: DTree): DNNF = t match {
     case DTreeLeaf(_, clause) => clauseToDDNNF(clause)
     case _ => // t: DTreeNode
-      // this whole process seems to be correct!!
       val key = computeCacheKey(t.currentClauseIds(operations), t.varSet)
       cache.get(key) match {
         case Some(v) => trackHit; v

@@ -15,6 +15,7 @@ import java.util.Set;
 public class DNNFOperations extends MSJCoreProver {
   protected int assertionLevel = -1;
   protected IntVec lastLearnt = null;
+  private boolean newlyImpliedDirty = true;
 
   public DNNFOperations() {
     super();
@@ -153,8 +154,6 @@ public class DNNFOperations extends MSJCoreProver {
     }
     return true;
   }
-
-  private boolean newlyImpliedDirty = true;
 
   /*
    * newly implied literals, i.e. all literals on the trail until (but not

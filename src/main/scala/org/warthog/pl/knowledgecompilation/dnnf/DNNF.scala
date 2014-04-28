@@ -48,7 +48,7 @@ trait DNNF {
 case object True extends DNNF {
   override def toString = "True"
 
-  def asPLFormula = Verum[PL]
+  val asPLFormula = Verum[PL]
 
   def substituteLits(mapping: Map[Int, String]) = True
 }
@@ -56,7 +56,7 @@ case object True extends DNNF {
 case object False extends DNNF {
   override def toString = "False"
 
-  def asPLFormula = Falsum[PL]
+  val asPLFormula = Falsum[PL]
 
   def substituteLits(mapping: Map[Int, String]) = False
 }
@@ -75,11 +75,12 @@ case class And(var operands: Seq[DNNF]) extends DNNF {
     case _        => false
   }
 
-  override def toString =
-    if (DNNF.nodeCount(this) <= 100)
-      "AND(" + operands.mkString(",") + ")"
-    else
-      "DNNF with more than 100 nodes"
+//  override def toString =
+//    if (DNNF.nodeCount(this) <= 100)
+//      "AND(" + operands.mkString(",") + ")"
+//    else
+//      "DNNF with more than 100 nodes"
+  override def toString = "AND(" + operands.filterNot(_.isInstanceOf[Or]).mkString(",") + ")"
 
   def asPLFormula = org.warthog.generic.formulas.And[PL](operands.map(_.asPLFormula): _*)
 
@@ -121,7 +122,7 @@ case class Lit(variable: Int, phase: Boolean) extends DNNF {
   }
   override def hashCode = variable.hashCode * (if (phase) 1 else -1)
 
-  def asPLFormula = throw new Exception("Cannot convert Int-Literal into PL")
+  lazy val asPLFormula = if (phase) PLAtom(variable.toString) else Not(PLAtom(variable.toString)) //throw new Exception("Cannot convert Int-Literal into PL")
 
   def substituteLits(mapping: Map[Int, String]) = StringLit(mapping.getOrElse(variable, variable.toString), phase)
 }
@@ -134,7 +135,7 @@ case class StringLit(variable: String, phase: Boolean) extends DNNF {
   }
   override def hashCode = variable.hashCode * (if (phase) 1 else -1)
 
-  def asPLFormula = if (phase) PLAtom(variable) else Not(PLAtom(variable))
+  lazy val asPLFormula = if (phase) PLAtom(variable) else Not(PLAtom(variable))
 
   def substituteLits(mapping: Map[Int, String]) = this
 }
@@ -406,7 +407,6 @@ object DNNF {
     })
 
     val smoothed = smooth(dnnf)
-    //  correct: assert(isSmooth(smoothed))
     count(smoothed) * BigInt(2).pow(vars - DNNF.varSet(smoothed).size)
   }
 
