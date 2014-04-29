@@ -42,7 +42,7 @@ import org.specs2.control.IncludeExcludeStackTraceFilter
  * Tests for DNNF-Compilation and Operations
  */
 
-class DNNFCompilationTest extends Specification {
+class DNNFPerformanceTest extends Specification {
 
   /**
    * Execute time expensive tests
@@ -94,66 +94,12 @@ class DNNFCompilationTest extends Specification {
       }
     }
 
-//  "" should {
-//    "" in {
-//      val formula = DIMACSReader.dimacs2Formula(getFileString("bmw_00004_sat.cnf", "automotiveFormulas"))
-//      compile(Advanced, formula)
-//      0 must be equalTo 0
-//    }
-//  }
-
-  compileT(F.x.pl, F.x.dnnf)
-  compileT(F.notx.pl, F.notx.dnnf)
-  compileT(F.xy.pl, F.xy.dnnf)
-  compileT(F.xoy.pl, F.xoy.dnnf)
-
-  picoCheck(F.verum.pl)
-  picoCheck(F.falsum.pl)
-  picoCheck(F.x.pl)
-  picoCheck(F.notx.pl)
-  picoCheck(F.xy.pl)
-  picoCheck(F.xoy.pl)
-  picoCheck(F.n_xynz.pl)
-  picoCheck(F.n_nxoyoz.pl)
-  picoCheck(F.equiv1.pl)
-  picoCheck(F.impl1_br.pl)
-  picoCheck(F.impl1vv.pl)
-  picoCheck(F.nxoyoz.pl)
-  picoCheck(F.xyoz_br.pl)
-  picoCheck(F.xorequiv1_br.pl)
-
-  "Model count" should {
-    "be 1511104 for formula uf150-010.cnf" in {
-      val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-010.cnf", "dimacs"))
-      val vars = formula.vars.size
-      DNNF.countModels(compile(Advanced, formula), vars) must be equalTo BigInt("1511104")
-    }
-    "be 67584 for formula uf150-027.cnf" in {
-      val formula = DIMACSReader.dimacs2Formula(getFileString("uf150-027.cnf", "dimacs"))
-      val vars = formula.vars.size
-      val dnnf = compile(Advanced, formula)
-      DNNF.countModels(dnnf, vars) must be equalTo BigInt("67584")
+  "Performance Test" should {
+    "" in {
+      println("!!! EXECUTING PERFORMANCE TEST !!!")
+      compileWithC2DDTree(getFileString("F03-20120606.cnf", "automotiveFormulas"))
+      0 must be equalTo 0
     }
   }
 
-  if (expensiveTests && (new File(getFileString("", "automotiveFormulas")) exists())) {
-    "Model count" should {
-      "be 30401807433546007798154659399137233759263265705164800 for formula bmw_00004_sat.cnf" in {
-        val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00004_sat.cnf", "automotiveFormulas")).vars.size
-        val dnnf = compileWithC2DDTree(getFileString("bmw_00004_sat.cnf", "automotiveFormulas"))
-        DNNF.countModels(dnnf, vars) must be equalTo BigInt("30401807433546007798154659399137233759263265705164800")
-      }
-      // takes 2500 seconds
-//      "be 443545835844420250060694583883091033456640000 for formula F03-20120606.cnf" in {
-//        val vars = DIMACSReader.dimacs2Formula(getFileString("F03-20120606.cnf", "automotiveFormulas")).vars.size
-//        val dnnf = compileWithC2DDTree(getFileString("F03-20120606.cnf", "automotiveFormulas"))
-//        DNNF.countModels(dnnf, vars) must be equalTo BigInt("443545835844420250060694583883091033456640000")
-//      }
-      "be 0 for formula bmw_00052_unsat.cnf" in {
-        val vars = DIMACSReader.dimacs2Formula(getFileString("bmw_00052_unsat.cnf", "automotiveFormulas")).vars.size
-        DNNF.countModels(compileWithC2DDTree(getFileString("bmw_00052_unsat.cnf", "automotiveFormulas")), vars) must
-          be equalTo BigInt("0")
-      }
-    }
-  }
 }

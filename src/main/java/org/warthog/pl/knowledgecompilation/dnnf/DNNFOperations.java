@@ -1,11 +1,16 @@
 package org.warthog.pl.knowledgecompilation.dnnf;
 
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.collections.IVec;
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.collections.Vec;
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.collections.nativeType.BooleanVec;
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.collections.nativeType.IntVec;
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.core.MSJCoreProver;
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.LBool;
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.MSJClause;
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.MSJVariable;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +21,9 @@ public class DNNFOperations extends MSJCoreProver {
   protected int assertionLevel = -1;
   protected IntVec lastLearnt = null;
   private boolean newlyImpliedDirty = true;
+  private IVec<IntVec> compilerClauses = new Vec<IntVec>(); // all existing clauses (including Unit and Binary clauses)
+  private BooleanVec subsumedClauses = new BooleanVec();
+  private IVec<IntVec> varToClauses = new Vec<IntVec>(); // varToClauses(i) = List of clauses containing variable i
 
   public DNNFOperations() {
     super();
@@ -27,6 +35,18 @@ public class DNNFOperations extends MSJCoreProver {
 
   public LBool valueOfLit(int lit) {
     return value(lit);
+  }
+
+  public List<Integer> getUnsubsumedClauses(List<Integer> clauses) {
+    List<Integer> unsubsumed = new LinkedList<Integer>();
+    for (int i : clauses)
+      if (!subsumedClauses.get(i))
+        unsubsumed.add(i);
+    return unsubsumed;
+  }
+
+  public boolean isClauseSubsumed(int clause) {
+    return subsumedClauses.get(clause);
   }
 
   @Override
@@ -102,7 +122,38 @@ public class DNNFOperations extends MSJCoreProver {
    */
   public void undoDecide(int lit) {
     newlyImpliedDirty = false;
-    cancelUntil(v(lit).level() - 1);
+    int backtrackLevel = v(lit).level() - 1;
+
+    // remember affectedLiterals before backtracking
+    IntVec affectedLiterals = new IntVec();
+    for (int c = trail.size() - 1; c >= trailLimits.get(backtrackLevel); c--)
+      affectedLiterals.push(trail.get(c));
+
+    cancelUntil(backtrackLevel); // backtracking
+
+    // restore validity of subsumedClauses
+    if (decisionLevel() > backtrackLevel) {
+      for (int n = 0; n < affectedLiterals.size(); n++) {
+        int btlit = affectedLiterals.get(n);
+        int btvar = var(btlit);
+        IntVec affectedClauses = varToClauses.get(btvar);
+        for (int i = 0; i < affectedClauses.size(); i++) {
+          IntVec clause = compilerClauses.get(affectedClauses.get(i));
+          if (subsumedClauses.get(i) || clause.contains(btlit)) {
+            // re-check all literals
+            subsumedClauses.set(i, checkSubsumed(clause));
+          }
+        }
+      }
+    }
+  }
+
+  private boolean checkSubsumed(IntVec clause) {
+    for (int i = 0; i < clause.size(); i++) {
+      if (valueOfLit(clause.get(i)) == LBool.TRUE)
+        return true;
+    }
+    return false;
   }
 
   /*
@@ -176,6 +227,19 @@ public class DNNFOperations extends MSJCoreProver {
     return super.propagate();
   }
 
+  @Override
+  protected boolean enqueue(int lit, MSJClause reason) {
+    IntVec affectedClauses = varToClauses.get(var(lit));
+    for (int i = 0; i < affectedClauses.size(); i++) {
+      if (!subsumedClauses.get(i)) {
+        IntVec clause = compilerClauses.get(affectedClauses.get(i));
+        if (clause.contains(lit))
+          subsumedClauses.set(i, true);
+      }
+    }
+    return super.enqueue(lit, reason);
+  }
+
   /**
    * Sets up the solver, returns true if it worked.
    * If the given clause set is unsatisfiable by unit propagation, it returns false.
@@ -184,15 +248,21 @@ public class DNNFOperations extends MSJCoreProver {
    */
   public boolean initSolver(List<Set<Integer>> clauses) {
     int maxVar = -1;
-    for (Set<Integer> clause : clauses) {
+    for (int i = 0; i < clauses.size(); i++) {
+      Set<Integer> clause = clauses.get(i);
       IntVec solverClause = new IntVec();
       for (Integer lit : clause) {
-        while (maxVar < var(lit)) {
+        int v = var(lit);
+        while (maxVar < v) {
           newVar();
           maxVar++;
+          varToClauses.push(new IntVec());
         }
+        varToClauses.get(v).push(i); // add new clause to list of clauses for variable v
         solverClause.push(lit);
       }
+      compilerClauses.push(solverClause);
+      subsumedClauses.push(false);
       newClause(solverClause, false);
     }
     return propagate() == null;

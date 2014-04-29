@@ -28,6 +28,7 @@ package org.warthog.pl.knowledgecompilation.dnnf.advancedCompiler.dtree
 import org.warthog.pl.knowledgecompilation.dnnf.DNNFOperations
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.core.MSJCoreProver
 import org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.prover.datastructures.LBool
+import scala.collection.JavaConversions._
 
 /**
  * Trait for a Decomposition Tree (DTree) for the AdvancedCompiler
@@ -37,6 +38,14 @@ sealed trait DTree {
 
   /** All variables of this DTree */
   val varSet: Set[Int]
+
+  /** All clauseIds in this DTree */
+  val clauseIdSet: Set[Int]
+
+  /** All clauseIds in this DTree as Java Linked List */
+  lazy val clauseIdsJava: java.util.List[Integer] = {
+    clauseIdSet.map(new Integer(_)).toList.sorted
+  }
 
   /**
    * Computes the current variable set of this dtree
@@ -60,7 +69,9 @@ sealed trait DTree {
    * @param operations The DNNFOperations which knows the current variable assignment
    * @return The current clause ids
    */
-  def currentClauseIds(operations: DNNFOperations): Set[Int]
+  def currentClauseIds(operations: DNNFOperations): List[Int] = {
+    operations.getUnsubsumedClauses(clauseIdsJava).map(_.toInt).toList
+  }
 
   /**
    * Counts the number of unsubsumed occurrences for each variable in vars
@@ -78,6 +89,7 @@ sealed trait DTree {
  */
 case class DTreeNode(val left: DTree, val right: DTree) extends DTree {
   lazy val varSet = left.varSet union right.varSet
+  lazy val clauseIdSet = left.clauseIdSet union right.clauseIdSet
 
   override def toString() = "Node(" + left + "," + right + ")"
 
@@ -86,7 +98,7 @@ case class DTreeNode(val left: DTree, val right: DTree) extends DTree {
   /** The separator of a node is defined as the intersection of the variables sets of its children */
   def currentSeparator(operations: DNNFOperations) = left.currentVarSet(operations) intersect right.currentVarSet(operations)
 
-  def currentClauseIds(operations: DNNFOperations) = left.currentClauseIds(operations) union right.currentClauseIds(operations)
+  //def currentClauseIds(operations: DNNFOperations) = left.currentClauseIds(operations) union right.currentClauseIds(operations)
 
   def countUnsubsumedOccurrences(operations: DNNFOperations, vars: Array[Int]) = {
     val l = left.countUnsubsumedOccurrences(operations, vars)
@@ -102,10 +114,11 @@ case class DTreeNode(val left: DTree, val right: DTree) extends DTree {
  */
 case class DTreeLeaf(val clauseId: Int, val clause: Set[Int]) extends DTree {
   lazy val varSet = clause.map(MSJCoreProver.`var`(_))
+  lazy val clauseIdSet = Set(clauseId)
 
   override def toString() = "Leaf(" + clauseId + ",{" + clause.map(l => (if (MSJCoreProver.sign(l)) "-" else "") + MSJCoreProver.`var`(l)).mkString(",") + "})"
 
-  def clauseIsSubsumed(operations: DNNFOperations) = clause.exists(x => operations.valueOfLit(x) == LBool.TRUE)
+  def clauseIsSubsumed(operations: DNNFOperations) = operations.isClauseSubsumed(clauseId) //clause.exists(x => operations.valueOfLit(x) == LBool.TRUE)
 
   /*
    * compute current variable set of clause at dtree leaf,
@@ -118,12 +131,12 @@ case class DTreeLeaf(val clauseId: Int, val clause: Set[Int]) extends DTree {
       varSet.filter(operations.valueOfVar(_) == LBool.UNDEF)
   }
 
-  def currentClauseIds(operations: DNNFOperations) = {
-    if (clauseIsSubsumed(operations))
-      Set[Int]()
-    else
-      Set(clauseId)
-  }
+//  def currentClauseIds(operations: DNNFOperations) = {
+//    if (clauseIsSubsumed(operations))
+//      Set[Int]()
+//    else
+//      Set(clauseId)
+//  }
 
   /** The separator of a dtree leaf is trivially empty */
   def currentSeparator(solver: DNNFOperations) = Set.empty[Int]

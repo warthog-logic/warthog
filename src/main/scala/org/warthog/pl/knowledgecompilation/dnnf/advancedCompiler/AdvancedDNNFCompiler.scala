@@ -204,7 +204,7 @@ class AdvancedDNNFCompiler(numClauses: Int, numVariables: Int) {
     * @param varSet variable set to scan for instantiated entries
     * @return generated cache key
     */
-  private def computeCacheKey(clauseIds: Set[Int], varSet: Set[Int]) = {
+  private def computeCacheKey(clauseIds: List[Int], varSet: Set[Int]) = {
     val key = new BitVec(numClauses + numVariables)
 
     for (cls <- clauseIds)
