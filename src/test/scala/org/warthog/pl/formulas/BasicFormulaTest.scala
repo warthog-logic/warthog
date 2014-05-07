@@ -32,7 +32,7 @@ import org.warthog.generic.formulas.And
 
 /**
   * Basic tests for propositional generic
-  * + Flatteing
+  * + Flattening
   * + NNF
   * + Ground
   * + Sets of bound/free variables
@@ -52,6 +52,9 @@ class BasicFormulaTest extends Specification {
     }
     "be ground" in {
       F.verum.pl.isGround must be equalTo true
+    }
+    "is literal" in {
+      F.verum.pl.isLiteral must be equalTo false
     }
     "have an empty set of variables" in {
       F.verum.pl.vars must have size 0
@@ -77,6 +80,9 @@ class BasicFormulaTest extends Specification {
     "be ground" in {
       F.falsum.pl.isGround must be equalTo true
     }
+    "is literal" in {
+      F.falsum.pl.isLiteral must be equalTo false
+    }
     "have an empty set of variables" in {
       F.falsum.pl.vars must have size 0
     }
@@ -100,6 +106,9 @@ class BasicFormulaTest extends Specification {
     }
     "not be ground" in {
       F.x.pl.isGround must be equalTo false
+    }
+    "is literal" in {
+      F.x.pl.isLiteral must be equalTo true
     }
     "have a set of variables {x}" in {
       F.x.pl.vars must be equalTo List(x)
@@ -125,6 +134,9 @@ class BasicFormulaTest extends Specification {
     "not be ground" in {
       F.notx.pl.isGround must be equalTo false
     }
+    "is literal" in {
+      F.notx.pl.isLiteral must be equalTo true
+    }
     "have a set of variables {x}" in {
       F.notx.pl.vars must be equalTo List(x)
     }
@@ -148,6 +160,9 @@ class BasicFormulaTest extends Specification {
     }
     "not be ground" in {
       F.x_impl_y.pl.isGround must be equalTo false
+    }
+    "is literal" in {
+      F.x_impl_y.pl.isLiteral must be equalTo false
     }
     "have a set of variables {x,y}" in {
       F.x_impl_y.pl.vars must be equalTo List(x, y)
@@ -174,6 +189,9 @@ class BasicFormulaTest extends Specification {
     "not be ground" in {
       F.x_xor_y.pl.isGround must be equalTo false
     }
+    "is literal" in {
+      F.x_xor_y.pl.isLiteral must be equalTo false
+    }
     "have a set of variables {x,y}" in {
       F.x_xor_y.pl.vars must be equalTo List(x, y)
     }
@@ -199,6 +217,9 @@ class BasicFormulaTest extends Specification {
     "not be ground" in {
       F.x_equiv_y.pl.isGround must be equalTo false
     }
+    "is literal" in {
+      F.x_equiv_y.pl.isLiteral must be equalTo false
+    }
     "have a set of variables {x,y}" in {
       F.x_equiv_y.pl.vars must be equalTo List(x, y)
     }
@@ -223,6 +244,9 @@ class BasicFormulaTest extends Specification {
     "not be ground" in {
       F.xynz.pl.isGround must be equalTo false
     }
+    "is literal" in {
+      F.xynz.pl.isLiteral must be equalTo false
+    }
     "have a set of variables {x,y,z}" in {
       F.xynz.pl.vars must be equalTo List(x, y, z)
     }
@@ -246,6 +270,9 @@ class BasicFormulaTest extends Specification {
     }
     "not be ground" in {
       F.nxoyoz.pl.isGround must be equalTo false
+    }
+    "is literal" in {
+      F.nxoyoz.pl.isLiteral must be equalTo false
     }
     "have a set of variables {x,y,z}" in {
       F.nxoyoz.pl.vars must be equalTo List(x, y, z)
@@ -272,6 +299,9 @@ class BasicFormulaTest extends Specification {
     "not be ground" in {
       F.n_xynz.pl.isGround must be equalTo false
     }
+    "is literal" in {
+      F.n_xynz.pl.isLiteral must be equalTo false
+    }
     "have a set of variables {x,y,z}" in {
       F.n_xynz.pl.vars must be equalTo List(x, y, z)
     }
@@ -296,6 +326,9 @@ class BasicFormulaTest extends Specification {
     }
     "not be ground" in {
       F.n_nxoyoz.pl.isGround must be equalTo false
+    }
+    "is literal" in {
+      F.n_nxoyoz.pl.isLiteral must be equalTo false
     }
     "have a set of variables {x,y,z}" in {
       F.n_nxoyoz.pl.vars must be equalTo List(x, y, z)
