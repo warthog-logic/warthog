@@ -45,9 +45,9 @@ class PLParser extends RegexParsers with PackratParsers with RunParser {
 
   lazy val variable: PackratParser[PLFormula] = """([A-Za-z0-9_]+)""".r ^^ (v => new PLFormula(PLAtom(v)))
 
-  lazy val const: PackratParser[PLFormula] = ("$true" | "$false") ^^ {
-    case "$true"  => new PLFormula(Verum())
-    case "$false" => new PLFormula(Falsum())
+  lazy val const: PackratParser[PLFormula] = (Formula.TRUE | Formula.FALSE) ^^ {
+    case Formula.TRUE  => new PLFormula(Verum())
+    case Formula.FALSE => new PLFormula(Falsum())
   }
 
   lazy val literal: PackratParser[PLFormula] = ("~" ~ simp | simp) ^^ {
@@ -55,28 +55,28 @@ class PLParser extends RegexParsers with PackratParsers with RunParser {
     case n: PLFormula         => n
   }
 
-  lazy val conj: PackratParser[PLFormula] = rep1sep(literal, "&") ^^ {
+  lazy val conj: PackratParser[PLFormula] = rep1sep(literal, Formula.AND) ^^ {
     _.reduceLeft(And(_, _))
   }
 
-  lazy val disj: PackratParser[PLFormula] = rep1sep(conj, "|") ^^ {
+  lazy val disj: PackratParser[PLFormula] = rep1sep(conj, Formula.OR) ^^ {
     _.reduceLeft(Or(_, _))
   }
 
-  lazy val simp: PackratParser[PLFormula] = variable ||| const ||| ("(" ~ expr ~ ")" ^^ {
-    case "(" ~ e ~ ")" => e
+  lazy val simp: PackratParser[PLFormula] = variable ||| const ||| (Formula.BRACEL ~ expr ~ Formula.BRACER ^^ {
+    case Formula.BRACEL ~ e ~ Formula.BRACER => e
   })
 
-  lazy val impl: PackratParser[PLFormula] = (disj ~ "=>" ~ impl ||| disj ~ "<=" ~ impl ||| disj) ^^ {
-    case (e0: PLFormula) ~ "=>" ~ (e1: PLFormula) => new PLFormula(Implication(e0, e1))
-    case (e0: PLFormula) ~ "<=" ~ (e1: PLFormula) => new PLFormula(Implication(e1, e0))
-    case d: PLFormula                               => d
+  lazy val impl: PackratParser[PLFormula] = (disj ~ Formula.IMPL ~ impl ||| disj ~ Formula.IMPLR ~ impl ||| disj) ^^ {
+    case (e0: PLFormula) ~ Formula.IMPL ~  (e1: PLFormula) => new PLFormula(Implication(e0, e1))
+    case (e0: PLFormula) ~ Formula.IMPLR ~ (e1: PLFormula) => new PLFormula(Implication(e1, e0))
+    case d: PLFormula                                      => d
   }
 
-  lazy val equiv: PackratParser[PLFormula] = (impl ~ "<=>" ~ equiv ||| impl ~ "<~>" ~ equiv ||| impl) ^^ {
-    case (e0: PLFormula) ~ "<=>" ~ (e1: PLFormula) => new PLFormula(Equiv(e0, e1))
-    case (e0: PLFormula) ~ "<~>" ~ (e1: PLFormula) => new PLFormula(Xor(e0, e1))
-    case d: PLFormula                                => d
+  lazy val equiv: PackratParser[PLFormula] = (impl ~ Formula.EQUIV ~ equiv ||| impl ~ Formula.XOR ~ equiv ||| impl) ^^ {
+    case (e0: PLFormula) ~ Formula.EQUIV ~ (e1: PLFormula) => new PLFormula(Equiv(e0, e1))
+    case (e0: PLFormula) ~ Formula.XOR   ~ (e1: PLFormula) => new PLFormula(Xor(e0, e1))
+    case d: PLFormula                                      => d
   }
 
   lazy val expr: PackratParser[PLFormula] = equiv

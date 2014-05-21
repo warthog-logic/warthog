@@ -144,9 +144,12 @@ object Formula {
   val NOT = "~"
   val XOR = "<~>"
   val IMPL = "=>"
+  val IMPLR = "<="
   val EQUIV = "<=>"
   val AND = "&"
   val OR = "|"
+  val BRACEL = "("
+  val BRACER = ")"
   val FORALL = "!"
   val EXISTS = "?"
 

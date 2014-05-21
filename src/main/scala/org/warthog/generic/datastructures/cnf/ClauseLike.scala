@@ -101,13 +101,13 @@ trait ClauseLike[L <: Logic, T <: Literal[L]] {
   def size: Int = literals.size
 
   /**
-    * Is this clause empty?
+    * Is this clause empty? (Has no literal)
     * @return `true` if the clause is empty, `false` otherwise
     */
   def isEmpty: Boolean = literals.isEmpty
 
   /**
-    * Is this clause unit?
+    * Is this clause unit? (Has only one literal)
     * @return `true` if the clause is unit, `false` otherwise
     */
   def isUnit: Boolean = literals.size == 1
