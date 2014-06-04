@@ -148,18 +148,20 @@ object Formula {
   val EQUIV = "<=>"
   val AND = "&"
   val OR = "|"
-  val BRACEL = "("
-  val BRACER = ")"
+  val PARENL = "("
+  val PARENR = ")"
   val FORALL = "!"
   val EXISTS = "?"
 
   /**
-    * Apply org Morgans Law `-(a1 /\ a2) <=> (-a1 \/ -a2)`
+    * A helper function to create the NNF which
+    * uses Morgans Law `-(a1 /\ a2) <=> (-a1 \/ -a2)`
     * @param form a conjunction or a disjunction
-    * @return the formula with org Morgan's Law applied
+    * @return the formula with org Morgan's Law applied (except the negation over the result)
     */
-  def deMorgan[L <: Logic](form: Formula[L]): Formula[L] = form match {
+  def nnfHelper[L <: Logic](form: Formula[L]): Formula[L] = form match {
     case And(fs@_*) => Or[L](fs.map(Not(_).nnf): _*)
     case Or(fs@_*)  => And[L](fs.map(Not(_).nnf): _*)
+    case _          => throw new IllegalArgumentException("Formula has to a conjunction or a disjunction, but is: %s".format(form))
   }
 }

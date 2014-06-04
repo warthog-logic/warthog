@@ -63,8 +63,8 @@ class PLParser extends RegexParsers with PackratParsers with RunParser {
     _.reduceLeft(Or(_, _))
   }
 
-  lazy val simp: PackratParser[PLFormula] = variable ||| const ||| (Formula.BRACEL ~ expr ~ Formula.BRACER ^^ {
-    case Formula.BRACEL ~ e ~ Formula.BRACER => e
+  lazy val simp: PackratParser[PLFormula] = variable ||| const ||| (Formula.PARENL ~ expr ~ Formula.PARENR ^^ {
+    case Formula.PARENL ~ e ~ Formula.PARENR => e
   })
 
   lazy val impl: PackratParser[PLFormula] = (disj ~ Formula.IMPL ~ impl ||| disj ~ Formula.IMPLR ~ impl ||| disj) ^^ {

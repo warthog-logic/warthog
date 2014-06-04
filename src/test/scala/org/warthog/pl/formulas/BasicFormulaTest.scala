@@ -175,8 +175,16 @@ class BasicFormulaTest extends Specification {
       F.xy.pl.boundVars must have size 0
     }
     val nxony = "~x | ~y"
-    "deMorgan" in {
-      Formula.deMorgan(F.xy.pl) must be equalTo nxony.pl
+    "deMorganHelper" in {
+      Formula.nnfHelper(F.xy.pl) must be equalTo nxony.pl
+    }
+  }
+
+  "~x & y" should {
+    val nxy = "~x & y"
+    val xony = "x | ~y"
+    "deMorganHelper" in {
+      Formula.nnfHelper(nxy.pl) must be equalTo xony.pl
     }
   }
 
@@ -206,8 +214,8 @@ class BasicFormulaTest extends Specification {
       F.xoy.pl.boundVars must have size 0
     }
     val nxny = "~x & ~y"
-    "deMorgan" in {
-      Formula.deMorgan(F.xoy.pl) must be equalTo nxny.pl
+    "deMorganHelper" in {
+      Formula.nnfHelper(F.xoy.pl) must be equalTo nxny.pl
     }
   }
 
