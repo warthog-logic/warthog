@@ -174,17 +174,25 @@ class BasicFormulaTest extends Specification {
     "have an empty set of bound variables" in {
       F.xy.pl.boundVars must have size 0
     }
-    val nxony = "~x | ~y"
-    "deMorganHelper" in {
-      Formula.nnfHelper(F.xy.pl) must be equalTo nxony.pl
+    val n_nxony = "~(~x | ~y)"
+    "deMorgan" in {
+      Formula.deMorgan(F.xy.pl) must be equalTo n_nxony.pl
     }
   }
 
   "~x & y" should {
     val nxy = "~x & y"
-    val xony = "x | ~y"
-    "deMorganHelper" in {
-      Formula.nnfHelper(nxy.pl) must be equalTo xony.pl
+    val n_xony = "~(x | ~y)"
+    "deMorgan" in {
+      Formula.deMorgan(nxy.pl) must be equalTo n_xony.pl
+    }
+  }
+
+  "~(~x & ~y)" should {
+    val n_nxny = "~(~x & ~y)"
+    val xoy = "x | y"
+    "deMorgan" in {
+      Formula.deMorgan(n_nxny.pl) must be equalTo xoy.pl
     }
   }
 
@@ -213,9 +221,9 @@ class BasicFormulaTest extends Specification {
     "have an empty set of bound variables" in {
       F.xoy.pl.boundVars must have size 0
     }
-    val nxny = "~x & ~y"
-    "deMorganHelper" in {
-      Formula.nnfHelper(F.xoy.pl) must be equalTo nxny.pl
+    val n_nxny = "~(~x & ~y)"
+    "deMorgan" in {
+      Formula.deMorgan(F.xoy.pl) must be equalTo n_nxny.pl
     }
   }
 
