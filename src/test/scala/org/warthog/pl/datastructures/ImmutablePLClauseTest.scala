@@ -85,7 +85,7 @@ class ImmutablePLClauseTest extends Specification {
     }
   }
 
-  "(x,y,z)" should {
+  "(x)" should {
     "be unit" in {
       cx.isUnit must be equalTo true
     }
@@ -110,7 +110,7 @@ class ImmutablePLClauseTest extends Specification {
   }
 
   "(x,y,z)" should {
-    "be equals to (y,x,z)" in {
+    "be equal to (y,x,z)" in {
       cxyz == cyxz must be equalTo true
     }
   }
@@ -122,31 +122,31 @@ class ImmutablePLClauseTest extends Specification {
   }
 
   "(x,y,z) - x" should {
-    "be equals to (y,z)" in {
+    "be equal to (y,z)" in {
       cxyz.delete(x) must be equalTo new Clause(y, z)
     }
   }
 
   "~w::(x,y,z)" should {
-    "be equals to (~w,x,y,z)" in {
+    "be equal to (~w,x,y,z)" in {
       cxyz.push(nw) must be equalTo new Clause(x, y, z, nw)
     }
   }
 
   "x::(x,y,z)" should {
-    "be equals to (x,y,z)" in {
+    "be equal to (x,y,z)" in {
       cxyz.push(x) must be equalTo cxyz
     }
   }
 
   "(x,y) ++ (~w,z)" should {
-    "be equals to (~w,x,y,z)" in {
+    "be equal to (~w,x,y,z)" in {
       cxy.union(cnwz) must be equalTo cxyznw
     }
   }
 
   "(x,y,z) ++ (y,x,z)" should {
-    "be equals to (x,y,z)" in {
+    "be equal to (x,y,z)" in {
       cxyz.union(cyxz) must be equalTo cxyz
     }
   }

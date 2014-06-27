@@ -1,0 +1,7 @@
+c Basic Tests (nested e/a)
+p cnf 4 2
+e 1 2 0
+a 3
+e 4
+-1  2  0
+2 -3 -4 0
