@@ -29,7 +29,7 @@ import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Solver, sat }
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
-import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
+import org.warthog.pl.decisionprocedures.satsolver.impl.PicosatSolver
 
 /**
   * Tests for the picosat bindings
@@ -37,7 +37,7 @@ import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
-  val ps = new Picosat
+  val ps = new PicosatSolver
   var rv0: Int = _
   var rv1: Int = _
   var fm: Formula[PL] = _

@@ -24,7 +24,7 @@ class DNNFOperationsTest extends Specification {
 
   private def solve(file: String): Boolean = {
     val clauses = DIMACSReader.dimacs2Clauses(getFileString(file))
-    // cf. DIMACS handling in org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.MiniSatJava
+    // cf. DIMACS handling in org.warthog.pl.decisionprocedures.satsolver.impl.minisatjava.MinisatJava
     val solverClauses = clauses.map(_.map(i => if (i < 0) (((i * -1) - 1) * 2) ^ 1 else (i - 1) * 2))
     val javaClauses = solverClauses.map(_.map(new Integer(_)).asJava).asJava
 

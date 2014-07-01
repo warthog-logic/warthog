@@ -31,12 +31,12 @@ import org.warthog.pl.parsers.tptp._
 import org.warthog.pl.F
 import org.specs2.mutable._
 import org.specs2.specification._
-import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Duration, sat}
+import org.warthog.pl.decisionprocedures.satsolver.{Solver, Infinity, Duration, sat}
 import org.warthog.generic.parsers.DIMACSReader
 import org.warthog.pl.knowledgecompilation.dnnf.DNNFCompilation._
 import java.io.File
 import org.specs2.control.IncludeExcludeStackTraceFilter
+import org.warthog.pl.decisionprocedures.satsolver.impl.{MinisatJavaSolver, PicosatSolver}
 
 /**
  * Tests for DNNF-Compilation and Operations
@@ -47,7 +47,7 @@ class DNNFCompilationTest extends Specification {
   /**
    * Execute time expensive tests
    */
-  val expensiveTests = true
+  val expensiveTests = false
 
   object MyStackTraceFilter extends IncludeExcludeStackTraceFilter(
     Seq(),
@@ -57,18 +57,18 @@ class DNNFCompilationTest extends Specification {
 
   args(sequential = true)
 
-  val ps = new Picosat
+  val verifier = new MinisatJavaSolver
 
   private def getFileString(file: String, kind: String) =
     List("src", "test", "resources", kind, file).mkString(File.separator)
 
-  def checkEquality(formula: Formula[PL], dnnf: DNNF, ps: Picosat, duration: Long = -1): Int = {
+  def checkEquality(formula: Formula[PL], dnnf: DNNF, solver: Solver, duration: Long = -1): Int = {
     val checkFormula = new PLFormula(Xor(formula, dnnf.asPLFormula)).tseitinCNF
     var result = 0
-    sat(ps) {
-      solver => {
-        solver.add(checkFormula)
-        result = -solver.sat(if (duration > 0) new Duration(duration) else Infinity)
+    sat(solver) {
+      s => {
+        s.add(checkFormula)
+        result = -s.sat(if (duration > 0) new Duration(duration) else Infinity)
       }
     }
     result
@@ -87,10 +87,10 @@ class DNNFCompilationTest extends Specification {
   def picoCheck(f: Formula[PL]): Fragments =
     "Checking equality of " + f + " and its compiled DNNF using Picosat" should {
       "return true using the Simple Compiler" in {
-        checkEquality(f, compile(Simple, f), ps) must be greaterThan 0
+        checkEquality(f, compile(Simple, f), verifier) must be greaterThan 0
       }
       "return true using the Advanced Compiler" in {
-        checkEquality(f, compile(Advanced, f), ps) must be greaterThan 0
+        checkEquality(f, compile(Advanced, f), verifier) must be greaterThan 0
       }
     }
 

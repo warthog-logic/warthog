@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
+package org.warthog.pl.decisionprocedures.satsolver.impl
 
 import scala.collection.mutable.Map
 
@@ -31,11 +31,12 @@ import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver 
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
+import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.JPicosat
 
 /**
   * Solver Wrapper for Picosat
   */
-class Picosat extends Solver {
+class PicosatSolver extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
   private val PSUNKNOWN = 0
