@@ -36,6 +36,10 @@ import org.warthog.pl.formulas.PLAtom
 
 /**
   * A Reader for dimacs- and qdimacs-files
+  *
+  * DIMACS Reader based on:
+  * http://lim.univ-reunion.fr/staff/fred/Enseignement/ISN/DIMACS.pdf
+  *
   * There are methods for reading a (q)dimacs-file and returning:
   * - a List[Set[Int]]
   * - a Formula[PL]
@@ -51,6 +55,9 @@ object DIMACSReader {
   /**
     * Reads a dimacs-file and returns a corresponding Formula[PL]
     *
+    * DIMACS Reader based on:
+    * http://lim.univ-reunion.fr/staff/fred/Enseignement/ISN/DIMACS.pdf
+    *
     * @param path The path to the dimacs-file
     * @return A corresponding Formula[PL]
     */
@@ -61,6 +68,9 @@ object DIMACSReader {
 
   /**
     * Reads a dimacs-file and returns a corresponding List of ImmutablePLClauses
+    *
+    * DIMACS Reader based on:
+    * http://lim.univ-reunion.fr/staff/fred/Enseignement/ISN/DIMACS.pdf
     *
     * @param path The path to the dimacs-file
     * @return A corresponding List[ImmutablePLClause]
@@ -75,6 +85,9 @@ object DIMACSReader {
     * as list of clauses (represented as sets of ints)
     * Throws an exception if the file is actually a qdimacs-file
     *
+    * DIMACS Reader based on:
+    * http://lim.univ-reunion.fr/staff/fred/Enseignement/ISN/DIMACS.pdf
+    *
     * @param path The path to the dimacs-file
     * @return A corresponding list of clauses (list of set of int)
     */
@@ -86,18 +99,25 @@ object DIMACSReader {
   /**
     * Reads a qdimacs-file and returns a corresponding Formula[FOL]
     *
+    * QDIMACS Reader based on:
+    * http://www.qbflib.org/qdimacs.html
+    *
     * @param path The path to the qdimacs-file
     * @return A corresponding Formula[FOL]
     */
-  def qdimacs2Formula(path: String): Formula[FOL] = parseDimacs(path) match {
-    case (None, _) => throw new Exception("How should we handle that?")
-    case (Some(quants), clauses) =>
-      val matrix = And(clauses.map(cls => Or(cls.toList.map(lit =>
-        if (lit > 0) FOLPredicate(math.abs(lit).toString) else -FOLPredicate(math.abs(lit).toString)): _*)): _*)
-      quants.foldRight(matrix.asInstanceOf[Formula[FOL]])((quant, formula) => quant._1 match {
-        case Formula.EXISTS => FOLExists(quant._2.map(v => FOLVariable(v.toString)), formula)
-        case Formula.FORALL => FOLForAll(quant._2.map(v => FOLVariable(v.toString)), formula)
-      })
+  def qdimacs2Formula(path: String): Formula[FOL] = {
+    val (someQuants, clauses) = parseDimacs(path)
+    val folClauses: Formula[FOL] = And(clauses.map(
+      cls => Or(cls.toList.map(lit =>
+        if (lit < 0) Not(FOLPredicate(math.abs(lit).toString)) else FOLPredicate(lit.toString)): _*)): _*)
+    someQuants match {
+      case None => folClauses
+      case Some(quants) =>
+        quants.foldRight(folClauses)((quant, formula) => quant._1 match {
+          case Formula.EXISTS => FOLExists(quant._2.map(v => FOLVariable(v.toString)), formula)
+          case Formula.FORALL => FOLForAll(quant._2.map(v => FOLVariable(v.toString)), formula)
+        })
+    }
   }
 
   /**
@@ -105,15 +125,20 @@ object DIMACSReader {
     *  - The first element contains a list of tupels representing the quantifications as described in parseDimacs-method
     *  - The second element contains the list of clauses
     *
+    * QDIMACS Reader based on:
+    * http://www.qbflib.org/qdimacs.html
+    *
     * @param path The path to the qdimacs-file
     * @return The result
     */
-  def qdimacs2FOLClauses(path: String): (List[(String, Set[Int])], List[ImmutableFOLClause]) = parseDimacs(path) match {
-    case (None, _) => throw new Exception("How should we handle that?")
-    case (Some(quants), clauses) =>
-      val folClauses = clauses.map(cls => new ImmutableFOLClause(cls.toList.map(lit =>
-        FOLLiteral(FOLPredicate(math.abs(lit).toString), lit > 0))))
-      (quants, folClauses)
+  def qdimacs2FOLClauses(path: String): (List[(String, Set[Int])], List[ImmutableFOLClause]) = {
+    val (someQuants, clauses) = parseDimacs(path)
+    val folClauses = clauses.map(cls => new ImmutableFOLClause(cls.toList.map(lit =>
+      FOLLiteral(FOLPredicate(math.abs(lit).toString), lit > 0))))
+    someQuants match {
+      case None => (List(), folClauses)
+      case Some(quants) => (quants, folClauses)
+    }
   }
 
   /**
