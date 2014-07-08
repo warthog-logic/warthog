@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * Command line interface for MiniSATJava
  */
-public class MiniSatJava {
+public class MinisatJava {
 
   public static void main(String[] args) {
     assert args.length > 1 : "Not enough arguments";

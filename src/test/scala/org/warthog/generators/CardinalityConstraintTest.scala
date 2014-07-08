@@ -25,18 +25,18 @@
 
 package org.warthog.pl.generators
 
-import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, sat }
 import org.warthog.generic.formulas.Formula
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.pl.generators.cardinality._
+import org.warthog.pl.decisionprocedures.satsolver.impl.PicosatSolver
 
 /**
   * Tests for the cardinality constraints
   */
 class CardinalityConstraintTest extends Specification {
-  val ps = new Picosat
+  val ps = new PicosatSolver
   val (w, x, y, z) = (PLAtom("w"), PLAtom("x"), PLAtom("y"), PLAtom("z"))
   var rv: Int = _
 
