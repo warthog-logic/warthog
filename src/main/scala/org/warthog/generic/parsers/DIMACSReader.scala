@@ -55,6 +55,8 @@ object DIMACSReader {
   /**
     * Reads a dimacs-file and returns a corresponding Formula[PL]
     *
+    * Note: The resulting formula is always in conjunctive normal form, even if a clause has only one literal.
+    *
     * DIMACS Reader based on:
     * http://lim.univ-reunion.fr/staff/fred/Enseignement/ISN/DIMACS.pdf
     *
@@ -98,6 +100,8 @@ object DIMACSReader {
 
   /**
     * Reads a qdimacs-file and returns a corresponding Formula[FOL]
+    *
+    * Note: The resulting formula is always in conjunctive normal form (AND OR NOT x_i), even if a clause has only one literal.
     *
     * QDIMACS Reader based on:
     * http://www.qbflib.org/qdimacs.html
@@ -153,6 +157,9 @@ object DIMACSReader {
     * or the actual number of clauses/variables doesn't
     * correspond to the preamble, a message will be printed
     * to StdErr and the result be returned (ignoring the preamble)
+    *
+    * If a clause has 4 or more literals the order of the literals
+    * may change because Set[A] uses the HashSet[A] in this case.
     *
     * @param path The path to the dimacs-file
     * @return The result

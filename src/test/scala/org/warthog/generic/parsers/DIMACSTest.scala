@@ -151,7 +151,9 @@ class DIMACSTest extends Specification {
     }
   }
 
-  "f02.cnf" should { // -4 -1 2 -3 0
+  "f02.cnf" should {
+    /*  clause two should be -4 -1 2 -3 but his literals are switched up
+        => see DIMACSReader.parseDimacs(String) */
     val f = "(1 | ~2) & (~3 | ~4 | 2 | ~1) & (~3 | 2 | 4) & (2 | 1 | 3) & (2 | ~1 | ~4)"
     "be equal to "+f+" (dimacs2Formula)" in {
       DIMACSReader.dimacs2Formula(getFileString("dimacs","f02.cnf")) must be equalTo f.pl

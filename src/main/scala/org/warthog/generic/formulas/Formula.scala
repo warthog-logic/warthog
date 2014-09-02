@@ -150,8 +150,12 @@ object Formula {
   val OR = "|"
   val PARENL = "("
   val PARENR = ")"
+  val BRACKETL = "["
+  val BRACKETR = "]"
+  val COMMA = ","
   val FORALL = "!"
   val EXISTS = "?"
+  val APPLIES = ":"
 
   /**
     * Apply org Morgans Law `-(a1 /\ a2) <=> (-a1 \/ -a2)`
