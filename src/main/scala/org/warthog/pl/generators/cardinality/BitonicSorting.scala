@@ -35,7 +35,6 @@ import org.warthog.generic.formulas._
   * Encoding complexity: n lg**2 n comparisons
   */
 object BitonicSorting extends SortingBasedCC with PowerOf2 {
-  // TODO: Requires extensive testing
   private def comparator(in0: PLAtom, in1: PLAtom, out0: PLAtom, out1: PLAtom): (Array[PLAtom], Formula[PL]) = {
     (Array(out0, out1),
       And(
