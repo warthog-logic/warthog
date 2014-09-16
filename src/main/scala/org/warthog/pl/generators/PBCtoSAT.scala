@@ -26,7 +26,6 @@
 package org.warthog.pl.generators
 
 import org.warthog.pl.datastructures.cnf.{ PLLiteral => Lit, ImmutablePLClause => Clause }
-import scala.collection.mutable
 import scala.collection.mutable.{ HashMap }
 
 /**
@@ -50,7 +49,7 @@ class PBCtoSAT(ws: List[Int], b: Int) {
   private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (weights.take(i).sum <= b)
 
   /**
-   * Method is assuming there are no fixed literals!
+   * Method is assuming there are no fixed literals! (=> all literals are free)
    *
    */
   def encode() = encodeWorker(ws.length, bound, new HashMap)
@@ -69,8 +68,9 @@ class PBCtoSAT(ws: List[Int], b: Int) {
       used += ((dib,true))
       newElems ::: encodeWorker(i - 1, b, used) ::: encodeWorker(i - 1, b - weights(i-1), used)
     } else if (b == 0) {
-      // TODO what to do here??
-      List()
+      val di0:String = "D_" + i + ",0"
+      val xjs:List[String] = List.iterate(1,i)(s => s + 1).map(j => "x_" + j)
+      new Clause(Lit(di0, true) :: xjs.map(j => Lit(j,true))) :: xjs.map(j => new Clause(Lit(di0, false), Lit(j,false)))
     } else if (b < 0) {
       val varName:String = "D_" + i + "," + b
       List(new Clause(List(Lit(varName, false))))
