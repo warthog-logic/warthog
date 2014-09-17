@@ -35,7 +35,7 @@ class PBCtoSATTest extends Specification {
 
   "2x_1 + 3x_2 + 4x_3 <= 6" should {
     val c1 = new PBCtoSAT(List(2,3,4),6)
-    val sol1 = "List((~D_2,2, D_3,6), (~D_3,6, D_2,6), (~D_3,6, ~x_3, D_2,2), (~D_2,6, x_3, D_3,6), (D_2,6), (~D_1,-1, D_2,2), (~D_2,2, D_1,2), (~D_2,2, ~x_2, D_1,-1), (~D_1,2, x_2, D_2,2), (D_1,2), (~D_1,-1))"
+    val sol1 = "List((~D_2_2, D_3_6), (~D_3_6, D_2_6), (~D_3_6, ~x_3, D_2_2), (~D_2_6, x_3, D_3_6), (D_2_6), (~D_1_-1, D_2_2), (~D_2_2, D_1_2), (~D_2_2, ~x_2, D_1_-1), (~D_1_2, x_2, D_2_2), (D_1_2), (~D_1_-1))"
     "be equal to sol1" in {
       c1.encode().toString() must be equalTo sol1
     }
@@ -43,7 +43,7 @@ class PBCtoSATTest extends Specification {
 
   "1x_1 + 2x_2 + 3x_3 + 5x_4 <= 6" should {
     val c2 = new PBCtoSAT(List(1,2,3,5),6)
-    val sol2 = "List((~D_3,1, D_4,6), (~D_4,6, D_3,6), (~D_4,6, ~x_4, D_3,1), (~D_3,6, x_4, D_4,6), (D_3,6), (~D_2,-2, D_3,1), (~D_3,1, D_2,1), (~D_3,1, ~x_3, D_2,-2), (~D_2,1, x_3, D_3,1), (~D_1,-1, D_2,1), (~D_2,1, D_1,1), (~D_2,1, ~x_2, D_1,-1), (~D_1,1, x_2, D_2,1), (D_1,1), (~D_1,-1), (~D_2,-2))"
+    val sol2 = "List((~D_3_1, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_1), (~D_3_6, x_4, D_4_6), (D_3_6), (~D_2_-2, D_3_1), (~D_3_1, D_2_1), (~D_3_1, ~x_3, D_2_-2), (~D_2_1, x_3, D_3_1), (~D_1_-1, D_2_1), (~D_2_1, D_1_1), (~D_2_1, ~x_2, D_1_-1), (~D_1_1, x_2, D_2_1), (D_1_1), (~D_1_-1), (~D_2_-2))"
     "be equal to sol2" in {
       c2.encode().toString() must be equalTo sol2
     }
@@ -51,7 +51,7 @@ class PBCtoSATTest extends Specification {
 
   "1x_1 + 2x_2 + 3x_3 + 6x_4 <= 6" should {
     val c3 = new PBCtoSAT(List(1,2,3,6),6)
-    val sol3 = "List((~D_3,0, D_4,6), (~D_4,6, D_3,6), (~D_4,6, ~x_4, D_3,0), (~D_3,6, x_4, D_4,6), (D_3,6), (D_3,0, x_1, x_2, x_3), (~D_3,0, ~x_1), (~D_3,0, ~x_2), (~D_3,0, ~x_3))"
+    val sol3 = "List((~D_3_0, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_0), (~D_3_6, x_4, D_4_6), (D_3_6), (D_3_0, x_1, x_2, x_3), (~D_3_0, ~x_1), (~D_3_0, ~x_2), (~D_3_0, ~x_3))"
     "be equal to sol3" in {
       c3.encode().toString() must be equalTo sol3
     }

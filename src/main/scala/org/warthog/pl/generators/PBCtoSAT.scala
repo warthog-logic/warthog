@@ -25,15 +25,15 @@
 
 package org.warthog.pl.generators
 
-import org.warthog.pl.datastructures.cnf.{ PLLiteral => Lit, ImmutablePLClause => Clause }
-import scala.collection.mutable.{ HashMap }
+import org.warthog.pl.datastructures.cnf.{PLLiteral => Lit, ImmutablePLClause => Clause}
+import scala.collection.mutable.{HashMap}
 
 /**
  * CNF-encoding of pseudo-Boolean constraints
  *
- *   O. Bailleux, Y. Boufkhad, O. Roussel:
- *   "A Translation of Pseudo-Boolean Constraints to SAT",
- *   Proc. of CP 2006
+ * O. Bailleux, Y. Boufkhad, O. Roussel:
+ * "A Translation of Pseudo-Boolean Constraints to SAT",
+ * Proc. of CP 2006
  *
  * In the worst case, the size of the produced formula can be exponentially related to
  * the size of the input constraint, but Boolean cardinality constraints (and some
@@ -48,36 +48,39 @@ class PBCtoSAT(ws: List[Int], b: Int) {
 
   private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (weights.take(i).sum <= b)
 
+  private def mkName(i: Int, b: Int): String = PBCtoSAT.NamePrefix + i + "_" + b
+
   /**
    * Method is assuming there are no fixed literals! (=> all literals are free)
    *
    */
   def encode() = encodeWorker(ws.length, bound, new HashMap)
 
-  private def encodeWorker(i: Int, b: Int, used: HashMap[String,Boolean]): List[Clause] =
-    if (used.contains("D_"+i+","+b)) List()
+  private def encodeWorker(i: Int, b: Int, used: HashMap[String, Boolean]): List[Clause] =
+    if (used.contains(mkName(i, b))) List()
     else if (!isTerminal(i, b)) {
-      val dib:String = "D_" + i + "," + b
-      val di1bw:String = "D_" + (i - 1) + "," + (b - weights(i-1))
-      val di1b:String = "D_" + (i - 1) + "," + b
-      val xi:String = "x_" + i
+      val dib = mkName(i, b)
+      val di1bw = mkName(i - 1, b - weights(i - 1))
+      val di1b = mkName(i - 1, b)
+      val xi = "x_" + i
       val newElems = List(new Clause(Lit(di1bw, false), Lit(dib, true)),
         new Clause(Lit(dib, false), Lit(di1b, true)),
         new Clause(Lit(dib, false), Lit(xi, false), Lit(di1bw, true)),
         new Clause(Lit(di1b, false), Lit(xi, true), Lit(dib, true)))
-      used += ((dib,true))
-      newElems ::: encodeWorker(i - 1, b, used) ::: encodeWorker(i - 1, b - weights(i-1), used)
+      used += ((dib, true))
+      newElems ::: encodeWorker(i - 1, b, used) ::: encodeWorker(i - 1, b - weights(i - 1), used)
     } else if (b == 0) {
-      val di0:String = "D_" + i + ",0"
-      val xjs:List[String] = List.iterate(1,i)(s => s + 1).map(j => "x_" + j)
-      new Clause(Lit(di0, true) :: xjs.map(j => Lit(j,true))) :: xjs.map(j => new Clause(Lit(di0, false), Lit(j,false)))
+      val di0 = mkName(i, 0)
+      val xjs = List.iterate(1, i)(s => s + 1).map(j => "x_" + j)
+      new Clause(Lit(di0, true) :: xjs.map(j => Lit(j, true))) :: xjs.map(j => new Clause(Lit(di0, false), Lit(j, false)))
     } else if (b < 0) {
-      val varName:String = "D_" + i + "," + b
-      List(new Clause(List(Lit(varName, false))))
-    } else { // when sum_j=1^i w_j <= b
-      val varName:String = "D_"+i+","+b
-      List(new Clause(List(Lit(varName,true))))
+      List(new Clause(List(Lit(mkName(i, b), false))))
+    } else {
+      // when sum_j=1^i w_j <= b
+      List(new Clause(List(Lit(mkName(i, b), true))))
     }
+}
 
-
+object PBCtoSAT {
+  val NamePrefix = "D_"
 }
