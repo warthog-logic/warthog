@@ -55,7 +55,6 @@ class PBCtoSATTest extends Specification {
 
   "2x_1 + 3x_2 + 4x_3 <= 6" should {
     val pbc1 = List((2,x1),(3,x2),(4,x3))
-    val sol1 = "List((D_3_6), (~D_2_2, D_3_6), (~D_3_6, D_2_6), (~D_3_6, ~x_3, D_2_2), (~D_2_6, x_3, D_3_6), (D_2_6), (~D_1_-1, D_2_2), (~D_2_2, D_1_2), (~D_2_2, ~x_2, D_1_-1), (~D_1_2, x_2, D_2_2), (D_1_2), (~D_1_-1))"
     val solution = Set(
       new Clause("D_3_6"),
       new Clause("D_2_2".negate, "D_3_6"),
@@ -76,7 +75,6 @@ class PBCtoSATTest extends Specification {
 
   "1x_1 + 2x_2 + 3x_3 + 5x_4 <= 6" should {
     val pbc2 = List((1,x1),(2,x2),(3,x3),(5,x4))
-    val sol2 = "List((D_4_6), (~D_3_1, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_1), (~D_3_6, x_4, D_4_6), (D_3_6), (~D_2_-2, D_3_1), (~D_3_1, D_2_1), (~D_3_1, ~x_3, D_2_-2), (~D_2_1, x_3, D_3_1), (~D_1_-1, D_2_1), (~D_2_1, D_1_1), (~D_2_1, ~x_2, D_1_-1), (~D_1_1, x_2, D_2_1), (D_1_1), (~D_1_-1), (~D_2_-2))"
     val solution = Set(
       new Clause("D_4_6"),
       new Clause("D_3_1".negate, "D_4_6"),
@@ -102,8 +100,6 @@ class PBCtoSATTest extends Specification {
 
   "1x_1 + 2x_2 + 3x_3 + 6x_4 <= 6" should {
     val pbc3 = List((1,x1), (2,x2), (3,x3), (6,x4))
-    val sol3 = "List((D_4_6), (~D_3_0, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_0), (~D_3_6, x_4, D_4_6), (D_3_6), (D_3_0, x_1, x_2, x_3), " +
-      "(~D_3_0, ~x_1), (~D_3_0, ~x_2), (~D_3_0, ~x_3))"
     val solution = Set(
       new Clause("D_4_6"),
       new Clause("D_3_0".negate, "D_4_6"),

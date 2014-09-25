@@ -54,7 +54,7 @@ private class BailleuxBoufkhadRousselHelper(ws: List[(Int,Lit)], bound: Int, pre
 
   private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(weights.take(i)) <= b)
 
-  private def mkName(i: Int, b: Int): String = s"$prefix${i}_$b"
+  private def varName(i: Int, b: Int): String = s"$prefix${i}_$b"
 
   /**
    * Method is assuming there are no fixed literals! (=> all literals are free)
@@ -62,7 +62,7 @@ private class BailleuxBoufkhadRousselHelper(ws: List[(Int,Lit)], bound: Int, pre
    */
   def le() = {
     if (PBCtoSAT.sumWeights(weights) <= bound) Set.empty[Clause]
-    else leWorker(weights.length, bound)()._2 + new Clause(Lit(mkName(weights.length, bound), true))
+    else leWorker(weights.length, bound)()._2 + new Clause(Lit(varName(weights.length, bound), true))
   }
 
   implicit def toLit(s: String) = Lit(s, true)
@@ -71,12 +71,12 @@ private class BailleuxBoufkhadRousselHelper(ws: List[(Int,Lit)], bound: Int, pre
 
   private def leWorker(i: Int, b: Int)(state: T = (Set.empty[String], Set.empty[Clause])): T = {
     val (used, clauses) = state
-    if (used contains mkName(i, b))
+    if (used contains varName(i, b))
       (used, clauses)
     else if (!isTerminal(i, b)) {
-      val dib = mkName(i, b)
-      val di1bw = mkName(i - 1, b - weights(i - 1)._1)
-      val di1b = mkName(i - 1, b)
+      val dib = varName(i, b)
+      val di1bw = varName(i - 1, b - weights(i - 1)._1)
+      val di1b = varName(i - 1, b)
       val xi = weights(i - 1)._2
       val newElems = Set(new Clause(di1bw.negate, dib),
         new Clause(dib.negate, di1b),
@@ -84,13 +84,13 @@ private class BailleuxBoufkhadRousselHelper(ws: List[(Int,Lit)], bound: Int, pre
         new Clause(di1b.negate, xi, dib))
       (leWorker(i - 1, b) _ andThen leWorker(i - 1, b - weights(i - 1)._1) _)(used + dib, newElems union clauses)
     } else if (b == 0) {
-      val di0 = mkName(i, 0)
+      val di0 = varName(i, 0)
       val xjs = weights.take(i).unzip._2
       (used, clauses union xjs.toSet.map((x: Lit) => new Clause(di0.negate, x.negate)) + new Clause(Lit(di0, true) :: xjs))
     } else if (b < 0) {
-      (used, clauses + new Clause(mkName(i, b).negate))
+      (used, clauses + new Clause(varName(i, b).negate))
     } else {
-      (used, clauses + new Clause(mkName(i, b)))
+      (used, clauses + new Clause(varName(i, b)))
     }
   }
 }
