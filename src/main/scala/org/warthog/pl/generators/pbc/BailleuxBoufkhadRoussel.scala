@@ -40,22 +40,23 @@ import scala.collection.mutable.HashMap
  * the size of the input constraint, but Boolean cardinality constraints (and some
  * other classes) are encoded in polynomial time and size.
  *
- * Note: All weights and the bound has to be greater than null
+ * Note: All weights have to be greater than null
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
   override def le(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_"): List[Clause] = {
-    new BailleuxBoufkhadRousselHelper(weights, bound, prefix).encode()
+    new BailleuxBoufkhadRousselHelper(weights, bound, prefix).le()
   }
+
 }
 
-private class BailleuxBoufkhadRousselHelper(ws: List[Tuple2[Int,Lit]], b: Int, pre: String) extends PBCtoSAT {
+private class BailleuxBoufkhadRousselHelper(ws: List[Tuple2[Int,Lit]], b: Int, pre: String) {
 
   private val weights: List[Tuple2[Int,Lit]] = ws.sortBy(_._1)
   private val bound: Int = b
   private val prefix: String = pre
 
-  private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (weights.take(i).foldRight(0)((pair,r) => pair._1 + r) <= b)
+  private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(weights.take(i)) <= b)
 
   private def mkName(i: Int, b: Int): String = prefix + i + "_" + b
 
@@ -63,9 +64,12 @@ private class BailleuxBoufkhadRousselHelper(ws: List[Tuple2[Int,Lit]], b: Int, p
    * Method is assuming there are no fixed literals! (=> all literals are free)
    *
    */
-  def encode() = new Clause(Lit(mkName(weights.length,bound),true)) :: encodeWorker(weights.length, bound, new HashMap)
+  def le() = {
+    if (PBCtoSAT.sumWeights(weights) <= b) List()
+    else new Clause(Lit(mkName(weights.length,bound),true)) :: leWorker(weights.length, bound, new HashMap)
+  }
 
-  private def encodeWorker(i: Int, b: Int, used: HashMap[String, Boolean]): List[Clause] =
+  private def leWorker(i: Int, b: Int, used: HashMap[String, Boolean]): List[Clause] =
     if (used.contains(mkName(i, b))) List()
     else if (!isTerminal(i, b)) {
       val dib = mkName(i, b)
@@ -77,7 +81,7 @@ private class BailleuxBoufkhadRousselHelper(ws: List[Tuple2[Int,Lit]], b: Int, p
         new Clause(Lit(dib, false), xi.negate, Lit(di1bw, true)),
         new Clause(Lit(di1b, false), xi, Lit(dib, true)))
       used += ((dib, true))
-      newElems ::: encodeWorker(i - 1, b, used) ::: encodeWorker(i - 1, b - weights(i - 1)._1, used)
+      newElems ::: leWorker(i - 1, b, used) ::: leWorker(i - 1, b - weights(i - 1)._1, used)
     } else if (b == 0) {
       val di0 = mkName(i, 0)
       val xjs = weights.take(i).map(pair => pair._2)
@@ -88,4 +92,5 @@ private class BailleuxBoufkhadRousselHelper(ws: List[Tuple2[Int,Lit]], b: Int, p
       // when sum_j=1^i w_j <= b
       List(new Clause(Lit(mkName(i, b), true)))
     }
+
 }

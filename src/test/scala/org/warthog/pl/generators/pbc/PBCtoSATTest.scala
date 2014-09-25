@@ -81,30 +81,71 @@ class PBCtoSATTest extends Specification {
 
   args(sequential = true)
 
+  testSat("2x_1+3x_2+4x_3 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 6))
   lower("2x_1+3x_2+4x_3 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 6))
+  lower2("2x_1+3x_2+4x_3 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 6))
+  testSat("2x_1+3x_2+4x_3 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((2,x1),(3,x2),(4,x3)), 6))
   lower("2x_1+3x_2+4x_3 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((2,x1),(3,x2),(4,x3)), 6))
+  lower2("2x_1+3x_2+4x_3 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((2,x1),(3,x2),(4,x3)), 6))
+  testSat("1x_1+2x_2+3x_3+6x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(6,x4)), 6))
   lower("1x_1+2x_2+3x_3+5x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(5,x4)), 6))
+  lower2("1x_1+2x_2+3x_3+5x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(5,x4)), 6))
+  testSat("1x_1+2x_2+3x_3+5x_4 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((1,x1),(2,x2),(3,x3),(5,x4)), 6))
   lower("1x_1+2x_2+3x_3+5x_4 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((1,x1),(2,x2),(3,x3),(5,x4)), 6))
+  lower2("1x_1+2x_2+3x_3+5x_4 < 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((1,x1),(2,x2),(3,x3),(5,x4)), 6))
+  testSat("1x_1+2x_2+3x_3+6x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(6,x4)), 6))
   lower("1x_1+2x_2+3x_3+6x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(6,x4)), 6))
+  lower2("1x_1+2x_2+3x_3+6x_4 <= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2),(3,x3),(6,x4)), 6))
+  testSat("2x_1+3x_2+4x_3 <= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 10))
+  lower2("2x_1+3x_2+4x_3 <= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 10))
+  testSat("2x_1+3x_2+4x_3 <= 9 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 9))
+  lower2("2x_1+3x_2+4x_3 <= 9 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2),(4,x3)), 9))
+  testSat("x_1+2x_2 <= 0 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2)), 0))
+  testUnsat("x_1+2x_2 < 0 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((1,x1),(2,x2)), 0))
+  testUnsat("x_1+2x_2 <= -1 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2)), -1))
 
+  testSat("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
   greater("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
+  testSat("2x_1+3x_2+4x_3 > 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((2,x1),(3,x2),(4,x3)), 6))
   greater("2x_1+3x_2+4x_3 > 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((2,x1),(3,x2),(4,x3)), 6))
+  testSat("2x_1+3x_2+4x_3 > 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((2,x1),(3,x2),(4,x3)), 5))
   greater("2x_1+3x_2+4x_3 > 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((2,x1),(3,x2),(4,x3)), 5))
+  testSat("11x_1+9x_2+8x_3 >= 28 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((11,x1),(9,x2),(8,x3)), 28))
+  testUnsat("11x_1+9x_2+8x_3 > 28 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((11,x1),(9,x2),(8,x3)), 28))
 
+  testSat("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
   equal("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
+  testSat("10x_1+1x_2+4x_3+x_8 == 11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1),(1,x2),(4,x3),(8,x4)), 11))
   equal("10x_1+1x_2+4x_3+x_8 == 11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1),(1,x2),(4,x3),(8,x4)), 11))
+  testSat("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
+  equal("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
+  testUnsat("1x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), 6))
 
-  def lower(name: String, clauses: List[Clause]) = name should {
+  def testSat(name: String, clauses: List[Clause]) = name should {
     "be satisfiable" in {
       sat(ps) {
-        s =>
-        {
+        s => {
           s.add(toFormula(clauses))
           rv = s.sat(Infinity)
         }
       }
       rv must be equalTo (1)
     }
+  }
+
+  def testUnsat(name: String, clauses: List[Clause]) = name should {
+    "be unsatisfiable" in {
+      sat(ps) {
+        s => {
+          s.add(toFormula(clauses))
+          rv = s.sat(Infinity)
+        }
+      }
+      rv must be equalTo (-1)
+    }
+  }
+
+  def lower(name: String, clauses: List[Clause]) = name should {
     "be unsatisfiable after adding x_2=x_3=x_4=true" in {
       sat(ps) {
         s =>
@@ -116,6 +157,9 @@ class PBCtoSATTest extends Specification {
       }
       rv must be equalTo (-1)
     }
+  }
+
+  def lower2(name: String, clauses: List[Clause]) = name should {
     "be satisfiable for x_1=x_2=x_3=false x_4=true" in {
       sat(ps) {
         s =>
@@ -130,16 +174,6 @@ class PBCtoSATTest extends Specification {
   }
 
   def greater(name: String, clauses: List[Clause]) = name should {
-    "be satisfiable" in {
-      sat(ps) {
-        s =>
-        {
-          s.add(toFormula(clauses))
-          rv = s.sat(Infinity)
-        }
-      }
-      rv must be equalTo (1)
-    }
     "be unsatisfiable after adding x_3=false" in {
       sat(ps) {
         s =>
@@ -165,16 +199,6 @@ class PBCtoSATTest extends Specification {
   }
 
   def equal(name: String, clauses: List[Clause]) = name should {
-    "be satisfiable" in {
-      sat(ps) {
-        s =>
-        {
-          s.add(toFormula(clauses))
-          rv = s.sat(Infinity)
-        }
-      }
-      rv must be equalTo (1)
-    }
     "be unsatisfiable after adding x_1=false" in {
       sat(ps) {
         s =>

@@ -35,15 +35,21 @@ import org.warthog.generic.formulas._
 trait PBCtoSAT {
 
   def le(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_"): List[Clause] =
-    ge(weights.map(pair => (pair._1, pair._2.negate)), weights.foldRight(0)((pair, r) => r + pair._1) - bound, prefix)
+    ge(weights.map(pair => (pair._1, pair._2.negate)), PBCtoSAT.sumWeights(weights) - bound, prefix)
 
   def ge(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_"): List[Clause] =
-    le(weights.map(pair => (pair._1, pair._2.negate)), weights.foldRight(0)((pair, r) => r + pair._1) - bound, prefix)
+    le(weights.map(pair => (pair._1, pair._2.negate)), PBCtoSAT.sumWeights(weights) - bound, prefix)
 
   def eq(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_") = le(weights, bound, prefix+"_le") ++ ge(weights,bound, prefix+"_ge")
 
   def lt(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_") = le(weights, bound - 1, prefix)
 
   def gt(weights: List[Tuple2[Int,Lit]], bound: Int, prefix: String = "D_") = ge(weights, bound + 1, prefix)
+
+}
+
+object PBCtoSAT {
+
+  def sumWeights(l: List[Tuple2[Int,Lit]]) = l.foldRight(0)((pair,r) => pair._1 + r)
 
 }
