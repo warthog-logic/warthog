@@ -39,8 +39,8 @@ import org.warthog.pl.generators.cardinality._
  */
 class PBCtoSATTest extends Specification {
 
-  def toFormula(l: List[Clause]): Formula[PL] = {
-    And(l.map(_.toFormula):_*)
+  def toFormula(l: Set[Clause]): Formula[PL] = {
+    And(l.toList.map(_.toFormula):_*)
   }
 
   val x1 = Lit("x_1",true)
@@ -51,28 +51,73 @@ class PBCtoSATTest extends Specification {
   val x2F = x2.toFormula
   val x3F = x3.toFormula
   val x4F = x4.toFormula
+  implicit def toLit(s: String) = Lit(s, true)
 
   "2x_1 + 3x_2 + 4x_3 <= 6" should {
     val pbc1 = List((2,x1),(3,x2),(4,x3))
     val sol1 = "List((D_3_6), (~D_2_2, D_3_6), (~D_3_6, D_2_6), (~D_3_6, ~x_3, D_2_2), (~D_2_6, x_3, D_3_6), (D_2_6), (~D_1_-1, D_2_2), (~D_2_2, D_1_2), (~D_2_2, ~x_2, D_1_-1), (~D_1_2, x_2, D_2_2), (D_1_2), (~D_1_-1))"
+    val solution = Set(
+      new Clause("D_3_6"),
+      new Clause("D_2_2".negate, "D_3_6"),
+      new Clause("D_3_6".negate, "D_2_6"),
+      new Clause("D_3_6".negate, "x_3".negate, "D_2_2"),
+      new Clause("D_2_6".negate, "x_3", "D_3_6"),
+      new Clause("D_2_6"),
+      new Clause("D_1_-1".negate, "D_2_2"),
+      new Clause("D_2_2".negate, "D_1_2"),
+      new Clause("D_2_2".negate, "x_2".negate, "D_1_-1"),
+      new Clause("D_1_2".negate, "x_2", "D_2_2"),
+      new Clause("D_1_2"),
+      new Clause("D_1_-1".negate))
     "be equal to sol1" in {
-      BailleuxBoufkhadRoussel.le(pbc1,6).toString() must be equalTo sol1
+      BailleuxBoufkhadRoussel.le(pbc1,6) must be equalTo solution
     }
   }
 
   "1x_1 + 2x_2 + 3x_3 + 5x_4 <= 6" should {
     val pbc2 = List((1,x1),(2,x2),(3,x3),(5,x4))
     val sol2 = "List((D_4_6), (~D_3_1, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_1), (~D_3_6, x_4, D_4_6), (D_3_6), (~D_2_-2, D_3_1), (~D_3_1, D_2_1), (~D_3_1, ~x_3, D_2_-2), (~D_2_1, x_3, D_3_1), (~D_1_-1, D_2_1), (~D_2_1, D_1_1), (~D_2_1, ~x_2, D_1_-1), (~D_1_1, x_2, D_2_1), (D_1_1), (~D_1_-1), (~D_2_-2))"
+    val solution = Set(
+      new Clause("D_4_6"),
+      new Clause("D_3_1".negate, "D_4_6"),
+      new Clause("D_4_6".negate, "D_3_6"),
+      new Clause("D_4_6".negate, "x_4".negate, "D_3_1"),
+      new Clause("D_3_6".negate, "x_4", "D_4_6"),
+      new Clause("D_3_6"),
+      new Clause("D_2_-2".negate, "D_3_1"),
+      new Clause("D_3_1".negate, "D_2_1"),
+      new Clause("D_3_1".negate, "x_3".negate, "D_2_-2"),
+      new Clause("D_2_1".negate, "x_3", "D_3_1"),
+      new Clause("D_1_-1".negate, "D_2_1"),
+      new Clause("D_2_1".negate, "D_1_1"),
+      new Clause("D_2_1".negate, "x_2".negate, "D_1_-1"),
+      new Clause("D_1_1".negate, "x_2", "D_2_1"),
+      new Clause("D_1_1"),
+      new Clause("D_1_-1".negate),
+      new Clause("D_2_-2".negate))
     "be equal to sol2" in {
-      BailleuxBoufkhadRoussel.le(pbc2,6).toString() must be equalTo sol2
+      BailleuxBoufkhadRoussel.le(pbc2,6) must be equalTo solution
     }
   }
 
   "1x_1 + 2x_2 + 3x_3 + 6x_4 <= 6" should {
-    val pbc3 = List((6,x4), (2,x2), (1,x1), (3,x3))
-    val sol3 = "List((D_4_6), (~D_3_0, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_0), (~D_3_6, x_4, D_4_6), (D_3_6), (D_3_0, x_1, x_2, x_3), (~D_3_0, ~x_1), (~D_3_0, ~x_2), (~D_3_0, ~x_3))"
+    val pbc3 = List((1,x1), (2,x2), (3,x3), (6,x4))
+    val sol3 = "List((D_4_6), (~D_3_0, D_4_6), (~D_4_6, D_3_6), (~D_4_6, ~x_4, D_3_0), (~D_3_6, x_4, D_4_6), (D_3_6), (D_3_0, x_1, x_2, x_3), " +
+      "(~D_3_0, ~x_1), (~D_3_0, ~x_2), (~D_3_0, ~x_3))"
+    val solution = Set(
+      new Clause("D_4_6"),
+      new Clause("D_3_0".negate, "D_4_6"),
+      new Clause("D_4_6".negate, "D_3_6"),
+      new Clause("D_4_6".negate, "x_4".negate, "D_3_0"),
+      new Clause("D_3_6".negate, "x_4", "D_4_6"),
+      new Clause("D_3_6"),
+      new Clause("D_3_0", "x_1", "x_2", "x_3"),
+      new Clause("D_3_0".negate, "x_1".negate),
+      new Clause("D_3_0".negate, "x_2".negate),
+      new Clause("D_3_0".negate, "x_3".negate))
+
     "be equal to sol3" in {
-      BailleuxBoufkhadRoussel.le(pbc3,6).toString() must be equalTo sol3
+      BailleuxBoufkhadRoussel.le(pbc3,6) must be equalTo solution
     }
   }
 
@@ -121,7 +166,7 @@ class PBCtoSATTest extends Specification {
   equal("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
   testUnsat("1x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), 6))
 
-  def testSat(name: String, clauses: List[Clause]) = name should {
+  def testSat(name: String, clauses: Set[Clause]) = name should {
     "be satisfiable" in {
       sat(ps) {
         s => {
@@ -133,7 +178,7 @@ class PBCtoSATTest extends Specification {
     }
   }
 
-  def testUnsat(name: String, clauses: List[Clause]) = name should {
+  def testUnsat(name: String, clauses: Set[Clause]) = name should {
     "be unsatisfiable" in {
       sat(ps) {
         s => {
@@ -145,7 +190,7 @@ class PBCtoSATTest extends Specification {
     }
   }
 
-  def lower(name: String, clauses: List[Clause]) = name should {
+  def lower(name: String, clauses: Set[Clause]) = name should {
     "be unsatisfiable after adding x_2=x_3=x_4=true" in {
       sat(ps) {
         s =>
@@ -159,7 +204,7 @@ class PBCtoSATTest extends Specification {
     }
   }
 
-  def lower2(name: String, clauses: List[Clause]) = name should {
+  def lower2(name: String, clauses: Set[Clause]) = name should {
     "be satisfiable for x_1=x_2=x_3=false x_4=true" in {
       sat(ps) {
         s =>
@@ -173,7 +218,7 @@ class PBCtoSATTest extends Specification {
     }
   }
 
-  def greater(name: String, clauses: List[Clause]) = name should {
+  def greater(name: String, clauses: Set[Clause]) = name should {
     "be unsatisfiable after adding x_3=false" in {
       sat(ps) {
         s =>
@@ -198,7 +243,7 @@ class PBCtoSATTest extends Specification {
     }
   }
 
-  def equal(name: String, clauses: List[Clause]) = name should {
+  def equal(name: String, clauses: Set[Clause]) = name should {
     "be unsatisfiable after adding x_1=false" in {
       sat(ps) {
         s =>
