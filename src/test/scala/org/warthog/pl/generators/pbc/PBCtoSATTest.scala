@@ -144,6 +144,10 @@ class PBCtoSATTest extends Specification {
   testSat("x_1+2x_2 <= 0 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2)), 0))
   testUnsat("x_1+2x_2 < 0 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((1,x1),(2,x2)), 0))
   testUnsat("x_1+2x_2 <= -1 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((1,x1),(2,x2)), -1))
+  testUnsat("2x_1+3x_2 <= -5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1),(3,x2)), -5))
+  testUnsat("2~x_1+3~x_2 <= -5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1.negate),(3,x2.negate)), -5))
+  testSat("-2x_1+3x_2-2x_3 <= 4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((-2,x1),(3,x2),(-2,x3)), 4))
+  testSat("-2x_1+3x_2-2x_3 <= -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((-2,x1),(3,x2),(-2,x3)), -4))
 
   testSat("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
   greater("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
@@ -153,6 +157,10 @@ class PBCtoSATTest extends Specification {
   greater("2x_1+3x_2+4x_3 > 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((2,x1),(3,x2),(4,x3)), 5))
   testSat("11x_1+9x_2+8x_3 >= 28 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((11,x1),(9,x2),(8,x3)), 28))
   testUnsat("11x_1+9x_2+8x_3 > 28 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((11,x1),(9,x2),(8,x3)), 28))
+  testSat("11x_1+9x_2+8x_3 > -2 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((11,x1),(9,x2),(8,x3)), -2))
+  testUnsat("2x_1+3x_2 >= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2)), 10))
+  testUnsat("2~x_1+3~x_2 >= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1.negate),(3,x2.negate)), 10))
+  testSat("-2x_1+3x_2-2x_3 >= -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((-2,x1),(3,x2),(-2,x3)), -4))
 
   testSat("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
   equal("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
@@ -161,6 +169,8 @@ class PBCtoSATTest extends Specification {
   testSat("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
   equal("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
   testUnsat("1x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), 6))
+  testUnsat("1x_1+4x_2+3x_3 == -6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), -6))
+  testSat("-2x_1+3x_2-2x_3 == -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((-2,x1),(3,x2),(-2,x3)), -4))
 
   def testSat(name: String, clauses: Set[Clause]) = name should {
     "be satisfiable" in {
