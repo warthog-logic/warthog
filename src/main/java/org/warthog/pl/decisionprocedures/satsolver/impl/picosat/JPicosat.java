@@ -60,7 +60,10 @@ public class JPicosat {
             else
                 pref.append("/macosx/32");
         else if (Platform.isLinux())
-            pref.append("/linux");
+            if (Platform.is64Bit())
+              pref.append("/linux/64");
+            else
+              pref.append("/linux/32");
         else if (Platform.isWindows())
             if (Platform.is64Bit())
                 pref.append("/win/64");
