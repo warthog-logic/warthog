@@ -31,6 +31,8 @@ import org.warthog.generic.formulas._
 
 /**
   * Trait for pseudo boolean constraints
+  *
+  * Note: A object/class which implements this trait has to override at least le() or ge().
   */
 trait PBCtoSAT {
 
@@ -49,6 +51,27 @@ trait PBCtoSAT {
 }
 
 object PBCtoSAT {
+
+  /**
+   * Normalizes a constraint to a form in which all weights are positive
+   *
+   * @param weights list of pairs with weight and corresponding variable
+   * @param bound the maximum bound
+   * @return the normalized weights and bound as a pair
+   */
+  def normalize(weights: List[(Int,Lit)], bound: Int): (List[(Int,Lit)], Int) = {
+    if (!weights.isEmpty) {
+      val (nWeights, nBound) = normalize(weights.tail,bound)
+      val head = weights.head
+      if (head._1 < 0) {
+        ((-head._1,head._2.negate) :: nWeights, nBound - head._1)
+      } else {
+        (head :: nWeights, nBound)
+      }
+    } else {
+      (List(),bound)
+    }
+  }
 
   def sumWeights(l: List[(Int,Lit)]) = l.unzip._1.sum
 

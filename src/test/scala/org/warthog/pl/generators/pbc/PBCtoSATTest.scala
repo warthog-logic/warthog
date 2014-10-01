@@ -148,6 +148,9 @@ class PBCtoSATTest extends Specification {
   testUnsat("2~x_1+3~x_2 <= -5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((2,x1.negate),(3,x2.negate)), -5))
   testSat("-2x_1+3x_2-2x_3 <= 4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((-2,x1),(3,x2),(-2,x3)), 4))
   testSat("-2x_1+3x_2-2x_3 <= -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((-2,x1),(3,x2),(-2,x3)), -4))
+  testUnsat("-2x_1+3x_2-2x_3 < -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((-2,x1),(3,x2),(-2,x3)), -4))
+  testSat("-2x_1-3x_2-7x_3 <= -12 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.le(List((-2,x1),(-3,x2),(-7,x3)), -12))
+  testUnsat("-2x_1-3x_2-7x_3 < -12 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.lt(List((-2,x1),(-3,x2),(-7,x3)), -12))
 
   testSat("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
   greater("2x_1+3x_2+4x_3 >= 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2),(4,x3)), 6))
@@ -161,16 +164,26 @@ class PBCtoSATTest extends Specification {
   testUnsat("2x_1+3x_2 >= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1),(3,x2)), 10))
   testUnsat("2~x_1+3~x_2 >= 10 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((2,x1.negate),(3,x2.negate)), 10))
   testSat("-2x_1+3x_2-2x_3 >= -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((-2,x1),(3,x2),(-2,x3)), -4))
+  testSat("-2x_1-3x_2-7x_3 >= -8 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((-2,x1),(-3,x2),(-7,x3)), -8))
+  testSat("-2x_1-3x_2-7x_3 > -8 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((-2,x1),(-3,x2),(-7,x3)), -8))
+  testSat("-2x_1+3x_2+7x_3 >= 8 (and x1 = true) (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.ge(List((-2,x1),(3,x2),(7,x3)), 8) + new Clause(x1))
+  testUnsat("-2x_1+3x_2+7x_3 > 8 (and x1 = true) (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.gt(List((-2,x1),(3,x2),(7,x3)), 8) + new Clause(x1))
 
   testSat("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
   equal("2x_1+3x_2+4x_3+x_8 == 5 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(3,x2),(4,x3),(8,x4)), 5))
   testSat("10x_1+1x_2+4x_3+x_8 == 11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1),(1,x2),(4,x3),(8,x4)), 11))
-  equal("10x_1+1x_2+4x_3+x_8 == 11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1),(1,x2),(4,x3),(8,x4)), 11))
+  equal("10x_1+1x_2+4x_3+8x_4 == 11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1),(1,x2),(4,x3),(8,x4)), 11))
+  equal("-10x_1-1x_2-4x_3-8x_4 == -11 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((-10,x1),(-1,x2),(-4,x3),(-8,x4)), -11))
+  equal("-10x_1+3x_2-4x_3-8x_4 == -7 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((-10,x1),(3,x2),(-4,x3),(-8,x4)), -7))
+  equal("-10x_1+1x_2+2~x_3-15x_4 == -7 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((-10,x1),(1,x2),(2,x3.negate),(-15,x4)), -7))
+  equal("10~x_1-1~x_2+2~x_3-15x_4 == 2 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((10,x1.negate),(-1,x2.negate),(2,x3.negate),(-15,x4)), 2))
   testSat("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
   equal("2x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((2,x1),(4,x2),(3,x3)), 6))
   testUnsat("1x_1+4x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), 6))
   testUnsat("1x_1+4x_2+3x_3 == -6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((1,x1),(4,x2),(3,x3)), -6))
   testSat("-2x_1+3x_2-2x_3 == -4 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((-2,x1),(3,x2),(-2,x3)), -4))
+  equal("6x_1+4~x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((6,x1),(4,x2.negate),(3,x3)), 6))
+  equal("6x_1+4~x_2+3x_3 == 6 (Bailleux-Boufkhad-Roussel)", BailleuxBoufkhadRoussel.eq(List((6,x1),(4,x2.negate),(3,x3)), 6))
 
   def testSat(name: String, clauses: Set[Clause]) = name should {
     "be satisfiable" in {

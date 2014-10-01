@@ -38,12 +38,12 @@ import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral
  * the size of the input constraint, but Boolean cardinality constraints (and some
  * other classes) are encoded in polynomial time and size.
  *
- * Note: All weights have to be greater than null
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
   override def le(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_"): Set[Clause] = {
-    new BailleuxBoufkhadRousselHelper(weights, bound, prefix).le()
+    val (nWeights, nBound) = PBCtoSAT.normalize(weights, bound)
+    new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
   }
 
 }
