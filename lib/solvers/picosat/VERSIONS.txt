@@ -3,4 +3,4 @@ linux/64 : picosat-959
 macosx/32 : picosat-959
 macosx/64 : picosat-959
 win/32 : picosat-959
-win/64 : unknown, earlier than 953 and thus incompatible
+win/64 : picosat-959
