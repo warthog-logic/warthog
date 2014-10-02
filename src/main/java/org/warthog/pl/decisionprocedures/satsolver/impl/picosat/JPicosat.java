@@ -124,7 +124,7 @@ public class JPicosat {
         version = Integer.parseInt(INSTANCE.picosat_version());
       } catch (NumberFormatException e) { }
       if (version < 953)
-        System.err.println("Warning: The picosat library provided in " + path + "seems to be too old. " +
+        System.err.println("Warning: The picosat library provided in " + path + " seems to be too old. " +
                 "Only version 953 and following are supported! The application might crash randomly.");
     }
 
