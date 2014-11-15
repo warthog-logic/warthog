@@ -56,7 +56,7 @@ trait Skolemization extends Transformation[FOL] {
   private def skolem2(op: String, funs: List[FunctionSymbol], fs: Formula[FOL]*) = {
     val init = (Seq[Formula[FOL]](), funs)
     val newSkolem = fs.foldLeft(init)((t, e) => {
-      val temp = skolem(e, t._2);
+      val temp = skolem(e, t._2)
       (t._1.:+(temp._1), temp._2)
     })
     if (op == Formula.AND)
