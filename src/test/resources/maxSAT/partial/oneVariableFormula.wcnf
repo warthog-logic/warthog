@@ -1,0 +1,8 @@
+c
+c A formula with just one variable
+c Optimum: 0
+c
+p wcnf 1 3 4
+1 1 -1 -1 0
+1 1 -1 0
+1 -1 -1 0
