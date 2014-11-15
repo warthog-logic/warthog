@@ -40,7 +40,7 @@ class Picosat extends Solver {
   private val PSUNSAT = 20
   private val PSUNKNOWN = 0
   private val jps = new JPicosat()
-  private var initialized = false;
+  private var initialized = false
   private val fmtovar = Map[Formula[PL], Int]()
   private val vartofm = Map[Int, Formula[PL]]()
   private var clss: List[Set[Int]] = Nil
