@@ -58,4 +58,10 @@ object PLLiteral {
   }
 
   def apply(s: String, phase: Boolean): PLLiteral = new PLLiteral(PLAtom(s), phase)
+
+  def apply(lit: Int): PLLiteral = {
+    require(lit != 0, "Literal value 0 is invalid")
+    val phase = lit > 0
+    PLLiteral(if(phase) lit.toString else (-lit).toString, phase)
+  }
 }
