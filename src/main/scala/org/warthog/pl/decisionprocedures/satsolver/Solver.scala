@@ -36,7 +36,7 @@ trait Solver {
     * Add a formula to the solver.  If the solver held a formula `F` bevor, it now holds `F /\ fm`.
     * @param fm the formula to add
     */
-  def add(fm: Formula[PL]): Unit
+  def add(fm: Formula[PL])
 
   /**
     * Mark a solver's internal stack position.  Executing
@@ -49,12 +49,12 @@ trait Solver {
     * }}}
     * will set the solver back into the state after adding `f0`
     */
-  def mark(): Unit
+  def mark()
 
   /**
     * Undo all the additions until the last marked position.
     */
-  def undo(): Unit
+  def undo()
 
   /**
     * Check decisionprocedures satsolver of the formula on the internal stack.
@@ -73,12 +73,12 @@ trait Solver {
   /**
     * Reset the solver
     */
-  def reset(): Unit
+  def reset()
 
   /**
     * Initialize the solver
     */
-  def init(): Unit
+  def init()
 }
 
 object Solver {

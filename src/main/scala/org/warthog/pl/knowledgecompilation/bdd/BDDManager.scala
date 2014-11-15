@@ -267,7 +267,7 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
     }
 
     /* assumption: a>=0 */
-    def visitnode(a: Int): Unit = {
+    def visitnode(a: Int) {
       if (a > 1) {
         val BDDNode(v, l, r) = expandNode(a)
 
