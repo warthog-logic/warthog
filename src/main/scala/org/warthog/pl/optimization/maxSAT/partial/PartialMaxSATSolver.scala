@@ -28,27 +28,41 @@ package org.warthog.pl.optimization.maxSAT.partial
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.PL
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
+import org.warthog.pl.optimization.maxSAT.MaxSATHelper
+
+import scala.collection.mutable._
 
 /**
  * Common interface for Partial MaxSAT solvers.
  */
 abstract class PartialMaxSATSolver {
 
-  protected var hardClauses: List[ImmutablePLClause]
-  protected var softClauses: List[ImmutablePLClause]
+  protected var hardClauses = new ListBuffer[ImmutablePLClause]
+  protected var softClauses = new ListBuffer[ImmutablePLClause]
+  protected var minUNSATResult: Option[Long] = None
 
   def name()
 
   def reset() {
-    hardClauses = List[ImmutablePLClause]()
-    hardClauses = List[ImmutablePLClause]()
+    hardClauses.clear()
+    softClauses.clear()
+    minUNSATResult = None
   }
 
-  def addHardConstraint(fm: Formula[PL])
+  def addHardClause(clause: ImmutablePLClause) {
+    hardClauses += clause
+  }
 
-  def addSoftClause(c: ImmutablePLClause, weight: Long)
+  def addSoftClause(clause: ImmutablePLClause) {
+    softClauses += clause
+  }
 
-  def solveImpl()
+  protected def solveMinUNSATImpl(): Option[Long]
 
-  def solve()
+  def solveMinUNSAT() = {
+    if (!MaxSATHelper.isSAT(hardClauses))
+      None
+    else
+      solveMinUNSATImpl()
+  }
 }
