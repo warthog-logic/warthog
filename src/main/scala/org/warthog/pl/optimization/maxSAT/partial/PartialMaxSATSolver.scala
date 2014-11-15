@@ -36,7 +36,6 @@ import scala.collection.mutable._
  * Common interface for Partial MaxSAT solvers.
  */
 abstract class PartialMaxSATSolver {
-
   protected var hardClauses = new ListBuffer[ImmutablePLClause]
   protected var softClauses = new ListBuffer[ImmutablePLClause]
   protected var minUNSATResult: Option[Long] = None

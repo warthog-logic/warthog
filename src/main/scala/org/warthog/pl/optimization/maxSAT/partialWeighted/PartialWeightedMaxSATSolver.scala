@@ -35,7 +35,6 @@ import collection.mutable.{ListBuffer, MutableList}
  * Common interface for Partial Weighted MaxSAT solvers.
  */
 abstract class PartialWeightedMaxSATSolver {
-
   protected var hardClauses = new ListBuffer[ImmutablePLClause]
   protected var softClauses = new ListBuffer[ImmutablePLClause]
   protected var weights = new ListBuffer[Long]
