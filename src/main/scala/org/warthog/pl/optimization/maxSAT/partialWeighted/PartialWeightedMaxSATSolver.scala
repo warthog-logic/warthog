@@ -23,23 +23,25 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.optimization.maxSAT.partial
+package org.warthog.pl.optimization.maxSAT.partialWeighted
 
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.PL
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
 
 /**
- * Common interface for Partial MaxSAT solvers.
+ * Common interface for Partial Weighted MaxSAT solvers.
  */
-abstract class PartialMaxSATSolver {
+abstract class PartialWeightedMaxSATSolver {
 
   protected var hardClauses: List[ImmutablePLClause]
   protected var softClauses: List[ImmutablePLClause]
+  protected var weights: List[Long]
 
   def name()
 
   def reset() {
+    hardClauses = List[ImmutablePLClause]()
     hardClauses = List[ImmutablePLClause]()
     hardClauses = List[ImmutablePLClause]()
   }
