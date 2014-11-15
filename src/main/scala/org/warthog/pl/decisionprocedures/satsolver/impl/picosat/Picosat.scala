@@ -47,12 +47,12 @@ class Picosat extends Solver {
   private var marks: List[Int] = Nil
   private var laststate = PSUNKNOWN
 
-  override def init(): Unit = {
+  override def init() {
     jps.picosat_init()
     initialized = true
   }
 
-  override def reset(): Unit = {
+  override def reset() {
     jps.picosat_reset()
     fmtovar.clear()
     vartofm.clear()
@@ -62,7 +62,7 @@ class Picosat extends Solver {
     initialized = false
   }
 
-  override def add(fm: Formula[PL]): Unit = {
+  override def add(fm: Formula[PL]) {
     require(initialized, "add(): Solver not yet initialized!")
     /*
      * Convert clause list to List of Set of Ints, update Int->Formula
@@ -110,12 +110,12 @@ class Picosat extends Solver {
     if (laststate == PSSAT) 1 else if (laststate == PSUNSAT) -1 else 0
   }
 
-  override def mark(): Unit = {
+  override def mark() {
     require(initialized, "mark(): Solver not yet initialized!")
     marks = clss.length :: marks
   }
 
-  override def undo(): Unit = {
+  override def undo() {
     require(initialized, "undo(): Solver not yet initialized!")
     marks match {
       case h :: t => {
