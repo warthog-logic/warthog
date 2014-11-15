@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.parsers
+package org.warthog.pl.parsers.tptp
 
 import org.warthog.pl.F
 import org.specs2.mutable._
