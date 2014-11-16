@@ -32,7 +32,6 @@ import org.warthog.generic.formulas.And
 class PartialMaxSATReaderTest extends Specification {
   sequential
   val fs = System.getProperty("file.separator")
-
   val partialMaxSATReader = new PartialMaxSATReader()
 
   testSimpleInstances()
