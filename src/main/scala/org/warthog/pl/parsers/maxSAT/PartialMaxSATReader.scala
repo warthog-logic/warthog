@@ -60,7 +60,7 @@ class PartialMaxSATReader {
 
   private def processProblemLine(line: String) {
     val parts = line.split("\\s+")
-    topWeight = parts(5).toLong
+    topWeight = parts(4).toLong
   }
 
   private def processClauseLine(line: String) {

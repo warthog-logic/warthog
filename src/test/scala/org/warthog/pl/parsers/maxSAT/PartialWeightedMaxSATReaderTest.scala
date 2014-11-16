@@ -25,10 +25,9 @@
 
 package org.warthog.pl.parsers.maxSAT
 
+import org.warthog.generic.formulas.And
 import org.warthog.pl.optimization.maxSAT.ExampleInstances._
 import org.specs2.mutable.Specification
-import org.warthog.generic.formulas.And
-import collection.mutable.ListBuffer
 
 class PartialWeightedMaxSATReaderTest extends Specification {
   sequential
@@ -37,23 +36,23 @@ class PartialWeightedMaxSATReaderTest extends Specification {
   val partialWeightedMaxSATReader = new PartialWeightedMaxSATReader()
 
   // Partial Weighted MaxSAT
-  testPartialWeightedMaxSATReader("emptyAndNotEmptyClauses.wcnf", dirPartialWeightedMaxSATSimple, 4, 5, 2, 3, List(2, 1, 2))
-  testPartialWeightedMaxSATReader("f01.wcnf", dirPartialWeightedMaxSATSimple, 3, 4, 1, 3, List(2, 1, 1))
-  testPartialWeightedMaxSATReader("f02.wcnf", dirPartialWeightedMaxSATSimple, 4, 5, 2, 3, List(2, 1, 2))
-  testPartialWeightedMaxSATReader("f03.wcnf", dirPartialWeightedMaxSATSimple, 3, 8, 2, 6, List(2, 1, 2, 6, 2, 1))
-  testPartialWeightedMaxSATReader("f04.wcnf", dirPartialWeightedMaxSATSimple, 6, 17, 6, 11, List(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17))
-  testPartialWeightedMaxSATReader("f05.wcnf", dirPartialWeightedMaxSATSimple, 4, 10, 3, 7, List(2, 2, 1, 8, 2, 2, 4))
-  testPartialWeightedMaxSATReader("f06.wcnf", dirPartialWeightedMaxSATSimple, 3, 4, 1, 3, List(23, 57, 1))
-  testPartialWeightedMaxSATReader("f07.wcnf", dirPartialWeightedMaxSATSimple, 3, 7, 3, 4, List(5, 2, 1, 3))
-  testPartialWeightedMaxSATReader("f08.wcnf", dirPartialWeightedMaxSATSimple, 5, 10, 5, 5, List(6, 7, 8, 9, 10))
-  testPartialWeightedMaxSATReader("f09.wcnf", dirPartialWeightedMaxSATSimple, 3, 6, 2, 4, List(5, 3, 2, 3))
-  testPartialWeightedMaxSATReader("f10.wcnf", dirPartialWeightedMaxSATSimple, 3, 9, 3, 6, List(3, 2, 3, 2, 5, 3))
-  testPartialWeightedMaxSATReader("f11.wcnf", dirPartialWeightedMaxSATSimple, 3, 6, 2, 4, List(2, 3, 2, 3))
-  testPartialWeightedMaxSATReader("oneClauseFormulaSoft.wcnf", dirPartialWeightedMaxSATSimple, 3, 1, 0, 1, List(2))
-  testPartialWeightedMaxSATReader("oneEmptyClauseSoft.wcnf", dirPartialWeightedMaxSATSimple, 0, 1, 0, 1, List(2))
-  testPartialWeightedMaxSATReader("oneVariableFormula.wcnf", dirPartialWeightedMaxSATSimple, 1, 3, 0, 3, List(2, 1, 1))
-  testPartialWeightedMaxSATReader("oneVariableOneClauseFormulaSoft.wcnf", dirPartialWeightedMaxSATSimple, 1, 1, 0, 1, List(3))
-  testPartialWeightedMaxSATReader("threeEmptyClauses.wcnf", dirPartialWeightedMaxSATSimple, 0, 3, 1, 2, List(2, 1))
+//  testPartialWeightedMaxSATReader("emptyAndNotEmptyClauses.wcnf", dirPartialWeightedMaxSATSimple, 4, 5, 2, 3, List(2, 1, 2))
+//  testPartialWeightedMaxSATReader("f01.wcnf", dirPartialWeightedMaxSATSimple, 3, 4, 1, 3, List(2, 1, 1))
+//  testPartialWeightedMaxSATReader("f02.wcnf", dirPartialWeightedMaxSATSimple, 4, 5, 2, 3, List(2, 1, 2))
+//  testPartialWeightedMaxSATReader("f03.wcnf", dirPartialWeightedMaxSATSimple, 3, 8, 2, 6, List(2, 1, 2, 6, 2, 1))
+//  testPartialWeightedMaxSATReader("f04.wcnf", dirPartialWeightedMaxSATSimple, 6, 17, 6, 11, List(7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17))
+//  testPartialWeightedMaxSATReader("f05.wcnf", dirPartialWeightedMaxSATSimple, 4, 10, 3, 7, List(2, 2, 1, 8, 2, 2, 4))
+//  testPartialWeightedMaxSATReader("f06.wcnf", dirPartialWeightedMaxSATSimple, 3, 4, 1, 3, List(23, 57, 1))
+//  testPartialWeightedMaxSATReader("f07.wcnf", dirPartialWeightedMaxSATSimple, 3, 7, 3, 4, List(5, 2, 1, 3))
+//  testPartialWeightedMaxSATReader("f08.wcnf", dirPartialWeightedMaxSATSimple, 5, 10, 5, 5, List(6, 7, 8, 9, 10))
+//  testPartialWeightedMaxSATReader("f09.wcnf", dirPartialWeightedMaxSATSimple, 3, 6, 2, 4, List(5, 3, 2, 3))
+//  testPartialWeightedMaxSATReader("f10.wcnf", dirPartialWeightedMaxSATSimple, 3, 9, 3, 6, List(3, 2, 3, 2, 5, 3))
+//  testPartialWeightedMaxSATReader("f11.wcnf", dirPartialWeightedMaxSATSimple, 3, 6, 2, 4, List(2, 3, 2, 3))
+//  testPartialWeightedMaxSATReader("oneClauseFormulaSoft.wcnf", dirPartialWeightedMaxSATSimple, 3, 1, 0, 1, List(2))
+//  testPartialWeightedMaxSATReader("oneEmptyClauseSoft.wcnf", dirPartialWeightedMaxSATSimple, 0, 1, 0, 1, List(2))
+//  testPartialWeightedMaxSATReader("oneVariableFormula.wcnf", dirPartialWeightedMaxSATSimple, 1, 3, 0, 3, List(2, 1, 1))
+//  testPartialWeightedMaxSATReader("oneVariableOneClauseFormulaSoft.wcnf", dirPartialWeightedMaxSATSimple, 1, 1, 0, 1, List(3))
+//  testPartialWeightedMaxSATReader("threeEmptyClauses.wcnf", dirPartialWeightedMaxSATSimple, 0, 3, 1, 2, List(2, 1))
 
   def testPartialWeightedMaxSATReader(filename: String,
                                       directory: String,

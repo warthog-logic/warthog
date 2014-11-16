@@ -35,49 +35,57 @@ class PartialMaxSATReaderTest extends Specification {
 
   val partialMaxSATReader = new PartialMaxSATReader()
 
-  testPartialMaxSATReader("emptyAndNotEmptyClauses.wcnf", dirPartialMaxSATSimple, 4, 5, 2, 3)
-  // TODO vars-method bug
-  //testPartialMaxSATReader("emptyFormula.wcnf", dirPartialMaxSATSimple, 0, 0, 0, 0)
-  testPartialMaxSATReader("f01.wcnf", dirPartialMaxSATSimple, 3, 4, 1, 3)
-  testPartialMaxSATReader("f02.wcnf", dirPartialMaxSATSimple, 4, 5, 2, 3)
-  testPartialMaxSATReader("f03.wcnf", dirPartialMaxSATSimple, 3, 8, 2, 6)
-  testPartialMaxSATReader("f04.wcnf", dirPartialMaxSATSimple, 6, 17, 6, 11)
-  testPartialMaxSATReader("f05.wcnf", dirPartialMaxSATSimple, 4, 10, 3, 7)
-  testPartialMaxSATReader("f06.wcnf", dirPartialMaxSATSimple, 3, 4, 1, 3)
-  testPartialMaxSATReader("f07.wcnf", dirPartialMaxSATSimple, 3, 7, 3, 4)
-  testPartialMaxSATReader("f08.wcnf", dirPartialMaxSATSimple, 5, 10, 5, 5)
-  testPartialMaxSATReader("f09.wcnf", dirPartialMaxSATSimple, 3, 6, 2, 4)
-  testPartialMaxSATReader("f10.wcnf", dirPartialMaxSATSimple, 3, 9, 3, 6)
-  testPartialMaxSATReader("f11.wcnf", dirPartialMaxSATSimple, 3, 6, 2, 4)
-  testPartialMaxSATReader("oneClauseFormulaHard.wcnf", dirPartialMaxSATSimple, 3, 1, 1, 0)
-  testPartialMaxSATReader("oneClauseFormulaSoft.wcnf", dirPartialMaxSATSimple, 3, 1, 0, 1)
-  testPartialMaxSATReader("oneEmptyClauseHard.wcnf", dirPartialMaxSATSimple, 0, 1, 1, 0)
-  testPartialMaxSATReader("oneEmptyClauseSoft.wcnf", dirPartialMaxSATSimple, 0, 1, 0, 1)
-  testPartialMaxSATReader("oneVariableFormula.wcnf", dirPartialMaxSATSimple, 1, 3, 0, 3)
-  testPartialMaxSATReader("oneVariableOneClauseFormulaHard.wcnf", dirPartialMaxSATSimple, 1, 1, 1, 0)
-  testPartialMaxSATReader("oneVariableOneClauseFormulaSoft.wcnf", dirPartialMaxSATSimple, 1, 1, 0, 1)
-  testPartialMaxSATReader("threeEmptyClauses.wcnf", dirPartialMaxSATSimple, 0, 3, 1, 2)
+  testSimpleInstances()
+
+  def testSimpleInstances() {
+    testPartialMaxSATReader("emptyAndNotEmptyClauses.wcnf", dirPartialMaxSATSimple, 4, 5, 2, 3)
+    testPartialMaxSATReader("emptyFormula.wcnf", dirPartialMaxSATSimple, 0, 0, 0, 0)
+    testPartialMaxSATReader("f01.wcnf", dirPartialMaxSATSimple, 3, 4, 1, 3)
+    testPartialMaxSATReader("f02.wcnf", dirPartialMaxSATSimple, 4, 5, 2, 3)
+    testPartialMaxSATReader("f03.wcnf", dirPartialMaxSATSimple, 3, 8, 2, 6)
+    testPartialMaxSATReader("f04.wcnf", dirPartialMaxSATSimple, 6, 17, 6, 11)
+    testPartialMaxSATReader("f05.wcnf", dirPartialMaxSATSimple, 4, 10, 3, 7)
+    testPartialMaxSATReader("f06.wcnf", dirPartialMaxSATSimple, 3, 4, 1, 3)
+    testPartialMaxSATReader("f07.wcnf", dirPartialMaxSATSimple, 3, 7, 3, 4)
+    testPartialMaxSATReader("f08.wcnf", dirPartialMaxSATSimple, 5, 10, 5, 5)
+    testPartialMaxSATReader("f09.wcnf", dirPartialMaxSATSimple, 3, 6, 2, 4)
+    testPartialMaxSATReader("f10.wcnf", dirPartialMaxSATSimple, 3, 9, 3, 6)
+    testPartialMaxSATReader("f11.wcnf", dirPartialMaxSATSimple, 3, 6, 2, 4)
+    testPartialMaxSATReader("oneClauseFormulaHard.wcnf", dirPartialMaxSATSimple, 3, 1, 1, 0)
+    testPartialMaxSATReader("oneClauseFormulaSoft.wcnf", dirPartialMaxSATSimple, 3, 1, 0, 1)
+    testPartialMaxSATReader("oneEmptyClauseHard.wcnf", dirPartialMaxSATSimple, 0, 1, 1, 0)
+    testPartialMaxSATReader("oneEmptyClauseSoft.wcnf", dirPartialMaxSATSimple, 0, 1, 0, 1)
+    testPartialMaxSATReader("oneVariableFormula.wcnf", dirPartialMaxSATSimple, 1, 3, 0, 3)
+    testPartialMaxSATReader("oneVariableOneClauseFormulaHard.wcnf", dirPartialMaxSATSimple, 1, 1, 1, 0)
+    testPartialMaxSATReader("oneVariableOneClauseFormulaSoft.wcnf", dirPartialMaxSATSimple, 1, 1, 0, 1)
+    testPartialMaxSATReader("threeEmptyClauses.wcnf", dirPartialMaxSATSimple, 0, 3, 1, 2)
+  }
 
   def testPartialMaxSATReader(filename: String,
                               directory: String,
                               numVars: Int,
                               numClauses: Int,
                               numHardClauses: Int,
-                              numSoftClauses: Int) =
+                              numSoftClauses: Int) = {
     filename + " in " + directory should {
       partialMaxSATReader.read(directory + fs + filename)
       "have " + numVars + " variables" in {
+        partialMaxSATReader.read(directory + fs + filename)
         And(partialMaxSATReader.hardClauses.map(_.toFormula).union(
           partialMaxSATReader.softClauses.map(_.toFormula)): _*).vars.size must be equalTo numVars
       }
       "have " + numClauses + " clauses" in {
+        partialMaxSATReader.read(directory + fs + filename)
         (partialMaxSATReader.hardClauses.size + partialMaxSATReader.softClauses.size) must be equalTo numClauses
       }
       "have " + numHardClauses + " hard clauses" in {
+        partialMaxSATReader.read(directory + fs + filename)
         partialMaxSATReader.hardClauses.size must be equalTo numHardClauses
       }
       "have " + numSoftClauses + " soft clauses" in {
+        partialMaxSATReader.read(directory + fs + filename)
         partialMaxSATReader.softClauses.size must be equalTo numSoftClauses
       }
     }
+  }
 }

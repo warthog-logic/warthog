@@ -1,12 +1,11 @@
 package org.warthog.pl.optimization.maxSAT
 
 import org.warthog.pl.datastructures.cnf.{ImmutablePLClause, PLLiteral}
-import org.warthog.pl.datastructures.maxsat._
 
 object ExampleInstances {
   val fs = System.getProperty("file.separator")
 
-  val dir_formula = "test" + fs + "resources" + fs + "maxSAT"
+  val dir_formula = "src" + fs + "test" + fs + "resources" + fs + "maxSAT"
 
   // Simple formulas
   val dirPartialMaxSATSimple = dir_formula + fs + "partial" + fs + "simple"
