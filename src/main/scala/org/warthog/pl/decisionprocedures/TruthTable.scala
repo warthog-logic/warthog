@@ -53,7 +53,7 @@ object TruthTable {
     sb: StringBuilder,
     f: Formula[PL],
     v: Map[PLAtom, Boolean],
-    ats: List[PLAtom]): Unit =
+    ats: List[PLAtom]) {
     ats match {
       case Nil => getRow(sb, v, f)
       case p :: ps => {
@@ -61,15 +61,16 @@ object TruthTable {
         generateRows(sb, f, v + (p -> true), ps)
       }
     }
+  }
 
   private def b2n(a: Boolean) = if (a) 1 else 0
 
-  private def getRow(sb: StringBuilder, v: Map[PLAtom, Boolean], f: Formula[PL]): Unit = {
+  private def getRow(sb: StringBuilder, v: Map[PLAtom, Boolean], f: Formula[PL]) {
     appendAtomValuation(sb, v, f.vars.asInstanceOf[List[PLAtom]])
     sb.append(" | %7d\n".format(b2n(f.eval(v))))
   }
 
-  private def appendAtomValuation(sb: StringBuilder, v: Map[PLAtom, Boolean], as: List[PLAtom]): Unit = {
+  private def appendAtomValuation(sb: StringBuilder, v: Map[PLAtom, Boolean], as: List[PLAtom]) {
     as.foreach {
       case a => sb.append(("%" + (a.toString.length) + "d ").format(b2n(v(a))))
     }

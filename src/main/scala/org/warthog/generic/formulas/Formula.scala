@@ -144,19 +144,29 @@ object Formula {
   val NOT = "~"
   val XOR = "<~>"
   val IMPL = "=>"
+  val IMPLR = "<="
   val EQUIV = "<=>"
   val AND = "&"
   val OR = "|"
+  val PARENL = "("
+  val PARENR = ")"
+  val BRACKETL = "["
+  val BRACKETR = "]"
+  val COMMA = ","
   val FORALL = "!"
   val EXISTS = "?"
+  val APPLIES = ":"
 
   /**
     * Apply org Morgans Law `-(a1 /\ a2) <=> (-a1 \/ -a2)`
-    * @param form a conjunction or a disjunction
+    * @param form (a negation of) a conjunction or a disjunction
     * @return the formula with org Morgan's Law applied
     */
   def deMorgan[L <: Logic](form: Formula[L]): Formula[L] = form match {
-    case And(fs@_*) => Or[L](fs.map(Not(_).nnf): _*)
-    case Or(fs@_*)  => And[L](fs.map(Not(_).nnf): _*)
+    case Not(And(fs@_*)) => Or[L](fs.map(Not(_).nnf): _*)
+    case Not(Or(fs@_*))  => And[L](fs.map(Not(_).nnf): _*)
+    case And(fs@_*)      => Not(Or[L](fs.map(Not(_).nnf): _*))
+    case Or(fs@_*)       => Not(And[L](fs.map(Not(_).nnf): _*))
+    case _               => throw new IllegalArgumentException("Formula has to be (a negation of) a conjunction or a disjunction, but is: %s".format(form))
   }
 }

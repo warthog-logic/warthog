@@ -38,7 +38,7 @@ import org.warthog.generic.formulas._
   * Encoding size is quadratic in the size of inputs
   */
 object BailleuxBoufkhad extends SortingBasedCC {
-  /* TODO: Requires extensive testing */
+
   private def totalitarize(in0: Array[PLAtom], in1: Array[PLAtom], out: Array[PLAtom]) = {
     val (len0, len1) = (in0.length, in1.length)
     ((for {

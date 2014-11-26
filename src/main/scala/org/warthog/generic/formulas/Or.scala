@@ -52,7 +52,7 @@ class Or[-L <: Logic](fs: Formula[L]*)
     case None    => Or(args.map(_.syntacticalRewrite(subs)): _*)
   }
 
-  def getNNF(phase: Boolean) = if (phase) Or(args.map(_.getNNF(true)): _*) else Formula.deMorgan(this)
+  def getNNF(phase: Boolean) = if (phase) Or(args.map(_.getNNF(true)): _*) else Formula.deMorgan(Not(this))
 
   def priority = 30
 }

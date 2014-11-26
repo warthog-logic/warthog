@@ -73,6 +73,7 @@ object F {
   val xoyz_br = "(x | y) & z"
   val xyoz_br = "x & (y | z)"
   val impl1_br = "(x | (~y => ~z)) & y"
+  val impl2_br = "~(x | (~y => ~z)) & y"
   val equiv1_br = "(x => (~y <=> ~z)) <= y"
   val xor1_br = "(x => (~y <~> ~z)) <= y"
   val xorequiv1_br = "(x <~> ~y) <=> ~z"

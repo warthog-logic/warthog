@@ -28,7 +28,6 @@ package org.warthog.generators
 import org.warthog.generic.formulas._
 import org.scalacheck.{Gen, Arbitrary}
 import org.warthog.fol.formulas._
-import org.warthog.fol.formulas.FOLVariable
 import org.warthog.generic.formulas.Implication
 
 object FormulaGenerators {
