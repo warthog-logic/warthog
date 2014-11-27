@@ -25,43 +25,41 @@
 
 package org.warthog.pl.optimization.maxSAT.partial
 
-import org.warthog.generic.formulas.Formula
-import org.warthog.pl.formulas.PL
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
-import org.warthog.pl.optimization.maxSAT.MaxSATHelper
-
-import scala.collection.mutable._
+import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Solver}
 
 /**
  * Common interface for Partial MaxSAT solvers.
  */
-abstract class PartialMaxSATSolver {
-  protected var hardClauses = new ListBuffer[ImmutablePLClause]
-  protected var softClauses = new ListBuffer[ImmutablePLClause]
+abstract class PartialMaxSATSolver(satSolver: Solver) {
   protected var minUNSATResult: Option[Long] = None
 
   def name()
 
   def reset() {
-    hardClauses.clear()
-    softClauses.clear()
+    satSolver.reset()
     minUNSATResult = None
   }
 
-  def addHardClause(clause: ImmutablePLClause) {
-    hardClauses += clause
+  def addHardConstraint(clause: ImmutablePLClause) {
+    satSolver.add(clause.toFormula)
   }
 
-  def addSoftClause(clause: ImmutablePLClause) {
-    softClauses += clause
+  def markHardConstraints() {
+    satSolver.mark()
   }
 
-  protected def solveMinUNSATImpl(): Option[Long]
+  def undoHardConstraints() {
+    satSolver.undo()
+  }
 
-  def solveMinUNSAT() = {
-    if (!MaxSATHelper.isSAT(hardClauses))
-      None
+  protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause]): Option[Long]
+
+  def solveMinUNSAT(softClauses: List[ImmutablePLClause]) = {
+    if (!(satSolver.sat(Infinity) > 0))
+      minUNSATResult = None
     else
-      solveMinUNSATImpl()
+      minUNSATResult = solveMinUNSATImpl(softClauses)
+    minUNSATResult
   }
 }
