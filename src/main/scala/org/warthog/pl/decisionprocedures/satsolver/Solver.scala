@@ -155,7 +155,7 @@ trait CraigInterpolant {
 object sat {
 
   class SolverExecutor(s: Solver) {
-    def apply(f: Solver => Unit) = {
+    def apply(f: Solver => Unit) {
       s.init()
       try {
         f(s)

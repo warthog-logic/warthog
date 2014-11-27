@@ -124,7 +124,7 @@ class PicosatTest extends Specification {
     }
   }
   "the empty formula" should {
-    "return true uppon sat checking" in {
+    "return true upon sat checking" in {
       var model: Formula[PL] = null
       sat(ps) {
         s =>
