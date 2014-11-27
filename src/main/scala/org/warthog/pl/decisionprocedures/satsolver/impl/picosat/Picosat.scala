@@ -39,7 +39,7 @@ class Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
   private val PSUNKNOWN = 0
-  private val jps = new JPicosat()
+  private val jPicosatInstance = new JPicosat()
   private var isInitialized = false
   private val fmToVar = Map[Formula[PL], Int]()
   private val varToFm = Map[Int, Formula[PL]]()
@@ -48,12 +48,12 @@ class Picosat extends Solver {
   private var lastState = PSUNKNOWN
 
   override def init() {
-    jps.picosat_init()
+    jPicosatInstance.picosat_init()
     isInitialized = true
   }
 
   override def reset() {
-    jps.picosat_reset()
+    jPicosatInstance.picosat_reset()
     fmToVar.clear()
     varToFm.clear()
     clauses = Nil
@@ -83,7 +83,7 @@ class Picosat extends Solver {
       }).toSet)
     }
     /* add clauses to solver */
-    lcls.foreach(add_cls)
+    lcls.foreach(addClauses)
 
     /* add clauses to solver stack */
     clauses = lcls ++ clauses
@@ -93,9 +93,9 @@ class Picosat extends Solver {
       lastState = PSUNKNOWN
   }
 
-  private def add_cls(cs: Set[Int]): Int = {
-    cs.foreach(jps.picosat_add(_))
-    jps.picosat_add(0)
+  private def addClauses(cs: Set[Int]): Int = {
+    cs.foreach(jPicosatInstance.picosat_add(_))
+    jPicosatInstance.picosat_add(0)
   }
 
   override def sat(to: Duration): Int = {
@@ -103,8 +103,8 @@ class Picosat extends Solver {
     if (lastState == PSUNKNOWN) {
       /* call sat only if solver is in unknown state */
       lastState = to match {
-        case Infinity => jps.picosat_sat(-1)
-        case _ => jps.picosat_sat(to.to.toInt)
+        case Infinity => jPicosatInstance.picosat_sat(-1)
+        case _ => jPicosatInstance.picosat_sat(to.to.toInt)
       }
     }
     if (lastState == PSSAT) 1 else if (lastState == PSUNSAT) -1 else 0
@@ -120,10 +120,10 @@ class Picosat extends Solver {
     marks match {
       case h :: t => {
         marks = t
-        jps.picosat_reset()
-        jps.picosat_init()
+        jPicosatInstance.picosat_reset()
+        jPicosatInstance.picosat_init()
         clauses = clauses.drop(clauses.length - h)
-        clauses.foreach(add_cls)
+        clauses.foreach(addClauses)
       }
       case _ => {
         marks = 0 :: marks
@@ -141,8 +141,8 @@ class Picosat extends Solver {
       case PSUNSAT => None
       case PSSAT => {
         val picosatLiterals = (for {
-          i <- 1 to jps.picosat_variables()
-          j = i * jps.picosat_deref(i)
+          i <- 1 to jPicosatInstance.picosat_variables()
+          j = i * jPicosatInstance.picosat_deref(i)
           if j != 0 /* filter out unassigned variables */
         } yield j)
         val positiveVariables = picosatLiterals.filter(picosatLit => picosatLit > 0)
