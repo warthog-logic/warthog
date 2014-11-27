@@ -36,16 +36,13 @@ import org.warthog.generic.formulas._
  * Solver Wrapper for Picosat
  */
 class Picosat extends Solver {
-  private val PSSAT = 10
-  private val PSUNSAT = 20
-  private val PSUNKNOWN = 0
   private val jPicosatInstance = new JPicosat()
   private var isInitialized = false
   private val fmToVar = Map[Formula[PL], Int]()
   private val varToFm = Map[Int, Formula[PL]]()
   private var clauses: List[Set[Int]] = Nil
   private var marks: List[Int] = Nil
-  private var lastState = PSUNKNOWN
+  private var lastState = JPicosat.PSUNKNOWN
 
   override def init() {
     jPicosatInstance.picosat_init()
@@ -58,7 +55,7 @@ class Picosat extends Solver {
     varToFm.clear()
     clauses = Nil
     marks = Nil
-    lastState = PSUNKNOWN
+    lastState = JPicosat.PSUNKNOWN
     isInitialized = false
   }
 
@@ -89,8 +86,8 @@ class Picosat extends Solver {
     clauses = lcls ++ clauses
 
     /* an unsatisfiable formula doesn't get satisfiable by adding clauses */
-    if (lastState != PSUNSAT)
-      lastState = PSUNKNOWN
+    if (lastState != JPicosat.PSUNSAT)
+      lastState = JPicosat.PSUNKNOWN
   }
 
   private def addClauses(cs: Set[Int]): Int = {
@@ -100,14 +97,14 @@ class Picosat extends Solver {
 
   override def sat(to: Duration): Int = {
     require(isInitialized, "sat(): Solver not yet initialized!")
-    if (lastState == PSUNKNOWN) {
+    if (lastState == JPicosat.PSUNKNOWN) {
       /* call sat only if solver is in unknown state */
       lastState = to match {
         case Infinity => jPicosatInstance.picosat_sat(-1)
         case _ => jPicosatInstance.picosat_sat(to.to.toInt)
       }
     }
-    if (lastState == PSSAT) 1 else if (lastState == PSUNSAT) -1 else 0
+    if (lastState == JPicosat.PSSAT) 1 else if (lastState == JPicosat.PSUNSAT) -1 else 0
   }
 
   override def mark() {
@@ -130,16 +127,16 @@ class Picosat extends Solver {
         undo()
       }
     }
-    lastState = PSUNKNOWN
+    lastState = JPicosat.PSUNKNOWN
   }
 
   override def getModel(): Option[Model] = {
     require(isInitialized, "getModel(): Solver not yet initialized!")
-    require(lastState == PSSAT || lastState == PSUNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
+    require(lastState == JPicosat.PSSAT || lastState == JPicosat.PSUNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
 
     lastState match {
-      case PSUNSAT => None
-      case PSSAT => {
+      case JPicosat.PSUNSAT => None
+      case JPicosat.PSSAT => {
         val picosatLiterals = (for {
           i <- 1 to jPicosatInstance.picosat_variables()
           j = i * jPicosatInstance.picosat_deref(i)

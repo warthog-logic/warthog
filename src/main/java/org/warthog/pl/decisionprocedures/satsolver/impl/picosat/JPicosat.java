@@ -32,6 +32,11 @@ import com.sun.jna.Pointer;
 
 public class JPicosat {
     private static final String DIR = "/solvers/picosat";
+
+    public static final int PSUNKNOWN = 0;
+    public static final int PSSAT = 10;
+    public static final int PSUNSAT = 20;
+
     private CPicosat INSTANCE;
     private Pointer currentPicosatObject;
 
@@ -125,35 +130,4 @@ public class JPicosat {
         System.err.println("Warning: The picosat library provided in " + path + " seems to be too old. " +
                 "Only version 959 and following are supported! The application might crash randomly.");
     }
-
-    public void test() {
-        picosat_init();
-
-        picosat_add(-1);
-        picosat_add(0);
-
-        picosat_add(1);
-        picosat_add(0);
-
-        System.out.println("p cnf 1 2\n-1 0\n1 0? "+picosat_sat(-1));
-
-        picosat_reset();
-
-        picosat_init();
-
-        picosat_add(1);
-        picosat_add(-2);
-        picosat_add(0);
-
-        System.out.println("p cnf 2 1\n1 -2 0? "+picosat_sat(-1));
-
-        picosat_reset();
-    }
-
-    public static void main(String[] args) throws Exception {
-        //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
-        JPicosat jps=new JPicosat();
-        jps.test();
-    }
-
 }
