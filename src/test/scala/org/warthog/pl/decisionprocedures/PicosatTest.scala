@@ -25,7 +25,7 @@
 
 package org.warthog.pl.decisionprocedures
 
-import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Solver, sat }
+import satsolver.{Model, Infinity, Solver, sat}
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{ PL, PLAtom }
 import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
@@ -40,7 +40,7 @@ class PicosatTest extends Specification {
   val ps = new Picosat
   var rv0: Int = _
   var rv1: Int = _
-  var fm: Formula[PL] = _
+  var model: Option[Model] = _
 
   /*
    * By default, tests are executed concurrently. JNI/JNA, however, is able to load _only one_ instance of
@@ -68,10 +68,12 @@ class PicosatTest extends Specification {
           {
             solver.add(x)
             solver.sat(Infinity)
-            fm = solver.getModel()
+            model = solver.getModel()
           }
       }
-      fm must be equalTo (x)
+      model.get.positiveLiterals.size must be equalTo 1
+      model.get.negativeLiterals.size must be equalTo 0
+      model.get.positiveLiterals must contain(x)
     }
     "be unsatisfiable after adding -x" in {
       sat(ps) {
@@ -123,9 +125,8 @@ class PicosatTest extends Specification {
       rv0 must be equalTo (1)
     }
   }
-  "the empty formula" should {
+  "the verum" should {
     "return true upon sat checking" in {
-      var model: Formula[PL] = null
       sat(ps) {
         s =>
           {
@@ -134,7 +135,8 @@ class PicosatTest extends Specification {
             model = s.getModel()
           }
       }
-      model must be equalTo (Verum())
+      model.get.positiveLiterals.size must be equalTo 0
+      model.get.negativeLiterals.size must be equalTo 0
     }
   }
 }

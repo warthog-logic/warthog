@@ -26,12 +26,15 @@
 package org.warthog.pl.decisionprocedures.satsolver
 
 import org.warthog.pl.formulas.PL
-import org.warthog.generic.formulas.Formula
+import org.warthog.generic.formulas.{And, Formula}
 
 /**
  * A (partial) Model representing a satisfying assignment of a propositional formula.
  */
-class Model(positiveLiterals: List[Formula[PL]], negativeLiterals: List[Formula[PL]]) {
+class Model(val positiveLiterals: List[Formula[PL]], val negativeLiterals: List[Formula[PL]]) {
+
+  def toFormula = And(And(positiveLiterals: _*), And(negativeLiterals: _*))
+
   override def toString = positiveLiterals.mkString(",") + negativeLiterals.map(l => "-" + l).mkString(",")
 }
 
