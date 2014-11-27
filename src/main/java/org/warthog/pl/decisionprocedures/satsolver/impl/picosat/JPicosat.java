@@ -48,7 +48,7 @@ public class JPicosat {
 
         void picosat_reset(Pointer object);
 
-        int picosat_sat(Pointer object, int to);
+        int picosat_sat(Pointer object, int decisionLimit);
 
         int picosat_variables(Pointer object);
 
@@ -101,8 +101,8 @@ public class JPicosat {
         INSTANCE.picosat_reset(currentPicosatObject);
     }
 
-    public int picosat_sat(int to) {
-        return INSTANCE.picosat_sat(currentPicosatObject, to);
+    public int picosat_sat(int decisionLimit) {
+        return INSTANCE.picosat_sat(currentPicosatObject, decisionLimit);
     }
 
     public int picosat_variables() {
