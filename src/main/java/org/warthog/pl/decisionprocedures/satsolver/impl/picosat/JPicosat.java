@@ -58,10 +58,10 @@ public class JPicosat {
         String picosat_version();
     }
 
-    public JPicosat(String libdir) throws Exception {
-        if (libdir == null || libdir == "")
-            libdir="lib";
-        StringBuilder pref = new StringBuilder(libdir + DIR);
+    public JPicosat(String libDir) throws Exception {
+        if (libDir == null || libDir == "")
+            libDir="lib";
+        StringBuilder pref = new StringBuilder(libDir + DIR);
 
         if (Platform.isMac())
             if (Platform.is64Bit())

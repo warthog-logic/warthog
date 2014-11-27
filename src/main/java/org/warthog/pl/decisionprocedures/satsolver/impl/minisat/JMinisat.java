@@ -40,8 +40,8 @@ public class JMinisat {
         void ms_freeSolver(int solver);
     }
 
-    public JMinisat(String libdir) throws Exception {
-        StringBuilder pref=new StringBuilder(libdir+DIR);
+    public JMinisat(String libDir) throws Exception {
+        StringBuilder pref=new StringBuilder(libDir+DIR);
 
         if (Platform.isMac())
             if (Platform.is64Bit())
