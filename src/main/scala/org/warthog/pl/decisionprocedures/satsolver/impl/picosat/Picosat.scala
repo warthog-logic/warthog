@@ -27,14 +27,14 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 
 import scala.collection.mutable.Map
 
-import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Duration, Solver }
+import org.warthog.pl.decisionprocedures.satsolver.{Model, Infinity, Duration, Solver}
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
 
 /**
-  * Solver Wrapper for Picosat
-  */
+ * Solver Wrapper for Picosat
+ */
 class Picosat extends Solver {
   private val PSSAT = 10
   private val PSUNSAT = 20
@@ -73,7 +73,7 @@ class Picosat extends Solver {
       case l => l.map(_.map(f => {
         val (at, mul) = f match {
           case Not(ff) => (ff, -1)
-          case _       => (f, 1)
+          case _ => (f, 1)
         }
         fmtovar.getOrElseUpdate(at, {
           val lit = fmtovar.size + 1
@@ -104,7 +104,7 @@ class Picosat extends Solver {
       /* call sat only if solver is in unknown state */
       laststate = to match {
         case Infinity => jps.picosat_sat(-1)
-        case _        => jps.picosat_sat(to.to.toInt)
+        case _ => jps.picosat_sat(to.to.toInt)
       }
     }
     if (laststate == PSSAT) 1 else if (laststate == PSUNSAT) -1 else 0
@@ -133,29 +133,26 @@ class Picosat extends Solver {
     laststate = PSUNKNOWN
   }
 
-  override def getModel(): Formula[PL] = {
+  override def getModel(): Option[Model] = {
     require(initialized, "getModel(): Solver not yet initialized!")
     require(laststate == PSSAT || laststate == PSUNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
 
-    def toConjunction(a: Seq[Formula[PL]]) =
-      if (a.isEmpty)
-        Verum()
-      else
-        a.reduceLeft(And(_, _))
-
     laststate match {
-      case PSUNSAT => Falsum()
-      case PSSAT =>
-        toConjunction((for {
+      case PSUNSAT => None
+      case PSSAT => {
+        val picosatLiterals = (for {
           i <- 1 to jps.picosat_variables()
           j = i * jps.picosat_deref(i)
           if j != 0 /* filter out unassigned variables */
-        } yield j).
-          map(l => /* map literals to proper generic */
-            if (l < 0)
-              Not(vartofm.getOrElse(-l, Falsum()))
-            else
-              vartofm.getOrElse(l, Verum())).toSeq)
+        } yield j)
+        val positiveVariables = picosatLiterals.filter(picosatLit => picosatLit > 0)
+          .filter(picosatLit => vartofm.contains(picosatLit))
+          .map(picosatLit => vartofm(picosatLit)).toList
+        val negativeVariables = picosatLiterals.filter(picosatLit => picosatLit < 0)
+          .filter(picosatLit => vartofm.contains(picosatLit))
+          .map(picosatLit => vartofm(picosatLit)).toList
+        Some(Model(positiveVariables, negativeVariables))
+      }
     }
   }
 }

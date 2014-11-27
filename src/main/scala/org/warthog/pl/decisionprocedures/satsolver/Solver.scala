@@ -63,12 +63,7 @@ trait Solver {
     */
   def sat(timeout: Duration): Int
 
-  /**
-    * Get a model of the formula
-    * @return [[org.warthog.formulas.Falsum]] if UNSAT, else satisfying assignment
-    *           in form of a conjunction of literals
-    */
-  def getModel(): Formula[PL]
+  def getModel(): Option[Model]
 
   /**
     * Reset the solver
