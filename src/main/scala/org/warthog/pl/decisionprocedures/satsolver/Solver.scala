@@ -33,6 +33,11 @@ import org.warthog.pl.formulas.PL
   */
 trait Solver {
   /**
+   * Reset the solver
+   */
+  def reset()
+
+  /**
     * Add a formula to the solver.  If the solver held a formula `F` bevor, it now holds `F /\ fm`.
     * @param fm the formula to add
     */
@@ -64,16 +69,6 @@ trait Solver {
   def sat(timeout: Duration = Infinity): Int
 
   def getModel(): Option[Model]
-
-  /**
-    * Reset the solver
-    */
-  def reset()
-
-  /**
-    * Initialize the solver
-    */
-  def init()
 }
 
 object Solver {
@@ -128,15 +123,10 @@ trait UnsatCore {
   * }}}
   */
 object sat {
-
   class SolverExecutor(s: Solver) {
     def apply(f: Solver => Unit) {
-      s.init()
-      try {
-        f(s)
-      } finally {
-        s.reset()
-      }
+      s.reset()
+      f(s)
     }
   }
 
