@@ -111,11 +111,4 @@ public class JMinisat {
         minisat_free(solver0);
         minisat_free(solver1);
     }
-
-    public static void main(String[] args) throws Exception {
-        //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
-        JMinisat jps=new JMinisat();
-        jps.test();
-    }
-
 }
