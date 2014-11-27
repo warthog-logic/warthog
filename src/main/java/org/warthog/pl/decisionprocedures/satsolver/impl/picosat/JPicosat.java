@@ -36,9 +36,7 @@ public class JPicosat {
     private Pointer currentPicosatObject;
 
     /**
-     *  Interface for Picosat-953 and following versions.
-     *  Note that this interface changed from version 951 to 953,
-     *  so every native Picosat library must be at least version 953.
+     *  Interface for Picosat-959.
      */
     public interface CPicosat extends Library {
         Pointer picosat_init();
@@ -123,9 +121,9 @@ public class JPicosat {
       try {
         version = Integer.parseInt(INSTANCE.picosat_version());
       } catch (NumberFormatException e) { }
-      if (version < 953)
+      if (version < 959)
         System.err.println("Warning: The picosat library provided in " + path + " seems to be too old. " +
-                "Only version 953 and following are supported! The application might crash randomly.");
+                "Only version 959 and following are supported! The application might crash randomly.");
     }
 
     public void test() {
