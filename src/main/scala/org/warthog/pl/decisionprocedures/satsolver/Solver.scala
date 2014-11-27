@@ -121,26 +121,6 @@ trait UnsatCore {
 }
 
 /**
-  * Solvers which support proof trace generation mix-in this trait
-  */
-trait ProofTrace {
-  /* TODO: Suitable form for proof traces/refutations? */
-}
-
-/**
-  * Solvers which support interpolant generation mix-in this trait
-  *
-  * There are solvers that generate Craig interpolants on the fly, if a
-  * solver supports proof trace generation, interpolants can, however, be
-  * easily extracted from resolution refutations (for an overview cf.
-  * D'Silva, Kroening et al.: "Interpolant Strength", VMCAI 2010).
-  */
-trait CraigInterpolant {
-  this: ProofTrace =>
-  def getInterpolant(): Formula[PL]
-}
-
-/**
   * Example usage:
   *
   * {{{
