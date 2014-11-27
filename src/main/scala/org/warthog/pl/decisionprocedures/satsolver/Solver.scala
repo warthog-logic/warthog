@@ -61,7 +61,7 @@ trait Solver {
     * @param timeout a timeout value for the solver
     * @return <0: UNSAT, >0: SAT, 0: UNKNOWN
     */
-  def sat(timeout: Duration): Int
+  def sat(timeout: Duration = Infinity): Int
 
   def getModel(): Option[Model]
 
