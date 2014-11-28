@@ -57,7 +57,7 @@ class PicosatTest extends Specification {
           resultValue0 = solver.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.SAT
+      resultValue0 must be equalTo Solver.SAT
     }
     "be satisfied by model x" in {
       sat(ps) {
@@ -79,7 +79,7 @@ class PicosatTest extends Specification {
           resultValue0 = solver.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.UNSAT
+      resultValue0 must be equalTo Solver.UNSAT
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
       sat(ps) {
@@ -92,8 +92,8 @@ class PicosatTest extends Specification {
           resultValue1 = solver.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.UNSAT
-      resultValue1 must be equalTo Picosat.SAT
+      resultValue0 must be equalTo Solver.UNSAT
+      resultValue1 must be equalTo Solver.SAT
     }
   }
   "the empty clause" should {
@@ -104,7 +104,7 @@ class PicosatTest extends Specification {
           resultValue0 = s.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.UNSAT
+      resultValue0 must be equalTo Solver.UNSAT
     }
   }
   "the empty formula" should {
@@ -115,7 +115,7 @@ class PicosatTest extends Specification {
           resultValue0 = s.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.SAT
+      resultValue0 must be equalTo Solver.SAT
     }
   }
   "the verum" should {
@@ -142,7 +142,7 @@ class PicosatTest extends Specification {
           resultValue0 = s.sat(Infinity)
         }
       }
-      resultValue0 must be equalTo Picosat.UNSAT
+      resultValue0 must be equalTo Solver.UNSAT
     }
   }
 }

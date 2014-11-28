@@ -64,7 +64,7 @@ trait Solver {
   /**
     * Checks the previously added constraints for satisfiability.
     * @param timeout a timeout value for the solver
-    * @return <0: UNSAT, >0: SAT, 0: UNKNOWN
+    * @return Appropriate constant UNKOWN, SAT or UNSAT
     */
   def sat(timeout: Duration = Infinity): Int
 
@@ -72,6 +72,11 @@ trait Solver {
 }
 
 object Solver {
+  /* Possible solver states */
+  final val UNKNOWN = 0
+  final val SAT = 1
+  final val UNSAT = -1
+
   /**
     * literal: true
     */
