@@ -35,7 +35,7 @@ import org.warthog.pl.generators.PigeonHoleGenerator
   * Tests for the DPLL implementation
   */
 
-class DPTest extends Specification {
+class DPLLTest extends Specification {
 
   F.verum should {
     "be satisfiable" in {
