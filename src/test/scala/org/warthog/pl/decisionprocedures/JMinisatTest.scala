@@ -26,58 +26,56 @@
 package org.warthog.pl.decisionprocedures
 
 import org.specs2.mutable.Specification
-import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.JPicosat
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisat.JMinisat
 
-class JPicosatTest extends Specification {
+class JMinisatTest extends Specification {
   /*
    * By default, tests are executed concurrently. JNI/JNA, however, is able to load _only one_ instance of
-   * (lib)picosat.{so,dylib,dll} per JVM so concurrently accessing the picosat INSTANCE will result in double
+   * (lib)minisat.{so,dylib,dll} per JVM so concurrently accessing the minisat INSTANCE will result in double
    * instantiation errors and unexpected behaviour.
    */
   args(sequential = true)
 
-  "JPicosat with -1 and 1 clauses" should {
-    "be unsatisfiable" in {
-      val prover = new JPicosat()
-      prover.picosat_init()
-      prover.picosat_add(-1)
-      prover.picosat_add(0)
-      prover.picosat_add(1)
-      prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSUNSAT
+  "JMinisat" should {
+    val instance = new JMinisat()
+
+    "be unsatisfiable with -1 and 1 added" in {
+      val prover = instance.minisat_init()
+      instance.minisat_add(prover, Array(-1))
+      instance.minisat_add(prover, Array(1))
+      val result = instance.minisat_sat(prover)
+      instance.minisat_free(prover)
+      result must be equalTo JMinisat.MSUNSAT
     }
-  }
 
-  "JPicosat with -1 and 2 clauses" should {
-    "be satisfiable" in {
-      val prover = new JPicosat()
-      prover.picosat_init()
-      prover.picosat_add(-1)
-      prover.picosat_add(0)
-      prover.picosat_add(2)
-      prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSSAT
+    "be satisfiable with -1 and 2 added" in {
+      val prover = instance.minisat_init()
+      instance.minisat_add(prover, Array(-1))
+      instance.minisat_add(prover, Array(2))
+      val result = instance.minisat_sat(prover)
+      instance.minisat_free(prover)
+      result must be equalTo JMinisat.MSSAT
     }
-  }
 
-  "JPicosat after reset and added -1 and 2 clauses" should {
-    "be satisfiable" in {
-      val prover = new JPicosat()
+    "should be not in conflict when creating two different pointers" in {
+      val instance = new JMinisat()
+      val prover01 = instance.minisat_init()
+      val prover02 = instance.minisat_init()
 
-      prover.picosat_init()
-      prover.picosat_add(-1)
-      prover.picosat_add(0)
-      prover.picosat_add(1)
-      prover.picosat_add(0)
-      prover.picosat_sat(-1)
-      prover.picosat_reset()
+      instance.minisat_add(prover01, Array(1))
+      instance.minisat_add(prover01, Array(-1))
 
-      prover.picosat_init()
-      prover.picosat_add(-1)
-      prover.picosat_add(0)
-      prover.picosat_add(2)
-      prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSSAT
+      instance.minisat_add(prover02, Array(1))
+      instance.minisat_add(prover02, Array(2))
+
+      val result01 = instance.minisat_sat(prover01)
+      val result02 = instance.minisat_sat(prover02)
+
+      instance.minisat_free(prover01)
+      instance.minisat_free(prover02)
+
+      result01 must be equalTo JMinisat.MSUNSAT
+      result02 must be equalTo JMinisat.MSSAT
     }
   }
 }
