@@ -25,12 +25,12 @@
 
 package org.warthog.pl.decisionprocedures.satsolver
 
-import org.warthog.generic.formulas.{ Formula, Falsum }
+import org.warthog.generic.formulas.{Formula, Falsum}
 import org.warthog.pl.formulas.PL
 
 /**
-  * Common interface for SAT solvers
-  */
+ * Common interface for SAT solvers
+ */
 trait Solver {
   /**
    * Reset the solver
@@ -38,34 +38,34 @@ trait Solver {
   def reset()
 
   /**
-    * Add a formula to the solver.  If the solver held a formula `F` before, it now holds `F /\ fm`.
-    * @param fm the formula to add
-    */
+   * Add a formula to the solver.  If the solver held a formula `F` before, it now holds `F /\ fm`.
+   * @param fm the formula to add
+   */
   def add(fm: Formula[PL])
 
   /**
-    * Mark a solver's internal stack position.  Executing
-    * {{{
-    * Solver.add(f0)
-    * Solver.mark()
-    * Solver.add(a1)
-    * Solver.add(a2)
-    * Solver.undo()
-    * }}}
-    * will set the solver back into the state after adding `f0`
-    */
+   * Mark a solver's internal stack position.  Executing
+   * {{{
+   * Solver.add(f0)
+   * Solver.mark()
+   * Solver.add(a1)
+   * Solver.add(a2)
+   * Solver.undo()
+   * }}}
+   * will set the solver back into the state after adding `f0`
+   */
   def mark()
 
   /**
-    * Undo all the additions until the last marked position.
-    */
+   * Undo all the additions until the last marked position.
+   */
   def undo()
 
   /**
-    * Checks the previously added constraints for satisfiability.
-    * @param timeout a timeout value for the solver
-    * @return Appropriate constant UNKOWN, SAT or UNSAT
-    */
+   * Checks the previously added constraints for satisfiability.
+   * @param timeout a timeout value for the solver
+   * @return Appropriate constant UNKOWN, SAT or UNSAT
+   */
   def sat(timeout: Duration = Infinity): Int
 
   def getModel(): Option[Model]
@@ -76,58 +76,22 @@ object Solver {
   final val UNKNOWN = 0
   final val SAT = 1
   final val UNSAT = -1
-
-  /**
-    * literal: true
-    */
-  val TRUE_LITERAL: String = "T"
-  /**
-    * literal: false
-    */
-  val FALSE_LITERAL: String = "F"
-  /**
-    * minimum position model type
-    */
-  val Modeltype_MinPos: Int = 0
-  /**
-    * maximum position model type
-    */
-  val Modeltype_MaxPos: Int = 1
-  /**
-    * minimum negation model type
-    */
-  val Modeltype_MinNeg: Int = 2
-  /**
-    * maximum negation model type
-    */
-  val Modeltype_MaxNeg: Int = 3
-  /**
-    * minimum redundant codes
-    */
-  val MIN_REDUNDANT: Int = Integer.MIN_VALUE
 }
 
 /**
-  * Solvers that support unsat core extraction mix-in this trait
-  */
-trait UnsatCore {
-  this: Solver =>
-  def unsatCore(): Formula[PL]
-}
-
-/**
-  * Example usage:
-  *
-  * {{{
-  * sat(new PicoSat) {
-  *   solver => {
-  *     solver.add(...);
-  *     solver.sat(Infinity);
-  * }
-  * }
-  * }}}
-  */
+ * Example usage:
+ *
+ * {{{
+ * sat(new PicoSat) {
+ *   solver => {
+ *     solver.add(...);
+ *     solver.sat(Infinity);
+ * }
+ * }
+ * }}}
+ */
 object sat {
+
   class SolverExecutor(s: Solver) {
     def apply(f: Solver => Unit) {
       s.reset()
