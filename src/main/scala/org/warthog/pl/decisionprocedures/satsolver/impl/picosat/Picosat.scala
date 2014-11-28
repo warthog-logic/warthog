@@ -102,13 +102,10 @@ class Picosat extends Solver {
         jPicosatInstance.picosat_init()
         clauses = clauses.drop(clauses.length - h)
         clauses.foreach(addClauses)
+        lastState = Picosat.UNKNOWN
       }
-      case _ => {
-        marks = 0 :: marks
-        undo()
-      }
+      case _ =>
     }
-    lastState = Picosat.UNKNOWN
   }
 
   override def sat(to: Duration): Int = {
