@@ -27,13 +27,13 @@ package org.warthog.pl.decisionprocedures
 
 import satsolver.{Model, Infinity, Solver, sat}
 import org.specs2.mutable.Specification
-import org.warthog.pl.formulas.{ PL, PLAtom }
-import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
+import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.generic.formulas.{Formula, Verum, Falsum}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 
 /**
-  * Tests for the picosat bindings
-  */
+ * Tests for the picosat bindings
+ */
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
@@ -54,22 +54,20 @@ class PicosatTest extends Specification {
   "x" should {
     "be satisfiable" in {
       sat(ps) {
-        (solver: Solver) =>
-          {
-            solver.add(x)
-            rv0 = solver.sat(Infinity)
-          }
+        (solver: Solver) => {
+          solver.add(x)
+          rv0 = solver.sat(Infinity)
+        }
       }
-      rv0 must be equalTo (1)
+      rv0 must be equalTo Picosat.SAT
     }
     "be satisfied by model x" in {
       sat(ps) {
-        (solver: Solver) =>
-          {
-            solver.add(x)
-            solver.sat(Infinity)
-            model = solver.getModel()
-          }
+        (solver: Solver) => {
+          solver.add(x)
+          solver.sat(Infinity)
+          model = solver.getModel()
+        }
       }
       model.get.positiveLiterals.size must be equalTo 1
       model.get.negativeLiterals.size must be equalTo 0
@@ -77,66 +75,76 @@ class PicosatTest extends Specification {
     }
     "be unsatisfiable after adding -x" in {
       sat(ps) {
-        solver =>
-          {
-            solver.add(x)
-            solver.add(-x)
-            rv0 = solver.sat(Infinity)
-          }
+        solver => {
+          solver.add(x)
+          solver.add(-x)
+          rv0 = solver.sat(Infinity)
+        }
       }
-      rv0 must be equalTo (-1)
+      rv0 must be equalTo Picosat.UNSAT
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
       sat(ps) {
-        solver =>
-          {
-            solver.add(x)
-            solver.mark()
-            solver.add(-x)
-            rv0 = solver.sat(Infinity)
-            solver.undo()
-            rv1 = solver.sat(Infinity)
-          }
+        solver => {
+          solver.add(x)
+          solver.mark()
+          solver.add(-x)
+          rv0 = solver.sat(Infinity)
+          solver.undo()
+          rv1 = solver.sat(Infinity)
+        }
       }
-      (rv0 == -1 && rv1 == 1) must be equalTo (true)
+      rv0 must be equalTo Picosat.UNSAT
+      rv1 must be equalTo Picosat.SAT
     }
   }
   "the empty clause" should {
     "be satisfiable" in {
       sat(ps) {
-        s =>
-          {
-            s.add(Falsum())
-            rv0 = s.sat(Infinity)
-          }
+        s => {
+          s.add(Falsum())
+          rv0 = s.sat(Infinity)
+        }
       }
-      rv0 must be equalTo (-1)
+      rv0 must be equalTo Picosat.UNSAT
     }
   }
   "the empty formula" should {
     "be satisfiable" in {
       sat(ps) {
-        s =>
-          {
-            s.add(Verum())
-            rv0 = s.sat(Infinity)
-          }
+        s => {
+          s.add(Verum())
+          rv0 = s.sat(Infinity)
+        }
       }
-      rv0 must be equalTo (1)
+      rv0 must be equalTo Picosat.SAT
     }
   }
   "the verum" should {
     "return true upon sat checking" in {
       sat(ps) {
-        s =>
-          {
-            s.add(Verum())
-            rv0 = s.sat(Infinity)
-            model = s.getModel()
-          }
+        s => {
+          s.add(Verum())
+          rv0 = s.sat(Infinity)
+          model = s.getModel()
+        }
       }
       model.get.positiveLiterals.size must be equalTo 0
       model.get.negativeLiterals.size must be equalTo 0
+    }
+  }
+  "x and -x" should {
+    "be unsatisfiable even after multiple undo calls" in {
+      sat(ps) {
+        s => {
+          s.add(x)
+          s.add(-x)
+          s.undo()
+          s.undo()
+          rv0 = s.sat(Infinity)
+        }
+      }
+      rv0 must be equalTo Picosat.UNSAT
     }
   }
 }

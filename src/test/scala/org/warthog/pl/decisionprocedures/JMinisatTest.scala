@@ -45,7 +45,7 @@ class JMinisatTest extends Specification {
       instance.minisat_add(prover, Array(1))
       val result = instance.minisat_sat(prover)
       instance.minisat_free(prover)
-      result must be equalTo JMinisat.MSUNSAT
+      result must be equalTo JMinisat.UNSAT
     }
 
     "be satisfiable with -1 and 2 added" in {
@@ -54,7 +54,7 @@ class JMinisatTest extends Specification {
       instance.minisat_add(prover, Array(2))
       val result = instance.minisat_sat(prover)
       instance.minisat_free(prover)
-      result must be equalTo JMinisat.MSSAT
+      result must be equalTo JMinisat.SAT
     }
 
     "should be not in conflict when creating two different pointers" in {
@@ -74,8 +74,8 @@ class JMinisatTest extends Specification {
       instance.minisat_free(prover01)
       instance.minisat_free(prover02)
 
-      result01 must be equalTo JMinisat.MSUNSAT
-      result02 must be equalTo JMinisat.MSSAT
+      result01 must be equalTo JMinisat.UNSAT
+      result02 must be equalTo JMinisat.SAT
     }
   }
 }

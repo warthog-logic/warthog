@@ -30,9 +30,9 @@ import com.sun.jna.*;
 public class JMinisat {
     private static final String DIR = "/solvers/minisat";
 
-    public static final int MSUNKNOWN = 0;
-    public static final int MSSAT = 10;
-    public static final int MSUNSAT = 20;
+    public static final int UNKNOWN = 0;
+    public static final int SAT = 10;
+    public static final int UNSAT = 20;
 
     private CMinisat INSTANCE;
 

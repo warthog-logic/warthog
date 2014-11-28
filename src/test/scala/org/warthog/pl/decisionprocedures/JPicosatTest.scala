@@ -44,7 +44,7 @@ class JPicosatTest extends Specification {
       prover.picosat_add(0)
       prover.picosat_add(1)
       prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSUNSAT
+      prover.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS) must be equalTo JPicosat.UNSAT
     }
   }
 
@@ -56,7 +56,7 @@ class JPicosatTest extends Specification {
       prover.picosat_add(0)
       prover.picosat_add(2)
       prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSSAT
+      prover.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS) must be equalTo JPicosat.SAT
     }
   }
 
@@ -77,7 +77,7 @@ class JPicosatTest extends Specification {
       prover.picosat_add(0)
       prover.picosat_add(2)
       prover.picosat_add(0)
-      prover.picosat_sat(-1) must be equalTo JPicosat.PSSAT
+      prover.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS) must be equalTo JPicosat.SAT
     }
   }
 }

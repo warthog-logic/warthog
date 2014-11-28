@@ -33,9 +33,11 @@ import com.sun.jna.Pointer;
 public class JPicosat {
     private static final String DIR = "/solvers/picosat";
 
-    public static final int PSUNKNOWN = 0;
-    public static final int PSSAT = 10;
-    public static final int PSUNSAT = 20;
+    public static final int UNKNOWN = 0;
+    public static final int SAT = 10;
+    public static final int UNSAT = 20;
+
+    public static final int INFINITY_DECISION_LEVELS = -1;
 
     private CPicosat INSTANCE;
     private Pointer currentPicosatObject;

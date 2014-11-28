@@ -41,7 +41,7 @@ class Picosat extends Solver {
   private val varToFm = Map[Int, Formula[PL]]()
   private var clauses: List[Set[Int]] = Nil
   private var marks: List[Int] = Nil
-  private var lastState = JPicosat.PSUNKNOWN
+  private var lastState = Picosat.UNKNOWN
 
   jPicosatInstance.picosat_init()
 
@@ -52,7 +52,7 @@ class Picosat extends Solver {
     varToFm.clear()
     clauses = Nil
     marks = Nil
-    lastState = JPicosat.PSUNKNOWN
+    lastState = Picosat.UNKNOWN
   }
 
   override def add(fm: Formula[PL]) {
@@ -81,8 +81,8 @@ class Picosat extends Solver {
     clauses = lcls ++ clauses
 
     /* an unsatisfiable formula doesn't get satisfiable by adding clauses */
-    if (lastState != JPicosat.PSUNSAT)
-      lastState = JPicosat.PSUNKNOWN
+    if (lastState != Picosat.UNSAT)
+      lastState = Picosat.UNKNOWN
   }
 
   private def addClauses(cs: Set[Int]): Int = {
@@ -108,26 +108,31 @@ class Picosat extends Solver {
         undo()
       }
     }
-    lastState = JPicosat.PSUNKNOWN
+    lastState = Picosat.UNKNOWN
   }
 
   override def sat(to: Duration): Int = {
-    if (lastState == JPicosat.PSUNKNOWN) {
+    if (lastState == Picosat.UNKNOWN) {
       /* call sat only if solver is in unknown state */
-      lastState = to match {
-        case Infinity => jPicosatInstance.picosat_sat(-1)
+      lastState = Picosat.jPicoSatStateToPicoSatState(to match {
+        case Infinity => jPicosatInstance.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS)
         case _ => jPicosatInstance.picosat_sat(to.to.toInt)
-      }
+      })
     }
-    if (lastState == JPicosat.PSSAT) 1 else if (lastState == JPicosat.PSUNSAT) -1 else 0
+    if (lastState == Picosat.SAT)
+      Picosat.SAT
+    else if (lastState == Picosat.UNSAT)
+      Picosat.UNSAT
+    else
+      Picosat.UNKNOWN
   }
 
   override def getModel(): Option[Model] = {
-    require(lastState == JPicosat.PSSAT || lastState == JPicosat.PSUNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
+    require(lastState == Picosat.SAT || lastState == Picosat.UNSAT, "getModel(): Solver needs to be in SAT or UNSAT state!")
 
     lastState match {
-      case JPicosat.PSUNSAT => None
-      case JPicosat.PSSAT => {
+      case Picosat.UNSAT => None
+      case Picosat.SAT => {
         val picosatLiterals = (for {
           i <- 1 to jPicosatInstance.picosat_variables()
           j = i * jPicosatInstance.picosat_deref(i)
@@ -142,5 +147,17 @@ class Picosat extends Solver {
         Some(Model(positiveVariables, negativeVariables))
       }
     }
+  }
+}
+
+object Picosat {
+  final val UNKNOWN = 0
+  final val SAT = 1
+  final val UNSAT = -1
+
+  private def jPicoSatStateToPicoSatState(jPicoSatState: Int) = jPicoSatState match {
+    case JPicosat.UNSAT => Picosat.UNSAT
+    case JPicosat.SAT => Picosat.SAT
+    case JPicosat.UNKNOWN => Picosat.UNKNOWN
   }
 }
