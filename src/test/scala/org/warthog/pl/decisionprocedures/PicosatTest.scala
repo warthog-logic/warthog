@@ -38,8 +38,8 @@ class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
   val ps = new Picosat
-  var rv0: Int = _
-  var rv1: Int = _
+  var resultValue: Int = _
+  var resultValue: Int = _
   var model: Option[Model] = _
 
   /*
@@ -49,17 +49,15 @@ class PicosatTest extends Specification {
    */
   args(sequential = true)
 
-  //TODO property file
-
   "x" should {
     "be satisfiable" in {
       sat(ps) {
         (solver: Solver) => {
           solver.add(x)
-          rv0 = solver.sat(Infinity)
+          resultValue = solver.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.SAT
+      resultValue must be equalTo Picosat.SAT
     }
     "be satisfied by model x" in {
       sat(ps) {
@@ -78,10 +76,10 @@ class PicosatTest extends Specification {
         solver => {
           solver.add(x)
           solver.add(-x)
-          rv0 = solver.sat(Infinity)
+          resultValue = solver.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.UNSAT
+      resultValue must be equalTo Picosat.UNSAT
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
       sat(ps) {
@@ -89,13 +87,13 @@ class PicosatTest extends Specification {
           solver.add(x)
           solver.mark()
           solver.add(-x)
-          rv0 = solver.sat(Infinity)
+          resultValue = solver.sat(Infinity)
           solver.undo()
-          rv1 = solver.sat(Infinity)
+          resultValue = solver.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.UNSAT
-      rv1 must be equalTo Picosat.SAT
+      resultValue must be equalTo Picosat.UNSAT
+      resultValue must be equalTo Picosat.SAT
     }
   }
   "the empty clause" should {
@@ -103,10 +101,10 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Falsum())
-          rv0 = s.sat(Infinity)
+          resultValue = s.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.UNSAT
+      resultValue must be equalTo Picosat.UNSAT
     }
   }
   "the empty formula" should {
@@ -114,10 +112,10 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Verum())
-          rv0 = s.sat(Infinity)
+          resultValue = s.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.SAT
+      resultValue must be equalTo Picosat.SAT
     }
   }
   "the verum" should {
@@ -125,7 +123,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Verum())
-          rv0 = s.sat(Infinity)
+          resultValue = s.sat(Infinity)
           model = s.getModel()
         }
       }
@@ -141,10 +139,10 @@ class PicosatTest extends Specification {
           s.add(-x)
           s.undo()
           s.undo()
-          rv0 = s.sat(Infinity)
+          resultValue = s.sat(Infinity)
         }
       }
-      rv0 must be equalTo Picosat.UNSAT
+      resultValue must be equalTo Picosat.UNSAT
     }
   }
 }
