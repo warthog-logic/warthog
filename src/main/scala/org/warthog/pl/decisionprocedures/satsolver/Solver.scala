@@ -38,7 +38,7 @@ trait Solver {
   def reset()
 
   /**
-    * Add a formula to the solver.  If the solver held a formula `F` bevor, it now holds `F /\ fm`.
+    * Add a formula to the solver.  If the solver held a formula `F` before, it now holds `F /\ fm`.
     * @param fm the formula to add
     */
   def add(fm: Formula[PL])
@@ -62,7 +62,7 @@ trait Solver {
   def undo()
 
   /**
-    * Check decisionprocedures satsolver of the formula on the internal stack.
+    * Checks the previously added constraints for satisfiability.
     * @param timeout a timeout value for the solver
     * @return <0: UNSAT, >0: SAT, 0: UNKNOWN
     */
