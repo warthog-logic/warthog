@@ -63,10 +63,9 @@ trait Solver {
 
   /**
    * Checks the previously added constraints for satisfiability.
-   * @param timeout a timeout value for the solver
    * @return Appropriate constant UNKOWN, SAT or UNSAT
    */
-  def sat(timeout: Duration = Infinity): Int
+  def sat(): Int
 
   def getModel(): Option[Model]
 }
@@ -103,17 +102,3 @@ object sat {
     new SolverExecutor(s)
   }
 }
-
-class Duration(val to: Long = 0) {
-  def ms = new Duration(to * 1000)
-
-  def s = new Duration(to * 1000000)
-
-  def min = new Duration(to * 1000000 * 60)
-
-  def h = new Duration(to * 1000000 * 60 * 60)
-
-  def d = new Duration(to * 1000000 * 60 * 60 * 24)
-}
-
-case object Infinity extends Duration

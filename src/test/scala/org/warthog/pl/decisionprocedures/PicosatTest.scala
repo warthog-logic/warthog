@@ -25,7 +25,7 @@
 
 package org.warthog.pl.decisionprocedures
 
-import satsolver.{Model, Infinity, Solver, sat}
+import satsolver.{Model, Solver, sat}
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{PL, PLAtom}
 import org.warthog.generic.formulas.{Formula, Verum, Falsum}
@@ -54,7 +54,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         (solver: Solver) => {
           solver.add(x)
-          resultValue0 = solver.sat(Infinity)
+          resultValue0 = solver.sat()
         }
       }
       resultValue0 must be equalTo Solver.SAT
@@ -63,7 +63,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         (solver: Solver) => {
           solver.add(x)
-          solver.sat(Infinity)
+          solver.sat()
           model = solver.getModel()
         }
       }
@@ -76,7 +76,7 @@ class PicosatTest extends Specification {
         solver => {
           solver.add(x)
           solver.add(-x)
-          resultValue0 = solver.sat(Infinity)
+          resultValue0 = solver.sat()
         }
       }
       resultValue0 must be equalTo Solver.UNSAT
@@ -87,9 +87,9 @@ class PicosatTest extends Specification {
           solver.add(x)
           solver.mark()
           solver.add(-x)
-          resultValue0 = solver.sat(Infinity)
+          resultValue0 = solver.sat()
           solver.undo()
-          resultValue1 = solver.sat(Infinity)
+          resultValue1 = solver.sat()
         }
       }
       resultValue0 must be equalTo Solver.UNSAT
@@ -101,7 +101,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Falsum())
-          resultValue0 = s.sat(Infinity)
+          resultValue0 = s.sat()
         }
       }
       resultValue0 must be equalTo Solver.UNSAT
@@ -112,7 +112,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Verum())
-          resultValue0 = s.sat(Infinity)
+          resultValue0 = s.sat()
         }
       }
       resultValue0 must be equalTo Solver.SAT
@@ -123,7 +123,7 @@ class PicosatTest extends Specification {
       sat(ps) {
         s => {
           s.add(Verum())
-          resultValue0 = s.sat(Infinity)
+          resultValue0 = s.sat()
           model = s.getModel()
         }
       }
@@ -139,7 +139,7 @@ class PicosatTest extends Specification {
           s.add(-x)
           s.undo()
           s.undo()
-          resultValue0 = s.sat(Infinity)
+          resultValue0 = s.sat()
         }
       }
       resultValue0 must be equalTo Solver.UNSAT

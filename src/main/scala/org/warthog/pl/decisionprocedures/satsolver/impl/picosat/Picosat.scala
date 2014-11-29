@@ -27,7 +27,7 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 
 import scala.collection.mutable.Map
 
-import org.warthog.pl.decisionprocedures.satsolver.{Model, Infinity, Duration, Solver}
+import org.warthog.pl.decisionprocedures.satsolver.{Model, Solver}
 import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
@@ -108,20 +108,12 @@ class Picosat extends Solver {
     }
   }
 
-  override def sat(to: Duration): Int = {
-    if (lastState == Solver.UNKNOWN) {
-      /* call sat only if solver is in unknown state */
-      lastState = Picosat.jPicoSatStateToSolverState(to match {
-        case Infinity => jPicosatInstance.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS)
-        case _ => jPicosatInstance.picosat_sat(to.to.toInt)
-      })
-    }
-    if (lastState == Solver.SAT)
-      Solver.SAT
-    else if (lastState == Solver.UNSAT)
-      Solver.UNSAT
-    else
-      Solver.UNKNOWN
+  override def sat(): Int = {
+    if (lastState == Solver.UNKNOWN)
+    /* call sat only if solver is in unknown state */
+      lastState = Picosat.jPicoSatStateToSolverState(
+        jPicosatInstance.picosat_sat(JPicosat.INFINITY_DECISION_LEVELS))
+    lastState
   }
 
   override def getModel(): Option[Model] = {
