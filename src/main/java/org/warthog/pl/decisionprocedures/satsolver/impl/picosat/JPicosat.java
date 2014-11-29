@@ -64,7 +64,7 @@ public class JPicosat {
     }
 
     public JPicosat(String libDir) throws Exception {
-        if (libDir == null || libDir == "")
+        if (libDir == null || "".equals(libDir))
             libDir="lib";
         StringBuilder pref = new StringBuilder(libDir + DIR);
 

@@ -51,7 +51,7 @@ public class JMinisat {
     }
 
     public JMinisat(String libDir) throws Exception {
-        if (libDir == null || libDir == "")
+        if (libDir == null || "".equals(libDir))
             libDir = "lib";
         StringBuilder pref = new StringBuilder(libDir + DIR);
 
@@ -66,7 +66,7 @@ public class JMinisat {
             pref.append("/win");
         else
             throw new Exception("JMinisat: Platform unsupported!");
-
+        
         System.setProperty("jna.library.path", pref.toString());
         INSTANCE = (CMinisat) Native.loadLibrary("minisat", CMinisat.class);
     }
