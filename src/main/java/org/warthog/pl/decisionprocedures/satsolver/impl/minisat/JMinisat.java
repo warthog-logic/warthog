@@ -27,16 +27,16 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.minisat;
 
 import com.sun.jna.*;
 
-public class JMinisat {
+public class JMiniSat {
     private static final String DIR = "/solvers/minisat";
 
     public static final int UNKNOWN = 0;
     public static final int SAT = 10;
     public static final int UNSAT = 20;
 
-    private CMinisat INSTANCE;
+    private CMiniSat INSTANCE;
 
-    private interface CMinisat extends Library {
+    private interface CMiniSat extends Library {
         int ms_newSolver();
 
         void ms_addClause(int solver, int arr[]);
@@ -50,7 +50,7 @@ public class JMinisat {
         void ms_freeSolver(int solver);
     }
 
-    public JMinisat(String libDir) throws Exception {
+    public JMiniSat(String libDir) throws Exception {
         if (libDir == null || "".equals(libDir))
             libDir = "lib";
         StringBuilder pref = new StringBuilder(libDir + DIR);
@@ -65,13 +65,13 @@ public class JMinisat {
         else if (Platform.isWindows())
             pref.append("/win");
         else
-            throw new Exception("JMinisat: Platform unsupported!");
+            throw new Exception("JMiniSat: Platform unsupported!");
         
         System.setProperty("jna.library.path", pref.toString());
-        INSTANCE = (CMinisat) Native.loadLibrary("minisat", CMinisat.class);
+        INSTANCE = (CMiniSat) Native.loadLibrary("minisat", CMiniSat.class);
     }
 
-    public JMinisat() throws Exception {
+    public JMiniSat() throws Exception {
         this(System.getProperty("warthog.libs"));
     }
 

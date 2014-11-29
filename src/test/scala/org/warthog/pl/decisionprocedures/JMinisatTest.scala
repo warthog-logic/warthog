@@ -26,9 +26,9 @@
 package org.warthog.pl.decisionprocedures
 
 import org.specs2.mutable.Specification
-import org.warthog.pl.decisionprocedures.satsolver.impl.minisat.JMinisat
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisat.JMiniSat
 
-class JMinisatTest extends Specification {
+class JMiniSatTest extends Specification {
   /*
    * By default, tests are executed concurrently. JNI/JNA, however, is able to load _only one_ instance of
    * (lib)minisat.{so,dylib,dll} per JVM so concurrently accessing the minisat INSTANCE will result in double
@@ -36,8 +36,8 @@ class JMinisatTest extends Specification {
    */
   args(sequential = true)
 
-  "JMinisat" should {
-    val instance = new JMinisat()
+  "JMiniSat" should {
+    val instance = new JMiniSat()
 
     "be unsatisfiable with -1 and 1 added" in {
       val prover = instance.minisat_init()
@@ -45,7 +45,7 @@ class JMinisatTest extends Specification {
       instance.minisat_add(prover, Array(1))
       val result = instance.minisat_sat(prover)
       instance.minisat_free(prover)
-      result must be equalTo JMinisat.UNSAT
+      result must be equalTo JMiniSat.UNSAT
     }
 
     "be satisfiable with -1 and 2 added" in {
@@ -54,11 +54,11 @@ class JMinisatTest extends Specification {
       instance.minisat_add(prover, Array(2))
       val result = instance.minisat_sat(prover)
       instance.minisat_free(prover)
-      result must be equalTo JMinisat.SAT
+      result must be equalTo JMiniSat.SAT
     }
 
     "should be not in conflict when creating two different pointers" in {
-      val instance = new JMinisat()
+      val instance = new JMiniSat()
       val prover01 = instance.minisat_init()
       val prover02 = instance.minisat_init()
 
@@ -74,8 +74,8 @@ class JMinisatTest extends Specification {
       instance.minisat_free(prover01)
       instance.minisat_free(prover02)
 
-      result01 must be equalTo JMinisat.UNSAT
-      result02 must be equalTo JMinisat.SAT
+      result01 must be equalTo JMiniSat.UNSAT
+      result02 must be equalTo JMiniSat.SAT
     }
   }
 }
