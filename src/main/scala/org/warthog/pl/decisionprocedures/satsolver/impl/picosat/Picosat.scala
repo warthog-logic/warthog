@@ -28,9 +28,9 @@ package org.warthog.pl.decisionprocedures.satsolver.impl.picosat
 import scala.collection.mutable.Map
 
 import org.warthog.pl.decisionprocedures.satsolver.{Model, Solver}
-import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.formulas.{PLAtom, PL}
 import org.warthog.generic.formulas._
+import org.warthog.pl.transformations.CNFUtil
 
 /**
  * Solver Wrapper for Picosat
@@ -60,7 +60,7 @@ class Picosat extends Solver {
      * Convert clause list to List of Set of Ints, update Int->Formula
      * and Formula->Int mapping if necessary
      */
-    val lcls = CNFUtil.toCNF(fm) match {
+    val lcls = CNFUtil.toImmutableCNF(fm) match {
       case Nil => Nil
       case clauses => clauses.map(clause => clause.literals.map(literal => {
         val (at, mul) = (literal.variable, if (literal.phase) 1 else -1)

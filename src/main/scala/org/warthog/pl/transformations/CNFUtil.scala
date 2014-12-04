@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.io
+package org.warthog.pl.transformations
 
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas._
@@ -53,11 +53,11 @@ object CNFUtil {
     * @param f a formula in cnf
     * @return a list of clauses
     */
-  def toCNF(f: Formula[PL]): List[ImmutablePLClause] = {
+  def toImmutableCNF(f: Formula[PL]): List[ImmutablePLClause] = {
     (f.simplifiedCNF.removeBooleanConstants match {
       case v: Verum[PL]  => List[ImmutablePLClause]()
       case f: Falsum[PL] => List(new ImmutablePLClause())
-      case And(fs@_*)    => (for (i <- fs; x = toCNF(i)) yield x.head).toList
+      case And(fs@_*)    => (for (i <- fs; x = toImmutableCNF(i)) yield x.head).toList
       case Or(fs@_*)     => List(new ImmutablePLClause(fs.toList.map(PLLiteral(_))))
       case literal       => List(new ImmutablePLClause(PLLiteral(literal)))
     })
