@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, Andreas J. Kuebler & Christoph Zengler
+ * Copyright (c) 2011-2014, Andreas J. Kuebler & Christoph Zengler & Rouven Walter
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@ import scala.collection.mutable.Map
 
 import org.warthog.pl.decisionprocedures.satsolver.{Model, Solver}
 import org.warthog.pl.io.CNFUtil
-import org.warthog.pl.formulas.PL
+import org.warthog.pl.formulas.{PLAtom, PL}
 import org.warthog.generic.formulas._
 
 /**
@@ -37,8 +37,8 @@ import org.warthog.generic.formulas._
  */
 class Picosat extends Solver {
   private val jPicosatInstance = new JPicosat()
-  private val fmToVar = Map[Formula[PL], Int]()
-  private val varToFm = Map[Int, Formula[PL]]()
+  private val varToID = Map[PLAtom, Int]()
+  private val idToVar = Map[Int, PLAtom]()
   private var clauses: List[Set[Int]] = Nil
   private var marks: List[Int] = Nil
   private var lastState = Solver.UNKNOWN
@@ -48,8 +48,8 @@ class Picosat extends Solver {
   override def reset() {
     jPicosatInstance.picosat_reset()
     jPicosatInstance.picosat_init()
-    fmToVar.clear()
-    varToFm.clear()
+    varToID.clear()
+    idToVar.clear()
     clauses = Nil
     marks = Nil
     lastState = Solver.UNKNOWN
@@ -60,16 +60,13 @@ class Picosat extends Solver {
      * Convert clause list to List of Set of Ints, update Int->Formula
      * and Formula->Int mapping if necessary
      */
-    val lcls = CNFUtil.toList(fm) match {
+    val lcls = CNFUtil.toCNF(fm) match {
       case Nil => Nil
-      case l => l.map(_.map(f => {
-        val (at, mul) = f match {
-          case Not(ff) => (ff, -1)
-          case _ => (f, 1)
-        }
-        fmToVar.getOrElseUpdate(at, {
-          val lit = fmToVar.size + 1
-          varToFm += (lit -> at)
+      case clauses => clauses.map(clause => clause.literals.map(literal => {
+        val (at, mul) = (literal.variable, if (literal.phase) 1 else -1)
+        varToID.getOrElseUpdate(at, {
+          val lit = varToID.size + 1
+          idToVar += (lit -> at)
           lit
         }) * mul
       }).toSet)
@@ -128,11 +125,11 @@ class Picosat extends Solver {
           if j != 0 /* filter out unassigned variables */
         } yield j)
         val positiveVariables = picosatLiterals.filter(picosatLit => picosatLit > 0)
-          .filter(picosatLit => varToFm.contains(picosatLit))
-          .map(picosatLit => varToFm(picosatLit)).toList
+          .filter(picosatLit => idToVar.contains(picosatLit))
+          .map(picosatLit => idToVar(picosatLit)).toList
         val negativeVariables = picosatLiterals.filter(picosatLit => picosatLit < 0)
-          .filter(picosatLit => varToFm.contains(picosatLit))
-          .map(picosatLit => varToFm(picosatLit)).toList
+          .filter(picosatLit => idToVar.contains(picosatLit))
+          .map(picosatLit => idToVar(picosatLit)).toList
         Some(Model(positiveVariables, negativeVariables))
       }
     }

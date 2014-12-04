@@ -34,19 +34,6 @@ import org.warthog.pl.datastructures.cnf.{ ImmutablePLClause, PLLiteral, Mutable
   */
 object CNFUtil {
   /**
-    * List representation of a CNF formula
-    * @param f a formula in cnf
-    * @return a list (conjunction) of lists (clauses) of literals
-    */
-  def toList(f: Formula[PL]): List[List[Formula[PL]]] = {
-    (f.cnf match {
-      case And(fs@_*) => (for (i <- fs; x = toList(i); if x != Nil) yield x.head).toList
-      case Or(fs@_*)  => List(fs.toList.filter(!_.isInstanceOf[Falsum[PL]]))
-      case literal    => List(if (literal.isInstanceOf[Falsum[PL]]) Nil else List(literal))
-    }).filterNot(_.contains(Verum[PL]()))
-  }
-
-  /**
     * Internal CNF representation with mutable clauses
     * @param f a formula in cnf
     * @return a list of clauses

@@ -25,13 +25,13 @@
 
 package org.warthog.pl.decisionprocedures.satsolver
 
-import org.warthog.pl.formulas.PL
+import org.warthog.pl.formulas.{PLAtom, PL}
 import org.warthog.generic.formulas.{And, Formula}
 
 /**
  * A (partial) Model representing a satisfying assignment of a propositional formula.
  */
-class Model(val positiveLiterals: List[Formula[PL]], val negativeLiterals: List[Formula[PL]]) {
+class Model(val positiveLiterals: List[PLAtom], val negativeLiterals: List[PLAtom]) {
 
   def toFormula = And(And(positiveLiterals: _*), And(negativeLiterals: _*))
 
@@ -39,6 +39,6 @@ class Model(val positiveLiterals: List[Formula[PL]], val negativeLiterals: List[
 }
 
 object Model {
-  def apply(positiveLiterals: List[Formula[PL]], negativeLiterals: List[Formula[PL]]) =
+  def apply(positiveLiterals: List[PLAtom], negativeLiterals: List[PLAtom]) =
     new Model(positiveLiterals, negativeLiterals)
 }
