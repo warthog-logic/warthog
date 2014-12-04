@@ -31,6 +31,7 @@ import org.warthog.pl.decisionprocedures.satsolver.{Model, Solver}
 import org.warthog.pl.formulas.{PLAtom, PL}
 import org.warthog.generic.formulas._
 import org.warthog.pl.transformations.CNFUtil
+import org.warthog.pl.datastructures.cnf.ImmutablePLClause
 
 /**
  * Solver Wrapper for Picosat.
@@ -39,7 +40,7 @@ class Picosat extends Solver {
   private val jPicosatInstance = new JPicosat()
   private val varToID = Map[PLAtom, Int]()
   private val idToVar = Map[Int, PLAtom]()
-  private var clauses: List[Set[Int]] = Nil
+  private var clausesStack: List[Set[Int]] = Nil
   private var marks: List[Int] = Nil
   private var lastState = Solver.UNKNOWN
 
@@ -50,45 +51,42 @@ class Picosat extends Solver {
     jPicosatInstance.picosat_init()
     varToID.clear()
     idToVar.clear()
-    clauses = Nil
+    clausesStack = Nil
     marks = Nil
     lastState = Solver.UNKNOWN
   }
 
-  override def add(fm: Formula[PL]) {
-    /*
-     * Convert clause list to List of Set of Ints, update Int->Formula
-     * and Formula->Int mapping if necessary
-     */
-    val lcls = CNFUtil.toImmutableCNF(fm) match {
-      case Nil => Nil
-      case clauses => clauses.map(clause => clause.literals.map(literal => {
-        val (at, mul) = (literal.variable, if (literal.phase) 1 else -1)
-        varToID.getOrElseUpdate(at, {
-          val lit = varToID.size + 1
-          idToVar += (lit -> at)
-          lit
-        }) * mul
-      }).toSet)
-    }
-    /* add clauses to solver */
-    lcls.foreach(addClause)
+  override def add(formula: Formula[PL]) {
+    addClausesAndUpdateLastState(CNFUtil.toImmutableCNF(formula))
+  }
 
-    /* add clauses to solver stack */
-    clauses = lcls ++ clauses
+  private def addClausesAndUpdateLastState(clauses: List[ImmutablePLClause]) {
+    val clausesWithIDs = clauses.map(registerVariables)
+    clausesWithIDs.foreach(addClauseWithIDs)
+    clausesStack = clausesWithIDs ++ clausesStack
 
-    /* an unsatisfiable formula doesn't get satisfiable by adding clauses */
     if (lastState != Solver.UNSAT)
       lastState = Solver.UNKNOWN
   }
 
-  private def addClause(cs: Set[Int]): Int = {
-    cs.foreach(jPicosatInstance.picosat_add(_))
+  private def registerVariables(clause: ImmutablePLClause): Set[Int] = {
+    clause.literals.map(literal => {
+      val (at, mul) = (literal.variable, if (literal.phase) 1 else -1)
+      varToID.getOrElseUpdate(at, {
+        val lit = varToID.size + 1
+        idToVar += (lit -> at)
+        lit
+      }) * mul
+    }).toSet
+  }
+
+  private def addClauseWithIDs(clause: Set[Int]): Int = {
+    clause.foreach(jPicosatInstance.picosat_add(_))
     jPicosatInstance.picosat_add(0)
   }
 
   override def mark() {
-    marks = clauses.length :: marks
+    marks = clausesStack.length :: marks
   }
 
   override def undo() {
@@ -97,8 +95,8 @@ class Picosat extends Solver {
         marks = t
         jPicosatInstance.picosat_reset()
         jPicosatInstance.picosat_init()
-        clauses = clauses.drop(clauses.length - h)
-        clauses.foreach(addClause)
+        clausesStack = clausesStack.drop(clausesStack.length - h)
+        clausesStack.foreach(addClauseWithIDs)
         lastState = Solver.UNKNOWN
       }
       case _ =>
