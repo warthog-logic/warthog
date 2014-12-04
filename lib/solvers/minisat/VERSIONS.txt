@@ -1,3 +1,0 @@
-linux : UNKNOWN (probably 1.14)
-macosx/32 : UNKNOWN (probably 1.14)
-win : UNKNOWN (probably 1.14)
