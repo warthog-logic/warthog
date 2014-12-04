@@ -33,7 +33,7 @@ import org.warthog.generic.formulas._
 import org.warthog.pl.transformations.CNFUtil
 
 /**
- * Solver Wrapper for Picosat
+ * Solver Wrapper for Picosat.
  */
 class Picosat extends Solver {
   private val jPicosatInstance = new JPicosat()
@@ -72,7 +72,7 @@ class Picosat extends Solver {
       }).toSet)
     }
     /* add clauses to solver */
-    lcls.foreach(addClauses)
+    lcls.foreach(addClause)
 
     /* add clauses to solver stack */
     clauses = lcls ++ clauses
@@ -82,7 +82,7 @@ class Picosat extends Solver {
       lastState = Solver.UNKNOWN
   }
 
-  private def addClauses(cs: Set[Int]): Int = {
+  private def addClause(cs: Set[Int]): Int = {
     cs.foreach(jPicosatInstance.picosat_add(_))
     jPicosatInstance.picosat_add(0)
   }
@@ -98,7 +98,7 @@ class Picosat extends Solver {
         jPicosatInstance.picosat_reset()
         jPicosatInstance.picosat_init()
         clauses = clauses.drop(clauses.length - h)
-        clauses.foreach(addClauses)
+        clauses.foreach(addClause)
         lastState = Solver.UNKNOWN
       }
       case _ =>
