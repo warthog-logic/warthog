@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, Andreas J. Kuebler & Christoph Zengler
+ * Copyright (c) 2011-2014, Andreas J. Kuebler & Christoph Zengler & Rouven Walter
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,14 @@ import org.warthog.pl.formulas.{PL, PLAtom}
 import org.warthog.generic.formulas.{Formula, Verum, Falsum}
 
 /**
- * Propositional Craig Interpolation
+ * Propositional Craig Interpolation.
+ *
+ * Description:
+ * Let phi and psi two propositional formulas such that phi => psi holds.
+ * A Craig Interpolant of phi and psi is a propositional formula rho such that
+ * a) phi => rho  and
+ * b) rho => psi  and
+ * c) vars(rho) = vars(phi) intersection vars(psi).
  */
 object CraigInterpolation {
   /**
