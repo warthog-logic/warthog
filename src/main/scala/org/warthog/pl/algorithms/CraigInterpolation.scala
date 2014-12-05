@@ -25,8 +25,8 @@
 
 package org.warthog.pl.algorithms
 
-import org.warthog.pl.formulas.{ PL, PLAtom }
-import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
+import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.generic.formulas.{Formula, Verum, Falsum}
 
 /**
  * Propositional Craig Interpolation
@@ -39,11 +39,9 @@ object CraigInterpolation {
    * @return the craig interpolant of p and q
    */
   def pinterpolate(p: Formula[PL], q: Formula[PL]): Formula[PL] = {
-    val setminus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
-    setminus.size match {
-      case 0 => p
-      case _ => pinterpolate(p.substitute(setminus.head, Falsum()).removeBooleanConstants ||
-        p.substitute(setminus.head, Verum()).removeBooleanConstants, q).removeBooleanConstants
-    }
+    val setMinus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
+    setMinus.foldLeft(p)((expandedP, v) =>
+      expandedP.substitute(v, Falsum()).removeBooleanConstants ||
+        expandedP.substitute(v, Verum()).removeBooleanConstants).removeBooleanConstants
   }
 }
