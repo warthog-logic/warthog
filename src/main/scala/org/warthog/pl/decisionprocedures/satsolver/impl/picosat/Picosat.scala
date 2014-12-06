@@ -73,14 +73,14 @@ class Picosat extends Solver {
     clause.literals.map(literal => {
       val (v, phaseFactor) = (literal.variable, if (literal.phase) 1 else -1)
       varToID.getOrElseUpdate(v, {
-        val lit = varToID.size + 1
-        idToVar += (lit -> v)
-        lit
+        val nextID = varToID.size + 1
+        idToVar += (nextID -> v)
+        nextID
       }) * phaseFactor
     }).toSet
   }
 
-  private def addClauseWithIDs(clause: Set[Int]): Int = {
+  private def addClauseWithIDs(clause: Set[Int]) {
     clause.foreach(jPicosatInstance.picosat_add(_))
     jPicosatInstance.picosat_add(0)
   }
