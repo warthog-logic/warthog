@@ -99,7 +99,7 @@ class Picosat extends Solver {
         clausesStack.foreach(addClauseWithIDs)
         lastState = Solver.UNKNOWN
       }
-      case _ =>
+      case _ => // No mark, then ignore undo
     }
   }
 
