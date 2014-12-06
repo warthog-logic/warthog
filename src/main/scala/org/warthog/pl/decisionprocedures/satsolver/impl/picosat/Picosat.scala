@@ -61,7 +61,7 @@ class Picosat extends Solver {
   }
 
   private def addClausesAndUpdateLastState(clauses: List[ImmutablePLClause]) {
-    val clausesWithIDs = clauses.map(registerVariables)
+    val clausesWithIDs = clauses.map(getIDsWithPhase)
     clausesWithIDs.foreach(addClauseWithIDs)
     clausesStack = clausesWithIDs ++ clausesStack
 
@@ -69,7 +69,7 @@ class Picosat extends Solver {
       lastState = Solver.UNKNOWN
   }
 
-  private def registerVariables(clause: ImmutablePLClause): Set[Int] = {
+  private def getIDsWithPhase(clause: ImmutablePLClause): Set[Int] = {
     clause.literals.map(literal => {
       val (v, phaseFactor) = (literal.variable, if (literal.phase) 1 else -1)
       varToID.getOrElseUpdate(v, {
