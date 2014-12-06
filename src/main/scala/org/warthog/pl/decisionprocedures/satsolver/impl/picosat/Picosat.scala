@@ -71,12 +71,12 @@ class Picosat extends Solver {
 
   private def registerVariables(clause: ImmutablePLClause): Set[Int] = {
     clause.literals.map(literal => {
-      val (at, mul) = (literal.variable, if (literal.phase) 1 else -1)
-      varToID.getOrElseUpdate(at, {
+      val (v, phaseFactor) = (literal.variable, if (literal.phase) 1 else -1)
+      varToID.getOrElseUpdate(v, {
         val lit = varToID.size + 1
-        idToVar += (lit -> at)
+        idToVar += (lit -> v)
         lit
-      }) * mul
+      }) * phaseFactor
     }).toSet
   }
 
