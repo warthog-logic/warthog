@@ -31,9 +31,9 @@ import org.warthog.generic.formulas.{And, Formula}
 /**
  * A (partial) Model representing a satisfying assignment of a propositional formula.
  */
-case class Model(positiveLiterals: List[PLAtom], negativeLiterals: List[PLAtom]) {
+case class Model(positiveVariables: List[PLAtom], negativeVariables: List[PLAtom]) {
 
-  def toFormula = And(And(positiveLiterals: _*), And(negativeLiterals: _*))
+  def toFormula = And(And(positiveVariables: _*), And(negativeVariables: _*))
 
-  override def toString = positiveLiterals.mkString(",") + negativeLiterals.map(l => "-" + l).mkString(",")
+  override def toString = positiveVariables.mkString(",") + negativeVariables.map(l => "-" + l).mkString(",")
 }
