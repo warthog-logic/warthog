@@ -1,0 +1,8 @@
+c
+c A formula with three empty clauses
+c Optimum: None
+c
+p wcnf 0 3 4
+4 0
+2 0
+1 0
