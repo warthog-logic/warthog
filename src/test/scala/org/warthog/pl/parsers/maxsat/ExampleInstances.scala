@@ -5,7 +5,7 @@ import org.warthog.pl.datastructures.cnf.PLLiteral
 object ExampleInstances {
   val fs = System.getProperty("file.separator")
 
-  val dir_formula = "src" + fs + "test" + fs + "resources" + fs + "maxSAT"
+  val dir_formula = "src" + fs + "test" + fs + "resources" + fs + "maxsat"
 
   // Simple formulas
   val dirPartialMaxSATSimple = dir_formula + fs + "partial" + fs + "simple"
