@@ -41,7 +41,7 @@ import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
-  override def le(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] = {
+  override def le(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
     val (nWeights, nBound) = PBCtoSAT.normalize(weights, bound)
     new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
   }

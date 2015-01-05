@@ -46,7 +46,8 @@ trait PBCtoSAT {
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
   def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
-    le(weights, bound, prefix + "_le") ++ ge(weights, bound, prefix + "_ge")
+    le(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_LE_PREFIX)
+      ++ ge(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_GE_PREFIX)
 
   def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     le(weights, bound - 1, prefix)
@@ -58,6 +59,8 @@ trait PBCtoSAT {
 object PBCtoSAT {
 
   val DEFAULT_PREFIX = "D_"
+  val DEFAULT_ADDITIONAL_LE_PREFIX = "_le_"
+  val DEFAULT_ADDITIONAL_GE_PREFIX = "_ge_"
 
   /**
    * Normalizes a constraint to a form in which all weights are positive
