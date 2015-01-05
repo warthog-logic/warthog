@@ -41,16 +41,16 @@ import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
-  override def le(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_"): Set[Clause] = {
+  override def le(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] = {
     val (nWeights, nBound) = PBCtoSAT.normalize(weights, bound)
     new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
   }
 
 }
 
-private class BailleuxBoufkhadRousselHelper(ws: List[(Int,Lit)], bound: Int, prefix: String) {
+private class BailleuxBoufkhadRousselHelper(ws: List[(Int, Lit)], bound: Int, prefix: String) {
 
-  private val weights: List[(Int,Lit)] = ws.sortBy(_._1)
+  private val weights: List[(Int, Lit)] = ws.sortBy(_._1)
 
   private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(weights.take(i)) <= b)
 

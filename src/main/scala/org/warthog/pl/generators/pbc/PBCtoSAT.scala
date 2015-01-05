@@ -30,23 +30,27 @@ import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral
 import org.warthog.generic.formulas._
 
 /**
-  * Trait for pseudo boolean constraints
-  *
-  * Note: A object/class which implements this trait has to override at least le() or ge().
-  */
+ * Trait for converting pseudo boolean constraints (PBC) to a Boolean formula (SAT).
+ *
+ * Note: A object/class which implements this trait has to override at least le() or ge().
+ */
 trait PBCtoSAT {
 
-  def le(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
-    ge(weights.map { case (coeff, lit) => (coeff, lit.negate) }, PBCtoSAT.sumWeights(weights) - bound, prefix)
+  def le(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
+    ge(weights.map {
+      case (coeff, lit) => (coeff, lit.negate)
+    }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def ge(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
-    le(weights.map { case (coeff, lit) => (coeff, lit.negate) }, PBCtoSAT.sumWeights(weights) - bound, prefix)
+  def ge(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
+    le(weights.map {
+      case (coeff, lit) => (coeff, lit.negate)
+    }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def eq(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_") = le(weights, bound, prefix+"_le") ++ ge(weights,bound, prefix+"_ge")
+  def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = le(weights, bound, prefix + "_le") ++ ge(weights, bound, prefix + "_ge")
 
-  def lt(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_") = le(weights, bound - 1, prefix)
+  def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = le(weights, bound - 1, prefix)
 
-  def gt(weights: List[(Int,Lit)], bound: Int, prefix: String = "D_") = ge(weights, bound + 1, prefix)
+  def gt(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = ge(weights, bound + 1, prefix)
 
 }
 
@@ -59,20 +63,19 @@ object PBCtoSAT {
    * @param bound the maximum bound
    * @return the normalized weights and bound as a pair
    */
-  def normalize(weights: List[(Int,Lit)], bound: Int): (List[(Int,Lit)], Int) = {
+  def normalize(weights: List[(Int, Lit)], bound: Int): (List[(Int, Lit)], Int) = {
     if (!weights.isEmpty) {
-      val (nWeights, nBound) = normalize(weights.tail,bound)
+      val (nWeights, nBound) = normalize(weights.tail, bound)
       val head = weights.head
       if (head._1 < 0) {
-        ((-head._1,head._2.negate) :: nWeights, nBound - head._1)
+        ((-head._1, head._2.negate) :: nWeights, nBound - head._1)
       } else {
         (head :: nWeights, nBound)
       }
     } else {
-      (List(),bound)
+      (List(), bound)
     }
   }
 
-  def sumWeights(l: List[(Int,Lit)]) = l.unzip._1.sum
-
+  def sumWeights(l: List[(Int, Lit)]) = l.unzip._1.sum
 }
