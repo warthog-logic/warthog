@@ -46,8 +46,8 @@ trait PBCtoSAT {
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
   def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
-    le(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_LE_PREFIX)
-      ++ ge(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_GE_PREFIX)
+    le(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_LE_PREFIX) ++
+      ge(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_GE_PREFIX)
 
   def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     le(weights, bound - 1, prefix)

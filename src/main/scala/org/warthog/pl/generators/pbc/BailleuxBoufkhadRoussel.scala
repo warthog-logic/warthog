@@ -26,6 +26,7 @@
 package org.warthog.pl.generators.pbc
 
 import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral => Lit}
+import scala.language.implicitConversions
 
 /**
  * CNF-encoding of pseudo-Boolean constraints
