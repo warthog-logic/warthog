@@ -32,11 +32,11 @@ import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral
  *
  * O. Bailleux, Y. Boufkhad, O. Roussel:
  * "A Translation of Pseudo-Boolean Constraints to SAT",
- * Proc. of CP 2006
+ * JSAT 2(1-4):191-200 (2006)
  *
- * In the worst case, the size of the produced formula can be exponentially related to
- * the size of the input constraint, but Boolean cardinality constraints (and some
- * other classes) are encoded in polynomial time and size.
+ * Remark: In the worst case, the size of the produced formula can be exponentially related
+ * to the size of the input constraint, but Boolean cardinality constraints (and some other
+ * classes) are encoded in polynomial time and size.
  *
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
@@ -45,7 +45,6 @@ object BailleuxBoufkhadRoussel extends PBCtoSAT {
     val (nWeights, nBound) = PBCtoSAT.normalize(weights, bound)
     new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
   }
-
 }
 
 private class BailleuxBoufkhadRousselHelper(ws: List[(Int, Lit)], bound: Int, prefix: String) {

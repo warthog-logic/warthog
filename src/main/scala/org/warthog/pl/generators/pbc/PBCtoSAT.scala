@@ -25,7 +25,6 @@
 
 package org.warthog.pl.generators.pbc
 
-
 import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral => Lit}
 import org.warthog.generic.formulas._
 
@@ -54,7 +53,6 @@ trait PBCtoSAT {
 
   def gt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     ge(weights, bound + 1, prefix)
-
 }
 
 object PBCtoSAT {
