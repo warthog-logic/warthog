@@ -63,25 +63,25 @@ object PBCtoSAT {
   val DEFAULT_ADDITIONAL_GE_PREFIX = "_ge_"
 
   /**
-   * Normalizes a constraint to a form in which all weights are positive
+   * Normalizes a lower-equal PBC constraint to a form in which all terms are positive.
    *
-   * @param weights list of pairs with weight and corresponding variable
+   * @param terms list of terms (coefficient and literal)
    * @param bound the maximum bound
-   * @return the normalized weights and bound as a pair
+   * @return the normalized terms and bound
    */
-  def normalize(weights: List[(Int, Lit)], bound: Int): (List[(Int, Lit)], Int) = {
-    if (!weights.isEmpty) {
-      val (nWeights, nBound) = normalize(weights.tail, bound)
-      val head = weights.head
-      if (head._1 < 0) {
-        ((-head._1, head._2.negate) :: nWeights, nBound - head._1)
-      } else {
-        (head :: nWeights, nBound)
+  def normalize(terms: List[(Int, Lit)], bound: Int): (List[(Int, Lit)], Int) =
+    terms match {
+      case head :: tail => {
+        val (nWeights, nBound) = normalize(terms.tail, bound)
+        val head = terms.head
+        if (head._1 < 0) {
+          ((-head._1, head._2.negate) :: nWeights, nBound - head._1)
+        } else {
+          (head :: nWeights, nBound)
+        }
       }
-    } else {
-      (List(), bound)
+      case Nil => (terms, bound)
     }
-  }
 
   def sumWeights(l: List[(Int, Lit)]) = l.unzip._1.sum
 }
