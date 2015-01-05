@@ -36,25 +36,30 @@ import org.warthog.generic.formulas._
  */
 trait PBCtoSAT {
 
-  def le(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
+  def le(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
     ge(weights.map {
       case (coeff, lit) => (coeff, lit.negate)
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def ge(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_"): Set[Clause] =
+  def ge(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
     le(weights.map {
       case (coeff, lit) => (coeff, lit.negate)
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = le(weights, bound, prefix + "_le") ++ ge(weights, bound, prefix + "_ge")
+  def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+    le(weights, bound, prefix + "_le") ++ ge(weights, bound, prefix + "_ge")
 
-  def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = le(weights, bound - 1, prefix)
+  def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+    le(weights, bound - 1, prefix)
 
-  def gt(weights: List[(Int, Lit)], bound: Int, prefix: String = "D_") = ge(weights, bound + 1, prefix)
+  def gt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+    ge(weights, bound + 1, prefix)
 
 }
 
 object PBCtoSAT {
+
+  val DEFAULT_PREFIX = "D_"
 
   /**
    * Normalizes a constraint to a form in which all weights are positive
