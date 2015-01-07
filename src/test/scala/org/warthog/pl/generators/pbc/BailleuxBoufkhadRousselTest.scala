@@ -54,7 +54,7 @@ class BailleuxBoufkhadRousselTest extends Specification {
   implicit def toLit(s: String) = Lit(s, true)
 
   "2x_1 + 3x_2 + 4x_3 <= 6" should {
-    val pbc1 = List((2, x1), (3, x2), (4, x3))
+    val pbc1 = List((2L, x1), (3L, x2), (4L, x3))
     val solution = Set(
       new Clause("D_3_6"),
       new Clause("D_2_2".negate, "D_3_6"),
@@ -74,7 +74,7 @@ class BailleuxBoufkhadRousselTest extends Specification {
   }
 
   "1x_1 + 2x_2 + 3x_3 + 5x_4 <= 6" should {
-    val pbc2 = List((1, x1), (2, x2), (3, x3), (5, x4))
+    val pbc2 = List((1L, x1), (2L, x2), (3L, x3), (5L, x4))
     val solution = Set(
       new Clause("D_4_6"),
       new Clause("D_3_1".negate, "D_4_6"),
@@ -99,7 +99,7 @@ class BailleuxBoufkhadRousselTest extends Specification {
   }
 
   "1x_1 + 2x_2 + 3x_3 + 6x_4 <= 6" should {
-    val pbc3 = List((1, x1), (2, x2), (3, x3), (6, x4))
+    val pbc3 = List((1L, x1), (2L, x2), (3L, x3), (6L, x4))
     val solution = Set(
       new Clause("D_4_6"),
       new Clause("D_3_0".negate, "D_4_6"),
