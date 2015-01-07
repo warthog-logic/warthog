@@ -30,6 +30,8 @@ import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{PL, PLAtom}
 import org.warthog.generic.formulas.{Formula, Verum, Falsum}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
+import java.io.File
+import org.warthog.generic.parsers.DIMACSReader
 
 /**
  * Tests for the picosat bindings
@@ -48,6 +50,9 @@ class PicosatTest extends Specification {
    * instantiation errors and unexpected behaviour.
    */
   args(sequential = true)
+
+  private def getFileString(folder: String, file: String) =
+    List("src", "test", "resources", folder, file).mkString(File.separator)
 
   "x" should {
     "be satisfiable" in {
@@ -145,4 +150,44 @@ class PicosatTest extends Specification {
       resultValue0 must be equalTo Solver.UNSAT
     }
   }
+
+  private def testDIMACSFile(fileName: String, expResult: Int) {
+    val expText = if (expResult == Solver.SAT) "satisfiable" else "unsatisfiable"
+    "File " + fileName should {
+      "be " + expText in {
+        var resultVal = 0
+        sat(prover) {
+          (solver: Solver) => {
+            prover.add(DIMACSReader.dimacs2PLClauses(getFileString("dimacs", fileName)))
+            resultVal = solver.sat()
+          }
+        }
+        resultVal must be equalTo expResult
+      }
+    }
+  }
+
+  testDIMACSFile("f01.cnf", Solver.SAT)
+  testDIMACSFile("f02.cnf", Solver.SAT)
+  testDIMACSFile("f03.cnf", Solver.UNSAT)
+  testDIMACSFile("f04.cnf", Solver.UNSAT)
+
+  testDIMACSFile("f05.cnf", Solver.UNSAT)
+  testDIMACSFile("f06.cnf", Solver.UNSAT)
+  testDIMACSFile("f07.cnf", Solver.UNSAT)
+  testDIMACSFile("f08.cnf", Solver.UNSAT)
+
+  testDIMACSFile("f09.cnf", Solver.UNSAT)
+  testDIMACSFile("f10.cnf", Solver.UNSAT)
+  testDIMACSFile("f11.cnf", Solver.UNSAT)
+
+  testDIMACSFile("oneClauseFormula.cnf", Solver.SAT)
+  testDIMACSFile("oneEmptyClause.cnf", Solver.UNSAT)
+  testDIMACSFile("oneVariableFormula.cnf", Solver.SAT)
+
+  testDIMACSFile("uf150-010.cnf", Solver.SAT)
+  testDIMACSFile("uf150-027.cnf", Solver.SAT)
+
+  testDIMACSFile("uuf150-011.cnf", Solver.UNSAT)
+  testDIMACSFile("uuf150-024.cnf", Solver.UNSAT)
 }

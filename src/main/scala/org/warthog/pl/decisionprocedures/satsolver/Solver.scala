@@ -27,6 +27,8 @@ package org.warthog.pl.decisionprocedures.satsolver
 
 import org.warthog.generic.formulas.{Formula, Falsum}
 import org.warthog.pl.formulas.PL
+import org.warthog.pl.datastructures.cnf.ImmutablePLClause
+import org.warthog.pl.transformations.CNFUtil
 
 /**
  * Common interface for SAT solvers
@@ -41,7 +43,19 @@ trait Solver {
    * Add a formula to the solver.  If the solver held a formula `F` before, it now holds `F /\ fm`.
    * @param fm the formula to add
    */
-  def add(fm: Formula[PL])
+  def add(fm: Formula[PL]) {
+    add(CNFUtil.toImmutableCNF(fm))
+  }
+
+  def add(clauses: Traversable[ImmutablePLClause]) {
+    clauses.foreach(add)
+  }
+
+  /**
+   * Add a clause to the solver.
+   * @param clause the clause to add
+   */
+  def add(clause: ImmutablePLClause)
 
   /**
    * Mark a solver's internal stack position.  Executing
