@@ -11,6 +11,8 @@ c    forced? no
 c    mixed sat? no 
 c    clause length = 3 
 c
+c SAT: false
+c
 p cnf 150  645 
  -141 131 67 0
 44 -91 -47 0
