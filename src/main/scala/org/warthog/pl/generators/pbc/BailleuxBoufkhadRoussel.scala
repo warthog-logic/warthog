@@ -42,7 +42,7 @@ import scala.language.implicitConversions
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
-  override def le(terms: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
+  override def le(terms: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
     val (nTerms, nBound) = PBCtoSAT.normalize(terms, bound)
     new BailleuxBoufkhadRousselHelper(nTerms.sortBy(_._1), nBound, prefix).le()
   }
@@ -51,11 +51,11 @@ object BailleuxBoufkhadRoussel extends PBCtoSAT {
 /**
  * Assumption: Terms are in ascending order w.r.t. their weights
  */
-private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int, prefix: String) {
+private class BailleuxBoufkhadRousselHelper(terms: List[(Long, Lit)], bound: Long, prefix: String) {
 
-  private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(terms.take(i)) <= b)
+  private def isTerminal(i: Int, b: Long): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(terms.take(i)) <= b)
 
-  private def varName(i: Int, b: Int): String = s"$prefix${i}_$b"
+  private def varName(i: Int, b: Long): String = s"$prefix${i}_$b"
 
   /**
    * Method is assuming there are no fixed literals! (=> all literals are free)
@@ -70,7 +70,7 @@ private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int,
 
   type T = (Set[String], Set[Clause])
 
-  private def leWorker(i: Int, b: Int)(state: T = (Set.empty[String], Set.empty[Clause])): T = {
+  private def leWorker(i: Int, b: Long)(state: T = (Set.empty[String], Set.empty[Clause])): T = {
     val (used, clauses) = state
     if (used contains varName(i, b))
       (used, clauses)

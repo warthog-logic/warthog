@@ -35,24 +35,24 @@ import org.warthog.generic.formulas._
  */
 trait PBCtoSAT {
 
-  def le(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
+  def le(weights: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
     ge(weights.map {
       case (coeff, lit) => (coeff, lit.negate)
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def ge(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
+  def ge(weights: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] =
     le(weights.map {
       case (coeff, lit) => (coeff, lit.negate)
     }, PBCtoSAT.sumWeights(weights) - bound, prefix)
 
-  def eq(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+  def eq(weights: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     le(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_LE_PREFIX) ++
       ge(weights, bound, prefix + PBCtoSAT.DEFAULT_ADDITIONAL_GE_PREFIX)
 
-  def lt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+  def lt(weights: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     le(weights, bound - 1, prefix)
 
-  def gt(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
+  def gt(weights: List[(Long, Lit)], bound: Long, prefix: String = PBCtoSAT.DEFAULT_PREFIX) =
     ge(weights, bound + 1, prefix)
 }
 
@@ -69,7 +69,7 @@ object PBCtoSAT {
    * @param bound the maximum bound
    * @return the normalized terms and bound
    */
-  def normalize(terms: List[(Int, Lit)], bound: Int): (List[(Int, Lit)], Int) =
+  def normalize(terms: List[(Long, Lit)], bound: Long): (List[(Long, Lit)], Long) =
     terms match {
       case head :: tail => {
         val (nWeights, nBound) = normalize(terms.tail, bound)
@@ -83,5 +83,5 @@ object PBCtoSAT {
       case Nil => (terms, bound)
     }
 
-  def sumWeights(l: List[(Int, Lit)]) = l.unzip._1.sum
+  def sumWeights(l: List[(Long, Lit)]) = l.unzip._1.sum
 }
