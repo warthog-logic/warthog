@@ -42,15 +42,15 @@ import scala.language.implicitConversions
  */
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
-  override def le(weights: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
-    val (nWeights, nBound) = PBCtoSAT.normalize(weights, bound)
+  override def le(terms: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
+    val (nWeights, nBound) = PBCtoSAT.normalize(terms, bound)
     new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
   }
 }
 
-private class BailleuxBoufkhadRousselHelper(ws: List[(Int, Lit)], bound: Int, prefix: String) {
+private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int, prefix: String) {
 
-  private val weights: List[(Int, Lit)] = ws.sortBy(_._1)
+  private val weights: List[(Int, Lit)] = terms.sortBy(_._1)
 
   private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(weights.take(i)) <= b)
 
