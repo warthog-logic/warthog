@@ -27,39 +27,45 @@ package org.warthog.pl.optimization.maxsat.partialWeighted
 
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
 import org.warthog.pl.decisionprocedures.satsolver.Solver
+import org.warthog.generic.formulas.Formula
+import org.warthog.pl.formulas.PL
 
 /**
  * Common interface for Partial Weighted MaxSAT solvers.
  */
-abstract class PartialWeightedMaxSATSolver(satSolver: Solver) {
+abstract class PartialWeightedMaxSATSolver() {
   protected var minUNSATResult: Option[Long] = None
 
-  def name()
+  def name: String
 
   def reset() {
-    satSolver.reset()
     minUNSATResult = None
   }
 
-  def addHardConstraint(clause: ImmutablePLClause) {
-    satSolver.add(clause.toFormula)
-  }
+  def addHardConstraint(fm: Formula[PL])
 
-  def markHardConstraints() {
-    satSolver.mark()
-  }
+  def markHardConstraints()
 
-  def undoHardConstraints() {
-    satSolver.undo()
-  }
-
-  protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long]
+  def undoHardConstraints()
 
   def solveMinUNSAT(softClauses: List[ImmutablePLClause], weights: List[Long]) = {
-    if (!(satSolver.sat() > 0))
+    if (!areHardConstraintsSatisfiable())
       minUNSATResult = None
     else
       minUNSATResult = solveMinUNSATImpl(softClauses, weights)
     minUNSATResult
   }
+
+  /**
+   * Actual solving method.
+   *
+   * Assumption: Previously added hard constraints are satisfiable.
+   *
+   * @param softClauses
+   * @param weights
+   * @return
+   */
+  protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long]
+
+  protected def areHardConstraintsSatisfiable()
 }
