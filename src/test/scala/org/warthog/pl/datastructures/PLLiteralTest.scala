@@ -68,4 +68,34 @@ class PLLiteralTest extends Specification {
       PLLiteral("~x".pl) must be equalTo PLLiteral("x", false)
     }
   }
+
+  "integer -1 as literal" should {
+    "be literal ~1" in {
+      PLLiteral(-1) must be equalTo PLLiteral("1", false)
+    }
+  }
+
+  "integer 1 as literal" should {
+    "be literal 1" in {
+      PLLiteral(1) must be equalTo PLLiteral("1", true)
+    }
+  }
+
+  "integer -241 as literal" should {
+    "be literal ~241" in {
+      PLLiteral(-241) must be equalTo PLLiteral("241", false)
+    }
+  }
+
+  "integer 432 as literal" should {
+    "be literal 432" in {
+      PLLiteral(432) must be equalTo PLLiteral("432", true)
+    }
+  }
+
+  "integer 0 as literal" should {
+    "should throw an exception" in {
+      PLLiteral(0) must throwA[IllegalArgumentException]
+    }
+  }
 }

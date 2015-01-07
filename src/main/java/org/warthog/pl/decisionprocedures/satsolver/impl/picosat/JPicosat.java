@@ -32,20 +32,25 @@ import com.sun.jna.Pointer;
 
 public class JPicosat {
     private static final String DIR = "/solvers/picosat";
+
+    public static final int UNKNOWN = 0;
+    public static final int SAT = 10;
+    public static final int UNSAT = 20;
+
+    public static final int INFINITY_DECISION_LEVELS = -1;
+
     private CPicosat INSTANCE;
     private Pointer currentPicosatObject;
 
     /**
-     *  Interface for Picosat-953 and following versions.
-     *  Note that this interface changed from version 951 to 953,
-     *  so every native Picosat library must be at least version 953.
+     *  Interface for Picosat-959.
      */
     public interface CPicosat extends Library {
         Pointer picosat_init();
 
         void picosat_reset(Pointer object);
 
-        int picosat_sat(Pointer object, int to);
+        int picosat_sat(Pointer object, int decisionLimit);
 
         int picosat_variables(Pointer object);
 
@@ -58,10 +63,10 @@ public class JPicosat {
         String picosat_version();
     }
 
-    public JPicosat(String libdir) throws Exception {
-        if (libdir == null || libdir == "")
-            libdir="lib";
-        StringBuilder pref = new StringBuilder(libdir + DIR);
+    public JPicosat(String libDir) throws Exception {
+        if (libDir == null || "".equals(libDir))
+            libDir="lib";
+        StringBuilder pref = new StringBuilder(libDir + DIR);
 
         if (Platform.isMac())
             if (Platform.is64Bit())
@@ -98,8 +103,8 @@ public class JPicosat {
         INSTANCE.picosat_reset(currentPicosatObject);
     }
 
-    public int picosat_sat(int to) {
-        return INSTANCE.picosat_sat(currentPicosatObject, to);
+    public int picosat_sat(int decisionLimit) {
+        return INSTANCE.picosat_sat(currentPicosatObject, decisionLimit);
     }
 
     public int picosat_variables() {
@@ -123,39 +128,8 @@ public class JPicosat {
       try {
         version = Integer.parseInt(INSTANCE.picosat_version());
       } catch (NumberFormatException e) { }
-      if (version < 953)
+      if (version < 959)
         System.err.println("Warning: The picosat library provided in " + path + " seems to be too old. " +
-                "Only version 953 and following are supported! The application might crash randomly.");
+                "Only version 959 and following are supported! The application might crash randomly.");
     }
-
-    public void test() {
-        picosat_init();
-
-        picosat_add(-1);
-        picosat_add(0);
-
-        picosat_add(1);
-        picosat_add(0);
-
-        System.out.println("p cnf 1 2\n-1 0\n1 0? "+picosat_sat(-1));
-
-        picosat_reset();
-
-        picosat_init();
-
-        picosat_add(1);
-        picosat_add(-2);
-        picosat_add(0);
-
-        System.out.println("p cnf 2 1\n1 -2 0? "+picosat_sat(-1));
-
-        picosat_reset();
-    }
-
-    public static void main(String[] args) throws Exception {
-        //System.setProperty("warthog.libs", "/Users/ak/IdeaProjects/warthog/lib");
-        JPicosat jps=new JPicosat();
-        jps.test();
-    }
-
 }

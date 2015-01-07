@@ -26,7 +26,7 @@
 package org.warthog.pl.generators
 
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
-import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, sat }
+import org.warthog.pl.decisionprocedures.satsolver.sat
 import org.warthog.generic.formulas.Formula
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{ PL, PLAtom }
@@ -78,7 +78,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo (1)
@@ -89,7 +89,7 @@ class CardinalityConstraintTest extends Specification {
           {
             s.add(fm)
             s.add(x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo (-1)
@@ -100,7 +100,7 @@ class CardinalityConstraintTest extends Specification {
           {
             s.add(fm)
             s.add(-x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo (1)
@@ -113,7 +113,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -123,7 +123,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -133,7 +133,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -143,7 +143,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -153,7 +153,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -163,7 +163,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -173,7 +173,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -183,7 +183,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -193,7 +193,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -206,7 +206,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -216,7 +216,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -226,7 +226,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -236,7 +236,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -246,7 +246,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -256,7 +256,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -266,7 +266,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -276,7 +276,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -286,7 +286,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -299,7 +299,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -309,7 +309,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -319,7 +319,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -329,7 +329,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -339,7 +339,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -349,7 +349,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -359,7 +359,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -369,7 +369,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -379,7 +379,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -389,7 +389,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -399,7 +399,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -409,7 +409,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -419,7 +419,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -433,7 +433,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -443,7 +443,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -453,7 +453,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -463,7 +463,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -473,7 +473,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -483,7 +483,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -493,7 +493,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -503,7 +503,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -513,7 +513,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -523,7 +523,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -533,7 +533,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -543,7 +543,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -556,7 +556,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -566,7 +566,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -576,7 +576,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -586,7 +586,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -596,7 +596,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -606,7 +606,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -616,7 +616,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -626,7 +626,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -636,7 +636,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -646,7 +646,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -656,7 +656,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -666,7 +666,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -676,7 +676,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -686,7 +686,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -696,7 +696,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -710,7 +710,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -720,7 +720,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -730,7 +730,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -740,7 +740,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -750,7 +750,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -760,7 +760,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -770,7 +770,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -780,7 +780,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -790,7 +790,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -800,7 +800,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -810,7 +810,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -820,7 +820,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -830,7 +830,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -840,7 +840,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -850,7 +850,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -860,7 +860,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -870,7 +870,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -880,7 +880,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -890,7 +890,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -900,7 +900,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -910,7 +910,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -920,7 +920,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -930,7 +930,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -940,7 +940,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -950,7 +950,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -960,7 +960,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -970,7 +970,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -980,7 +980,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -990,7 +990,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1000,7 +1000,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1010,7 +1010,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1024,7 +1024,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1034,7 +1034,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1044,7 +1044,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1054,7 +1054,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1064,7 +1064,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1074,7 +1074,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1084,7 +1084,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1094,7 +1094,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1104,7 +1104,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1114,7 +1114,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1124,7 +1124,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1134,7 +1134,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1144,7 +1144,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1154,7 +1154,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1164,7 +1164,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1174,7 +1174,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1184,7 +1184,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1194,7 +1194,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1204,7 +1204,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1214,7 +1214,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1224,7 +1224,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1234,7 +1234,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1244,7 +1244,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1254,7 +1254,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1264,7 +1264,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1274,7 +1274,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1284,7 +1284,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1294,7 +1294,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1304,7 +1304,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1314,7 +1314,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1324,7 +1324,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1338,7 +1338,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1348,7 +1348,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1358,7 +1358,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1368,7 +1368,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1378,7 +1378,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1388,7 +1388,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1398,7 +1398,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1408,7 +1408,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1418,7 +1418,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1428,7 +1428,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1438,7 +1438,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1448,7 +1448,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1458,7 +1458,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1468,7 +1468,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1478,7 +1478,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1488,7 +1488,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1498,7 +1498,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1508,7 +1508,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1518,7 +1518,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1528,7 +1528,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1538,7 +1538,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1548,7 +1548,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1558,7 +1558,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1568,7 +1568,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1578,7 +1578,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1588,7 +1588,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1598,7 +1598,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1608,7 +1608,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1618,7 +1618,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1628,7 +1628,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1638,7 +1638,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1652,7 +1652,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1662,7 +1662,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1672,7 +1672,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1682,7 +1682,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1692,7 +1692,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1702,7 +1702,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1712,7 +1712,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1722,7 +1722,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1732,7 +1732,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1742,7 +1742,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1752,7 +1752,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1762,7 +1762,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1772,7 +1772,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1782,7 +1782,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1792,7 +1792,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1802,7 +1802,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && w && x && y && z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1812,7 +1812,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1822,7 +1822,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1832,7 +1832,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1842,7 +1842,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo 1
@@ -1852,7 +1852,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1862,7 +1862,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1872,7 +1872,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1882,7 +1882,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1892,7 +1892,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1902,7 +1902,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1912,7 +1912,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1922,7 +1922,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1932,7 +1932,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1942,7 +1942,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1
@@ -1952,7 +1952,7 @@ class CardinalityConstraintTest extends Specification {
         s =>
           {
             s.add(fm && -w && -x && -y && -z)
-            rv = s.sat(Infinity)
+            rv = s.sat()
           }
       }
       rv must be equalTo -1

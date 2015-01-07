@@ -23,32 +23,54 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.algorithms
+package org.warthog.pl.parsers.maxsat
 
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import collection.mutable.ListBuffer
+import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause}
+import io.Source
 
 /**
- * Propositional Craig Interpolation.
+ * A Reader for partial MaxSAT files.
  *
- * Description:
- * Let phi and psi two propositional formulas such that phi => psi holds.
- * A Craig Interpolant of phi and psi is a propositional formula rho such that
- * a) phi => rho  and
- * b) rho => psi  and
- * c) vars(rho) = vars(phi) intersection vars(psi).
+ * Reference: http://maxsat.ia.udl.cat/requirements/
  */
-object CraigInterpolation {
-  /**
-   * Compute the craig interpolant of two propositional formulas
-   * @param p the first formula
-   * @param q the second formula
-   * @return the craig interpolant of p and q
-   */
-  def pinterpolate(p: Formula[PL], q: Formula[PL]): Formula[PL] = {
-    val setMinus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
-    setMinus.foldLeft(p)((expandedP, v) =>
-      expandedP.substitute(v, Falsum()).removeBooleanConstants ||
-        expandedP.substitute(v, Verum()).removeBooleanConstants).removeBooleanConstants
+class PartialMaxSATReader {
+  var topWeight: Long = -1
+  var hardClauses = new ListBuffer[ImmutablePLClause]
+  var softClauses = new ListBuffer[ImmutablePLClause]
+
+  private def reset() {
+    topWeight = -1
+    hardClauses.clear()
+    softClauses.clear()
   }
+
+  def read(filePath: String) {
+    reset()
+    Source.fromFile(filePath).getLines().foreach(line => processLine(line.trim()))
+  }
+
+  private def processLine(line: String) {
+    line.trim()(0) match {
+      case 'c' => // comment line
+      case 'p' => processProblemLine(line)
+      case _ => processClauseLine(line)
+    }
+  }
+
+  private def processProblemLine(line: String) {
+    val parts = line.split("\\s+")
+    topWeight = parts(4).toLong
+  }
+
+  private def processClauseLine(line: String) {
+    val parts = line.split("\\s+")
+    val clause = new ImmutablePLClause(parts.drop(1).filter(_ != "0").map(_.toInt).map(PLLiteral(_)).toList)
+    if (isHardClause(parts))
+      hardClauses += clause
+    else
+      softClauses += clause
+  }
+
+  private def isHardClause(parts: Array[String]) = parts(0).toLong == topWeight
 }

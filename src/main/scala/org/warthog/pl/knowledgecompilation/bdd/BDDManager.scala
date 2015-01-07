@@ -103,9 +103,9 @@ class BDDManager(var ord: Seq[PLAtom] = Seq[PLAtom]()) {
   private def lookupUnique(node: BDDNode): Int = uback.get(node) match {
     case Some(i) => i
     case None => {
-      unique += (index -> node);
-      uback += (node -> index);
-      index += 1;
+      unique += (index -> node)
+      uback += (node -> index)
+      index += 1
       index - 1
     }
   }

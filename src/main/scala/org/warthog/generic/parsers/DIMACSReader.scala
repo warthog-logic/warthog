@@ -48,7 +48,6 @@ import org.warthog.pl.formulas.PLAtom
   * - a Formula[FOL]
   * - a (List[(String, Set[Int])], List[ImmutableFOLClause])
   *
-  * TODO: Read also dnf
   */
 object DIMACSReader {
 

@@ -36,7 +36,7 @@ object TruthTable {
   /**
     * Generate the truth table of a propositional formula
     * @param f a propositional formula
-    * @return a stringrepresentation of f's truth table
+    * @return a string representation of f's truth table
     */
   def generate(f: Formula[PL]): String = {
     val sb = new StringBuilder
