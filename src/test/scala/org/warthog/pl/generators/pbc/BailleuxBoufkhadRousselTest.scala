@@ -36,7 +36,7 @@ import satsolver.sat
 /**
  * Test for the PBCtoSAT encoding
  */
-class PBCtoSATTest extends Specification {
+class BailleuxBoufkhadRousselTest extends Specification {
 
   def toFormula(l: Set[Clause]): Formula[PL] = {
     And(l.toList.map(_.toFormula): _*)
