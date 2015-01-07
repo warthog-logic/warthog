@@ -43,16 +43,17 @@ import scala.language.implicitConversions
 object BailleuxBoufkhadRoussel extends PBCtoSAT {
 
   override def le(terms: List[(Int, Lit)], bound: Int, prefix: String = PBCtoSAT.DEFAULT_PREFIX): Set[Clause] = {
-    val (nWeights, nBound) = PBCtoSAT.normalize(terms, bound)
-    new BailleuxBoufkhadRousselHelper(nWeights, nBound, prefix).le()
+    val (nTerms, nBound) = PBCtoSAT.normalize(terms, bound)
+    new BailleuxBoufkhadRousselHelper(nTerms.sortBy(_._1), nBound, prefix).le()
   }
 }
 
+/**
+ * Assumption: Terms are in ascending order w.r.t. their weights
+ */
 private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int, prefix: String) {
 
-  private val weights: List[(Int, Lit)] = terms.sortBy(_._1)
-
-  private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(weights.take(i)) <= b)
+  private def isTerminal(i: Int, b: Int): Boolean = (b <= 0) || (PBCtoSAT.sumWeights(terms.take(i)) <= b)
 
   private def varName(i: Int, b: Int): String = s"$prefix${i}_$b"
 
@@ -61,8 +62,8 @@ private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int,
    *
    */
   def le() = {
-    if (PBCtoSAT.sumWeights(weights) <= bound) Set.empty[Clause]
-    else leWorker(weights.length, bound)()._2 + new Clause(Lit(varName(weights.length, bound), true))
+    if (PBCtoSAT.sumWeights(terms) <= bound) Set.empty[Clause]
+    else leWorker(terms.length, bound)()._2 + new Clause(Lit(varName(terms.length, bound), true))
   }
 
   implicit def toLit(s: String) = Lit(s, true)
@@ -75,17 +76,17 @@ private class BailleuxBoufkhadRousselHelper(terms: List[(Int, Lit)], bound: Int,
       (used, clauses)
     else if (!isTerminal(i, b)) {
       val dib = varName(i, b)
-      val di1bw = varName(i - 1, b - weights(i - 1)._1)
+      val di1bw = varName(i - 1, b - terms(i - 1)._1)
       val di1b = varName(i - 1, b)
-      val xi = weights(i - 1)._2
+      val xi = terms(i - 1)._2
       val newElems = Set(new Clause(di1bw.negate, dib),
         new Clause(dib.negate, di1b),
         new Clause(dib.negate, xi.negate, di1bw),
         new Clause(di1b.negate, xi, dib))
-      (leWorker(i - 1, b) _ andThen leWorker(i - 1, b - weights(i - 1)._1) _)(used + dib, newElems union clauses)
+      (leWorker(i - 1, b) _ andThen leWorker(i - 1, b - terms(i - 1)._1) _)(used + dib, newElems union clauses)
     } else if (b == 0) {
       val di0 = varName(i, 0)
-      val xjs = weights.take(i).unzip._2
+      val xjs = terms.take(i).unzip._2
       (used, clauses union xjs.toSet.map((x: Lit) => new Clause(di0.negate, x.negate)) + new Clause(Lit(di0, true) :: xjs))
     } else if (b < 0) {
       (used, clauses + new Clause(varName(i, b).negate))
