@@ -86,7 +86,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
 
     while (lb < ub) {
       // Is the instance satisfiable with lower or equal many blocking variables satisfied than 'mid'?
-      if (sat(pbcGenerator.le(weights.zip(blockingVars.map(bv => new PLLiteral(bv, true)).toList), mid))
+      if (sat(pbcGenerator.le(weights.zip(blockingVars.map(bv => new PLLiteral(bv, true)).toList), mid)))
         ub = cost(softClauses, weights, blockingVars, workingModel) /* New upper bound */
       else
         lb = mid + 1 /* New lower bound */
