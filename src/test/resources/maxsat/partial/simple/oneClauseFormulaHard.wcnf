@@ -1,0 +1,6 @@
+c
+c A formula with only one hard clause
+c Optimum: 0
+c
+p wcnf 3 1 4
+4 1 -2 -3 0

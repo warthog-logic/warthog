@@ -27,8 +27,8 @@ package org.warthog.pl.decisionprocedures.dpll
 
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.formulas.Formula
-import org.warthog.pl.io.CNFUtil
 import org.warthog.pl.datastructures.cnf.{ PLLiteral, ImmutablePLClause => Clause }
+import org.warthog.pl.transformations.CNFUtil
 
 /**
   * A basic implementation of the DP and DPLL procedures
@@ -40,7 +40,7 @@ object DPLL {
     * @param f a PL formula
     * @return `true` if the clauseset is satisfiable, `false` otherwise
     */
-  def dp(f: Formula[PL]): Boolean = dpRec(CNFUtil.toCNF(f))
+  def dp(f: Formula[PL]): Boolean = dpRec(CNFUtil.toImmutableCNF(f))
 
   /**
     * The main recursive DP algorithm

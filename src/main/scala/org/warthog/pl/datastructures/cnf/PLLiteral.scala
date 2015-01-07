@@ -32,21 +32,21 @@ import org.warthog.generic.datastructures.cnf.Literal
 /**
   * Representation of a propositional literal
   */
-case class PLLiteral(v: PLAtom, phase: Boolean = true) extends Literal[PL] {
+case class PLLiteral(variable: PLAtom, phase: Boolean = true) extends Literal[PL] {
 
-  override def toString = if (phase) v.toString else Formula.NOT + v
+  override def toString = if (phase) variable.toString else Formula.NOT + variable
 
   /**
     * A formula representation of the literal
-    * @return a formula respresentation in propositional logic
+    * @return a formula representation in propositional logic
     */
-  def toFormula: Formula[PL] = if (phase) v else -v
+  def toFormula: Formula[PL] = if (phase) variable else -variable
 
   /**
     * Return a negated copy of the literal
     * @return a negated copy of the literal
     */
-  def negate: PLLiteral = PLLiteral(v, !phase)
+  def negate: PLLiteral = PLLiteral(variable, !phase)
 
 }
 
@@ -58,4 +58,10 @@ object PLLiteral {
   }
 
   def apply(s: String, phase: Boolean): PLLiteral = new PLLiteral(PLAtom(s), phase)
+
+  def apply(lit: Int): PLLiteral = {
+    require(lit != 0, "Literal value 0 is invalid")
+    val phase = lit > 0
+    PLLiteral(if(phase) lit.toString else (-lit).toString, phase)
+  }
 }

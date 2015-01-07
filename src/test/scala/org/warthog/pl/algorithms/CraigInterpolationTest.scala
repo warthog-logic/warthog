@@ -25,30 +25,46 @@
 
 package org.warthog.pl.algorithms
 
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import org.warthog.pl.parsers.tptp._
+import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause => Clause}
+import org.warthog.pl.algorithms.CraigInterpolation._
 
-/**
- * Propositional Craig Interpolation.
- *
- * Description:
- * Let phi and psi two propositional formulas such that phi => psi holds.
- * A Craig Interpolant of phi and psi is a propositional formula rho such that
- * a) phi => rho  and
- * b) rho => psi  and
- * c) vars(rho) = vars(phi) intersection vars(psi).
- */
-object CraigInterpolation {
-  /**
-   * Compute the craig interpolant of two propositional formulas
-   * @param p the first formula
-   * @param q the second formula
-   * @return the craig interpolant of p and q
-   */
-  def pinterpolate(p: Formula[PL], q: Formula[PL]): Formula[PL] = {
-    val setMinus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
-    setMinus.foldLeft(p)((expandedP, v) =>
-      expandedP.substitute(v, Falsum()).removeBooleanConstants ||
-        expandedP.substitute(v, Verum()).removeBooleanConstants).removeBooleanConstants
+import org.specs2.mutable.Specification
+
+class CraigInterpolationTest extends Specification {
+  "Craig Interpolant of x and x" should {
+    "be formula x" in {
+      pinterpolate("x".pl, "x".pl) must be equalTo "x".pl
+    }
+  }
+
+  "Craig Interpolant of x & y and x" should {
+    "be formula x" in {
+      pinterpolate("x & y".pl, "x".pl) must be equalTo "x".pl
+    }
+  }
+
+  "Craig Interpolant of x & y and y" should {
+    "be formula y" in {
+      pinterpolate("x & y".pl, "y".pl) must be equalTo "y".pl
+    }
+  }
+
+  "Craig Interpolant of x and x | y" should {
+    "be formula x" in {
+      pinterpolate("x".pl, "x | y".pl) must be equalTo "x".pl
+    }
+  }
+
+  "Craig Interpolant of y and x | y" should {
+    "be formula y" in {
+      pinterpolate("y".pl, "x | y".pl) must be equalTo "y".pl
+    }
+  }
+
+  "Craig Interpolant of ~(p & q) => (~r & q) and (t => p) | (t => ~r)" should {
+    "be formula p | ~r" in {
+      pinterpolate("~(p & q) => (~r & q)".pl, "(t => p) | (t => ~r)".pl) must be equalTo "~p => ~r".pl
+    }
   }
 }

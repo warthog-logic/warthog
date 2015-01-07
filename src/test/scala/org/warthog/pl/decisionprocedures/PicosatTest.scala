@@ -25,22 +25,22 @@
 
 package org.warthog.pl.decisionprocedures
 
-import org.warthog.pl.decisionprocedures.satsolver.{ Infinity, Solver, sat }
+import satsolver.{Model, Solver, sat}
 import org.specs2.mutable.Specification
-import org.warthog.pl.formulas.{ PL, PLAtom }
-import org.warthog.generic.formulas.{ Formula, Verum, Falsum }
+import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.generic.formulas.{Formula, Verum, Falsum}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 
 /**
-  * Tests for the picosat bindings
-  */
+ * Tests for the picosat bindings
+ */
 class PicosatTest extends Specification {
 
   val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
-  val ps = new Picosat
-  var rv0: Int = _
-  var rv1: Int = _
-  var fm: Formula[PL] = _
+  val prover = new Picosat
+  var resultValue0: Int = _
+  var resultValue1: Int = _
+  var model: Option[Model] = _
 
   /*
    * By default, tests are executed concurrently. JNI/JNA, however, is able to load _only one_ instance of
@@ -49,92 +49,100 @@ class PicosatTest extends Specification {
    */
   args(sequential = true)
 
-  //TODO property file
-
   "x" should {
     "be satisfiable" in {
-      sat(ps) {
-        (solver: Solver) =>
-          {
-            solver.add(x)
-            rv0 = solver.sat(Infinity)
-          }
+      sat(prover) {
+        (solver: Solver) => {
+          solver.add(x)
+          resultValue0 = solver.sat()
+        }
       }
-      rv0 must be equalTo (1)
+      resultValue0 must be equalTo Solver.SAT
     }
     "be satisfied by model x" in {
-      sat(ps) {
-        (solver: Solver) =>
-          {
-            solver.add(x)
-            solver.sat(Infinity)
-            fm = solver.getModel()
-          }
+      sat(prover) {
+        (solver: Solver) => {
+          solver.add(x)
+          solver.sat()
+          model = solver.getModel()
+        }
       }
-      fm must be equalTo (x)
+      model.get.positiveVariables.size must be equalTo 1
+      model.get.negativeVariables.size must be equalTo 0
+      model.get.positiveVariables must contain(x)
     }
     "be unsatisfiable after adding -x" in {
-      sat(ps) {
-        solver =>
-          {
-            solver.add(x)
-            solver.add(-x)
-            rv0 = solver.sat(Infinity)
-          }
+      sat(prover) {
+        solver => {
+          solver.add(x)
+          solver.add(-x)
+          resultValue0 = solver.sat()
+        }
       }
-      rv0 must be equalTo (-1)
+      resultValue0 must be equalTo Solver.UNSAT
     }
     "be unsatisfiable after adding -x, satisfiable again after dropping -x" in {
-      sat(ps) {
-        solver =>
-          {
-            solver.add(x)
-            solver.mark()
-            solver.add(-x)
-            rv0 = solver.sat(Infinity)
-            solver.undo()
-            rv1 = solver.sat(Infinity)
-          }
+      sat(prover) {
+        solver => {
+          solver.add(x)
+          solver.mark()
+          solver.add(-x)
+          resultValue0 = solver.sat()
+          solver.undo()
+          resultValue1 = solver.sat()
+        }
       }
-      (rv0 == -1 && rv1 == 1) must be equalTo (true)
+      resultValue0 must be equalTo Solver.UNSAT
+      resultValue1 must be equalTo Solver.SAT
     }
   }
   "the empty clause" should {
     "be satisfiable" in {
-      sat(ps) {
-        s =>
-          {
-            s.add(Falsum())
-            rv0 = s.sat(Infinity)
-          }
+      sat(prover) {
+        s => {
+          s.add(Falsum())
+          resultValue0 = s.sat()
+        }
       }
-      rv0 must be equalTo (-1)
+      resultValue0 must be equalTo Solver.UNSAT
     }
   }
   "the empty formula" should {
     "be satisfiable" in {
-      sat(ps) {
-        s =>
-          {
-            s.add(Verum())
-            rv0 = s.sat(Infinity)
-          }
+      sat(prover) {
+        s => {
+          s.add(Verum())
+          resultValue0 = s.sat()
+        }
       }
-      rv0 must be equalTo (1)
+      resultValue0 must be equalTo Solver.SAT
     }
   }
-  "the empty formula" should {
-    "return true uppon sat checking" in {
-      var model: Formula[PL] = null
-      sat(ps) {
-        s =>
-          {
-            s.add(Verum())
-            rv0 = s.sat(Infinity)
-            model = s.getModel()
-          }
+  "the verum" should {
+    "return true upon sat checking" in {
+      sat(prover) {
+        s => {
+          s.add(Verum())
+          resultValue0 = s.sat()
+          model = s.getModel()
+        }
       }
-      model must be equalTo (Verum())
+      model.get.positiveVariables.size must be equalTo 0
+      model.get.negativeVariables.size must be equalTo 0
+    }
+  }
+  "x and -x" should {
+    "be unsatisfiable even after multiple undo calls" in {
+      sat(prover) {
+        s => {
+          s.add(x)
+          s.add(-x)
+          s.undo()
+          s.undo()
+          resultValue0 = s.sat()
+        }
+      }
+      resultValue0 must be equalTo Solver.UNSAT
     }
   }
 }

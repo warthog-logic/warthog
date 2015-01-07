@@ -23,32 +23,17 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.algorithms
+package org.warthog.pl.decisionprocedures.satsolver
 
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import org.warthog.pl.formulas.{PLAtom, PL}
+import org.warthog.generic.formulas.{And, Formula}
 
 /**
- * Propositional Craig Interpolation.
- *
- * Description:
- * Let phi and psi two propositional formulas such that phi => psi holds.
- * A Craig Interpolant of phi and psi is a propositional formula rho such that
- * a) phi => rho  and
- * b) rho => psi  and
- * c) vars(rho) = vars(phi) intersection vars(psi).
+ * A (partial) Model representing a satisfying assignment of a propositional formula.
  */
-object CraigInterpolation {
-  /**
-   * Compute the craig interpolant of two propositional formulas
-   * @param p the first formula
-   * @param q the second formula
-   * @return the craig interpolant of p and q
-   */
-  def pinterpolate(p: Formula[PL], q: Formula[PL]): Formula[PL] = {
-    val setMinus = p.vars.filterNot(q.vars.contains(_)).asInstanceOf[List[PLAtom]]
-    setMinus.foldLeft(p)((expandedP, v) =>
-      expandedP.substitute(v, Falsum()).removeBooleanConstants ||
-        expandedP.substitute(v, Verum()).removeBooleanConstants).removeBooleanConstants
-  }
+case class Model(positiveVariables: List[PLAtom], negativeVariables: List[PLAtom]) {
+
+  def toFormula = And(And(positiveVariables: _*), And(negativeVariables: _*))
+
+  override def toString = positiveVariables.mkString(",") + negativeVariables.map(l => "-" + l).mkString(",")
 }
