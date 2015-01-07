@@ -56,14 +56,10 @@ class Picosat extends Solver {
     lastState = Solver.UNKNOWN
   }
 
-  override def add(formula: Formula[PL]) {
-    addClausesAndUpdateLastState(CNFUtil.toImmutableCNF(formula))
-  }
-
-  private def addClausesAndUpdateLastState(clauses: List[ImmutablePLClause]) {
-    val clausesWithIDs = clauses.map(getIDsWithPhase)
-    clausesWithIDs.foreach(addClauseWithIDs)
-    clausesStack = clausesWithIDs ++ clausesStack
+  override def add(clause: ImmutablePLClause) {
+    val clauseWithIDs = getIDsWithPhase(clause)
+    addClauseWithIDs(clauseWithIDs)
+    clausesStack = (clauseWithIDs :: clausesStack)
 
     if (lastState != Solver.UNSAT)
       lastState = Solver.UNKNOWN
@@ -83,12 +79,6 @@ class Picosat extends Solver {
   private def addClauseWithIDs(clause: Set[Int]) {
     clause.foreach(jPicosatInstance.picosat_add(_))
     jPicosatInstance.picosat_add(0)
-  }
-
-  override def add(clause: ImmutablePLClause) {
-    val clauseWithIDs = getIDsWithPhase(clause)
-    addClauseWithIDs(clauseWithIDs)
-    clausesStack = (clauseWithIDs :: clausesStack)
   }
 
   override def mark() {
