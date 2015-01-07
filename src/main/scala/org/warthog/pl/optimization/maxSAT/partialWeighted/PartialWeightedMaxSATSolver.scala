@@ -67,5 +67,5 @@ abstract class PartialWeightedMaxSATSolver() {
    */
   protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long]
 
-  protected def areHardConstraintsSatisfiable()
+  protected def areHardConstraintsSatisfiable(): Boolean
 }

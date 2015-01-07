@@ -31,6 +31,7 @@ import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.{PLAtom, PL}
 import org.warthog.pl.optimization.maxsat.MaxSATHelper
 import org.warthog.pl.generators.pbc.PBCtoSAT
+import org.warthog.generic.datastructures.cnf.ClauseLike
 
 /**
  * Branch and Bound algorithm for Partial Weighted MaxSAT.
@@ -86,7 +87,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
 
     while (lb < ub) {
       // Is the instance satisfiable with lower or equal many blocking variables satisfied than 'mid'?
-      if (sat(pbcGenerator.le(weights.zip(blockingVars.map(bv => new PLLiteral(bv, true)).toList), mid)))
+      if (sat(pbcGenerator.le(weights.zip(blockingVars.map(bv => new PLLiteral(bv, true))), mid)))
         ub = cost(softClauses, weights, blockingVars, workingModel) /* New upper bound */
       else
         lb = mid + 1 /* New lower bound */
@@ -95,11 +96,11 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     Option[Long](ub)
   }
 
-  override protected def areHardConstraintsSatisfiable() {
-    satSolver.sat()
+  override protected def areHardConstraintsSatisfiable() = {
+    satSolver.sat() == Solver.SAT
   }
 
-  private def sat(clauses: Set[ImmutablePLClause] = Nil): Boolean = {
+  private def sat(clauses: Set[ImmutablePLClause] = Set.empty): Boolean = {
     satSolver.mark()
     for (c <- clauses)
       satSolver.add(c)
