@@ -25,14 +25,13 @@
 
 package org.warthog.pl.generators.pbc
 
-import org.specs2.mutable.Specification
 import org.warthog.pl.datastructures.cnf.{ImmutablePLClause => Clause, PLLiteral => Lit}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, sat}
-import org.warthog.generic.formulas.{Or, And, Formula}
+import org.warthog.pl.decisionprocedures.satsolver
+import org.warthog.generic.formulas.{And, Formula}
 import org.specs2.mutable.Specification
-import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.pl.generators.cardinality._
+import org.warthog.pl.formulas.PL
+import satsolver.sat
 
 /**
  * Test for the PBCtoSAT encoding
@@ -191,7 +190,7 @@ class PBCtoSATTest extends Specification {
       sat(ps) {
         s => {
           s.add(toFormula(clauses))
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (1)
@@ -203,7 +202,7 @@ class PBCtoSATTest extends Specification {
       sat(ps) {
         s => {
           s.add(toFormula(clauses))
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (-1)
@@ -216,7 +215,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(x2F && x3F && x4F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (-1)
@@ -229,7 +228,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(-x1F && -x2F && -x3F && x4F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (1)
@@ -242,7 +241,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(-x3F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (-1)
@@ -252,7 +251,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(x1F && x2F && x3F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (1)
@@ -265,7 +264,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(-x1F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (-1)
@@ -275,7 +274,7 @@ class PBCtoSATTest extends Specification {
         s => {
           s.add(toFormula(clauses))
           s.add(x1F && x2F && -x3F && -x4F)
-          rv = s.sat(Infinity)
+          rv = s.sat()
         }
       }
       rv must be equalTo (1)
