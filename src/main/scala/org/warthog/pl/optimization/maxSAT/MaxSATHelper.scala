@@ -23,17 +23,16 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.optimization.maxSAT
+package org.warthog.pl.optimization.maxsat
 
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
-import org.warthog.pl.decisionprocedures.satsolver.Infinity
 import collection.mutable
 
 object MaxSATHelper {
   def isSAT(clauses: mutable.Traversable[ImmutablePLClause]) = {
     val satSolver = new Picosat
     clauses.foreach(c => satSolver.add(c.toFormula))
-    satSolver.sat(Infinity) > 0
+    satSolver.sat() > 0
   }
 }

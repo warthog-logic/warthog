@@ -1,4 +1,4 @@
-package org.warthog.pl.optimization.maxSAT
+package org.warthog.pl.optimization.maxsat
 
 import org.warthog.pl.datastructures.cnf.{ImmutablePLClause, PLLiteral}
 

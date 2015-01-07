@@ -23,14 +23,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.warthog.pl.optimization.maxSAT.partialWeighted
+package org.warthog.pl.optimization.maxsat.partialWeighted
 
-import org.warthog.generic.formulas.Formula
-import org.warthog.pl.formulas.PL
 import org.warthog.pl.datastructures.cnf.ImmutablePLClause
-import org.warthog.pl.optimization.maxSAT.MaxSATHelper
-import collection.mutable.{ListBuffer, MutableList}
-import org.warthog.pl.decisionprocedures.satsolver.{Infinity, Solver}
+import org.warthog.pl.decisionprocedures.satsolver.Solver
 
 /**
  * Common interface for Partial Weighted MaxSAT solvers.
@@ -60,7 +56,7 @@ abstract class PartialWeightedMaxSATSolver(satSolver: Solver) {
   protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long]
 
   def solveMinUNSAT(softClauses: List[ImmutablePLClause], weights: List[Long]) = {
-    if (!(satSolver.sat(Infinity) > 0))
+    if (!(satSolver.sat() > 0))
       minUNSATResult = None
     else
       minUNSATResult = solveMinUNSATImpl(softClauses, weights)
