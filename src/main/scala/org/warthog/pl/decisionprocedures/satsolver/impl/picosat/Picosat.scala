@@ -85,6 +85,12 @@ class Picosat extends Solver {
     jPicosatInstance.picosat_add(0)
   }
 
+  override def add(clause: ImmutablePLClause) {
+    val clauseWithIDs = getIDsWithPhase(clause)
+    addClauseWithIDs(clauseWithIDs)
+    clausesStack = (clauseWithIDs :: clausesStack)
+  }
+
   override def mark() {
     marks = clausesStack.length :: marks
   }

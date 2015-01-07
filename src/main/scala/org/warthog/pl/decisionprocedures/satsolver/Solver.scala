@@ -27,6 +27,7 @@ package org.warthog.pl.decisionprocedures.satsolver
 
 import org.warthog.generic.formulas.{Formula, Falsum}
 import org.warthog.pl.formulas.PL
+import org.warthog.pl.datastructures.cnf.ImmutablePLClause
 
 /**
  * Common interface for SAT solvers
@@ -42,6 +43,12 @@ trait Solver {
    * @param fm the formula to add
    */
   def add(fm: Formula[PL])
+
+  /**
+   * Add a clause to the solver.
+   * @param clause the clause to add
+   */
+  def add(clause: ImmutablePLClause)
 
   /**
    * Mark a solver's internal stack position.  Executing
