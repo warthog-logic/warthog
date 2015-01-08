@@ -123,8 +123,8 @@ class Picosat extends Solver {
           .filter(picosatLit => idToVar.contains(picosatLit))
           .map(picosatLit => idToVar(picosatLit)).toList
         val negativeVariables = picosatLiterals.filter(picosatLit => picosatLit < 0)
-          .filter(picosatLit => idToVar.contains(picosatLit))
-          .map(picosatLit => idToVar(picosatLit)).toList
+          .filter(picosatLit => idToVar.contains(-picosatLit))
+          .map(picosatLit => idToVar(-picosatLit)).toList
         Some(Model(positiveVariables, negativeVariables))
       }
     }

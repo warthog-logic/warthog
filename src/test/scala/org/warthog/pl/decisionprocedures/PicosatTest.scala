@@ -28,7 +28,7 @@ package org.warthog.pl.decisionprocedures
 import satsolver.{Model, Solver, sat}
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Formula, Verum, Falsum}
+import org.warthog.generic.formulas.{Not, Formula, Verum, Falsum}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import java.io.File
 import org.warthog.generic.parsers.DIMACSReader
@@ -52,6 +52,30 @@ class PicosatTest extends Specification {
 
   private def getFileString(folder: String, file: String) =
     List("src", "test", "resources", folder, file).mkString(File.separator)
+
+  "~x" should {
+    "be satisfiable" in {
+      sat(prover) {
+        (solver: Solver) => {
+          solver.add(Not(x))
+          resultValue0 = solver.sat()
+        }
+      }
+      resultValue0 must be equalTo Solver.SAT
+    }
+    "be satisfied by model ~x" in {
+      sat(prover) {
+        (solver: Solver) => {
+          solver.add(Not(x))
+          solver.sat()
+          model = solver.getModel()
+        }
+      }
+      model.get.positiveVariables.size must be equalTo 0
+      model.get.negativeVariables.size must be equalTo 1
+      model.get.negativeVariables must contain(x)
+    }
+  }
 
   "x" should {
     "be satisfiable" in {
@@ -100,6 +124,7 @@ class PicosatTest extends Specification {
       resultValue1 must be equalTo Solver.SAT
     }
   }
+
   "the empty clause" should {
     "be satisfiable" in {
       sat(prover) {
@@ -111,6 +136,7 @@ class PicosatTest extends Specification {
       resultValue0 must be equalTo Solver.UNSAT
     }
   }
+
   "the empty formula" should {
     "be satisfiable" in {
       sat(prover) {
@@ -122,6 +148,7 @@ class PicosatTest extends Specification {
       resultValue0 must be equalTo Solver.SAT
     }
   }
+
   "the verum" should {
     "return true upon sat checking" in {
       sat(prover) {
@@ -135,6 +162,7 @@ class PicosatTest extends Specification {
       model.get.negativeVariables.size must be equalTo 0
     }
   }
+
   "x and -x" should {
     "be unsatisfiable even after multiple undo calls" in {
       sat(prover) {
