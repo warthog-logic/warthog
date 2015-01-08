@@ -58,7 +58,7 @@ trait PBCtoSAT {
 
 object PBCtoSAT {
 
-  val DEFAULT_PREFIX = "D_"
+  val DEFAULT_PREFIX = "D___"
   val DEFAULT_ADDITIONAL_LE_PREFIX = "_le_"
   val DEFAULT_ADDITIONAL_GE_PREFIX = "_ge_"
 

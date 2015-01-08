@@ -53,21 +53,23 @@ class BailleuxBoufkhadRousselTest extends Specification {
 
   implicit def toLit(s: String) = Lit(s, true)
 
+  private def v(i: Int, b: Int) = PBCtoSAT.DEFAULT_PREFIX + i + "_" + b
+
   "2x_1 + 3x_2 + 4x_3 <= 6" should {
     val pbc1 = List((2L, x1), (3L, x2), (4L, x3))
     val solution = Set(
-      new Clause("D_3_6"),
-      new Clause("D_2_2".negate, "D_3_6"),
-      new Clause("D_3_6".negate, "D_2_6"),
-      new Clause("D_3_6".negate, "x_3".negate, "D_2_2"),
-      new Clause("D_2_6".negate, "x_3", "D_3_6"),
-      new Clause("D_2_6"),
-      new Clause("D_1_-1".negate, "D_2_2"),
-      new Clause("D_2_2".negate, "D_1_2"),
-      new Clause("D_2_2".negate, "x_2".negate, "D_1_-1"),
-      new Clause("D_1_2".negate, "x_2", "D_2_2"),
-      new Clause("D_1_2"),
-      new Clause("D_1_-1".negate))
+      new Clause(v(3, 6)),
+      new Clause(v(2, 2).negate, v(3, 6)),
+      new Clause(v(3, 6).negate, v(2, 6)),
+      new Clause(v(3, 6).negate, "x_3".negate, v(2, 2)),
+      new Clause(v(2, 6).negate, "x_3", v(3, 6)),
+      new Clause(v(2, 6)),
+      new Clause(v(1, -1).negate, v(2, 2)),
+      new Clause(v(2, 2).negate, v(1, 2)),
+      new Clause(v(2, 2).negate, "x_2".negate, v(1, -1)),
+      new Clause(v(1, 2).negate, "x_2", v(2, 2)),
+      new Clause(v(1, 2)),
+      new Clause(v(1, -1).negate))
     "be equal to sol1" in {
       BailleuxBoufkhadRoussel.le(pbc1, 6) must be equalTo solution
     }
@@ -76,23 +78,23 @@ class BailleuxBoufkhadRousselTest extends Specification {
   "1x_1 + 2x_2 + 3x_3 + 5x_4 <= 6" should {
     val pbc2 = List((1L, x1), (2L, x2), (3L, x3), (5L, x4))
     val solution = Set(
-      new Clause("D_4_6"),
-      new Clause("D_3_1".negate, "D_4_6"),
-      new Clause("D_4_6".negate, "D_3_6"),
-      new Clause("D_4_6".negate, "x_4".negate, "D_3_1"),
-      new Clause("D_3_6".negate, "x_4", "D_4_6"),
-      new Clause("D_3_6"),
-      new Clause("D_2_-2".negate, "D_3_1"),
-      new Clause("D_3_1".negate, "D_2_1"),
-      new Clause("D_3_1".negate, "x_3".negate, "D_2_-2"),
-      new Clause("D_2_1".negate, "x_3", "D_3_1"),
-      new Clause("D_1_-1".negate, "D_2_1"),
-      new Clause("D_2_1".negate, "D_1_1"),
-      new Clause("D_2_1".negate, "x_2".negate, "D_1_-1"),
-      new Clause("D_1_1".negate, "x_2", "D_2_1"),
-      new Clause("D_1_1"),
-      new Clause("D_1_-1".negate),
-      new Clause("D_2_-2".negate))
+      new Clause(v(4, 6)),
+      new Clause(v(3, 1).negate, v(4, 6)),
+      new Clause(v(4, 6).negate, v(3, 6)),
+      new Clause(v(4, 6).negate, "x_4".negate, v(3, 1)),
+      new Clause(v(3, 6).negate, "x_4", v(4, 6)),
+      new Clause(v(3, 6)),
+      new Clause(v(2, -2).negate, v(3, 1)),
+      new Clause(v(3, 1).negate, v(2, 1)),
+      new Clause(v(3, 1).negate, "x_3".negate, v(2, -2)),
+      new Clause(v(2, 1).negate, "x_3", v(3, 1)),
+      new Clause(v(1, -1).negate, v(2, 1)),
+      new Clause(v(2, 1).negate, v(1, 1)),
+      new Clause(v(2, 1).negate, "x_2".negate, v(1, -1)),
+      new Clause(v(1, 1).negate, "x_2", v(2, 1)),
+      new Clause(v(1, 1)),
+      new Clause(v(1, -1).negate),
+      new Clause(v(2, -2).negate))
     "be equal to sol2" in {
       BailleuxBoufkhadRoussel.le(pbc2, 6) must be equalTo solution
     }
@@ -101,16 +103,16 @@ class BailleuxBoufkhadRousselTest extends Specification {
   "1x_1 + 2x_2 + 3x_3 + 6x_4 <= 6" should {
     val pbc3 = List((1L, x1), (2L, x2), (3L, x3), (6L, x4))
     val solution = Set(
-      new Clause("D_4_6"),
-      new Clause("D_3_0".negate, "D_4_6"),
-      new Clause("D_4_6".negate, "D_3_6"),
-      new Clause("D_4_6".negate, "x_4".negate, "D_3_0"),
-      new Clause("D_3_6".negate, "x_4", "D_4_6"),
-      new Clause("D_3_6"),
-      new Clause("D_3_0", "x_1", "x_2", "x_3"),
-      new Clause("D_3_0".negate, "x_1".negate),
-      new Clause("D_3_0".negate, "x_2".negate),
-      new Clause("D_3_0".negate, "x_3".negate))
+      new Clause(v(4, 6)),
+      new Clause(v(3, 0).negate, v(4, 6)),
+      new Clause(v(4, 6).negate, v(3, 6)),
+      new Clause(v(4, 6).negate, "x_4".negate, v(3, 0)),
+      new Clause(v(3, 6).negate, "x_4", v(4, 6)),
+      new Clause(v(3, 6)),
+      new Clause(v(3, 0), "x_1", "x_2", "x_3"),
+      new Clause(v(3, 0).negate, "x_1".negate),
+      new Clause(v(3, 0).negate, "x_2".negate),
+      new Clause(v(3, 0).negate, "x_3".negate))
 
     "be equal to sol3" in {
       BailleuxBoufkhadRoussel.le(pbc3, 6) must be equalTo solution
