@@ -26,7 +26,7 @@
 package org.warthog.pl.optimization.maxsat.partialWeighted
 
 import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause}
-import org.warthog.pl.decisionprocedures.satsolver.Solver
+import org.warthog.pl.decisionprocedures.satsolver.{Model, Solver}
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.PL
 import org.warthog.generic.datastructures.cnf.ClauseLike
@@ -36,12 +36,15 @@ import org.warthog.pl.transformations.CNFUtil
  * Common interface for Partial Weighted MaxSAT solvers.
  */
 abstract class PartialWeightedMaxSATSolver() {
+
   protected var minUNSATResult: Option[Long] = None
+  protected var model: Option[Model] = None
 
   def name: String
 
   def reset() {
     minUNSATResult = None
+    model = None
   }
 
   def addHardConstraint(fm: Formula[PL]) {
@@ -78,4 +81,6 @@ abstract class PartialWeightedMaxSATSolver() {
   protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long]
 
   protected def areHardConstraintsSatisfiable(): Boolean
+
+  def getModel(): Option[Model] = model
 }

@@ -38,7 +38,7 @@ import org.warthog.generic.datastructures.cnf.ClauseLike
  */
 class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWeightedMaxSATSolver() {
 
-  private var workingModel: Model = null;
+  private var workingModel: Model = null
 
   override def name = "BinarySearch"
 
@@ -47,7 +47,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     satSolver.reset()
   }
 
-  def addHardConstraint(clause: ClauseLike[PL, PLLiteral]) {
+  override def addHardConstraint(clause: ClauseLike[PL, PLLiteral]) {
     satSolver.add(clause)
   }
 
@@ -93,7 +93,10 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
         lb = mid + 1 /* New lower bound */
       mid = ((ub - lb) / 2) + lb /* New middle */
     }
-    Option[Long](ub)
+    model = Some(workingModel.
+      filterNot(BinarySearch.BLOCKING_VARIABLE_PREFIX).
+      filterNot(PBCtoSAT.DEFAULT_PREFIX))
+    Some(ub)
   }
 
   override protected def areHardConstraintsSatisfiable() = {
@@ -123,5 +126,5 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
 }
 
 object BinarySearch {
-  val BLOCKING_VARIABLE_PREFIX = "BV__"
+  val BLOCKING_VARIABLE_PREFIX = "BV___"
 }

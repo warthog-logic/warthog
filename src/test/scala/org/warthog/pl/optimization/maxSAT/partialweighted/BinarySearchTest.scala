@@ -32,6 +32,7 @@ import org.warthog.pl.parsers.maxsat.PartialWeightedMaxSATReader
 import org.warthog.pl.decisionprocedures.satsolver.Solver
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import org.warthog.pl.generators.pbc.{BailleuxBoufkhadRoussel, BailleuxBoufkhadRousselTest}
+import org.warthog.pl.optimization.maxsat.MaxSATHelper
 
 class BinarySearchTest extends Specification {
   /*
@@ -59,6 +60,11 @@ class BinarySearchTest extends Specification {
         var result = solver.solveMinUNSAT(reader.softClauses, reader.weights.toList)
 
         result must be equalTo expResult
+
+        if (result.isEmpty)
+          solver.getModel() must be equalTo None
+        else
+          MaxSATHelper.cost(reader.softClauses.toList, reader.weights.toList, solver.getModel().get) must be equalTo expResult.get
       }
     }
   }
