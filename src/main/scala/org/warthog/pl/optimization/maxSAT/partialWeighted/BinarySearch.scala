@@ -34,7 +34,7 @@ import org.warthog.pl.generators.pbc.PBCtoSAT
 import org.warthog.generic.datastructures.cnf.ClauseLike
 
 /**
- * Branch and Bound algorithm for Partial Weighted MaxSAT.
+ * Binary Search algorithm for Partial Weighted MaxSAT.
  */
 class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWeightedMaxSATSolver() {
 
@@ -69,9 +69,9 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
   private def solveMinUNSATImplHelper(softClauses: List[MutablePLClause], weights: List[Long]): Option[Long] = {
     // Adding blocking variables to each soft clause
     var blockingVarsIndex = 0
-    var blockingVars = new Array[PLAtom](softClauses.size)
+    val blockingVars = new Array[PLAtom](softClauses.size)
     for (softClause <- softClauses) {
-      var v = new PLAtom(BinarySearch.BLOCKING_VARIABLE_PREFIX + blockingVarsIndex)
+      val v = new PLAtom(BinarySearch.BLOCKING_VARIABLE_PREFIX + blockingVarsIndex)
       blockingVars(blockingVarsIndex) = v
       softClause.push(new PLLiteral(v, true))
       blockingVarsIndex += 1
@@ -117,7 +117,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
   private def cost(softClauses: List[MutablePLClause], weights: List[Long],
                    blockingVars: Array[PLAtom], model: Model): Long = {
     var cost = 0L
-    var posVars = model.positiveVariables
+    val posVars = model.positiveVariables
     for (i <- 0 until softClauses.size)
       if (posVars.contains(blockingVars(i)))
         cost += weights(i)

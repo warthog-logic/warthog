@@ -52,12 +52,12 @@ class BinarySearchTest extends Specification {
     val expText = if (expResult.isEmpty) "no solution" else "solution " + expResult.get
     "File " + fileName should {
       "have " + expText in {
-        var reader = new PartialWeightedMaxSATReader()
+        val reader = new PartialWeightedMaxSATReader()
         reader.read(getFileString("maxsat", subFolder, fileName))
 
         solver.reset()
         solver.addHardConstraint(reader.hardClauses)
-        var result = solver.solveMinUNSAT(reader.softClauses, reader.weights.toList)
+        val result = solver.solveMinUNSAT(reader.softClauses, reader.weights.toList)
 
         result must be equalTo expResult
 
