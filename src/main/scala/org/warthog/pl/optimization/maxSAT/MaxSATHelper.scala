@@ -25,14 +25,33 @@
 
 package org.warthog.pl.optimization.maxsat
 
-import org.warthog.pl.datastructures.cnf.ImmutablePLClause
+import org.warthog.pl.datastructures.cnf.{PLLiteral, MutablePLClause, ImmutablePLClause}
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import collection.mutable
+import org.warthog.pl.formulas.{PL, PLAtom}
+import org.warthog.pl.decisionprocedures.satsolver.Model
+import org.warthog.generic.datastructures.cnf.ClauseLike
 
 object MaxSATHelper {
-  def isSAT(clauses: mutable.Traversable[ImmutablePLClause]) = {
-    val satSolver = new Picosat
-    clauses.foreach(c => satSolver.add(c.toFormula))
-    satSolver.sat() > 0
+  /**
+   * Calculate the costs of unsatisfied clause weights.
+   *
+   * Assumption: Model is a complete variable assignment.
+   *
+   * @param clauses
+   * @param weights
+   * @param model
+   * @return
+   */
+  def cost(clauses: List[ClauseLike[PL, PLLiteral]], weights: List[Long], model: Model): Long = {
+    var benefit = 0L
+    val posVars = model.positiveVariables
+    val negVars = model.negativeVariables
+    for (weightedClause <- weights.zip(clauses))
+      if (weightedClause._2.literals.exists(lit =>
+        lit.phase && posVars.contains(lit.variable)
+          || !lit.phase && negVars.contains(lit.variable)))
+        benefit += weightedClause._1
+    weights.sum - benefit
   }
 }
