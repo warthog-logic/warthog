@@ -47,8 +47,8 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     satSolver.reset()
   }
 
-  override def addHardConstraint(fm: Formula[PL]) {
-    satSolver.add(fm)
+  def addHardConstraint(clause: ClauseLike[PL, PLLiteral]) {
+    satSolver.add(clause)
   }
 
   override def markHardConstraints() {
@@ -59,9 +59,9 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     satSolver.undo()
   }
 
-  override protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long] = {
+  override protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long] = {
     satSolver.mark() /* Mark to remove all added clauses after solving */
-    minUNSATResult = solveMinUNSATImplHelper(softClauses.map(c => new MutablePLClause(c.literals)), weights)
+    minUNSATResult = solveMinUNSATImplHelper(softClauses.map(c => new MutablePLClause(c.literals)).toList, weights)
     satSolver.undo()
     minUNSATResult
   }

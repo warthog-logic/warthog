@@ -25,10 +25,12 @@
 
 package org.warthog.pl.optimization.maxsat.partialWeighted
 
-import org.warthog.pl.datastructures.cnf.ImmutablePLClause
+import org.warthog.pl.datastructures.cnf.{PLLiteral, ImmutablePLClause}
 import org.warthog.pl.decisionprocedures.satsolver.Solver
 import org.warthog.generic.formulas.Formula
 import org.warthog.pl.formulas.PL
+import org.warthog.generic.datastructures.cnf.ClauseLike
+import org.warthog.pl.transformations.CNFUtil
 
 /**
  * Common interface for Partial Weighted MaxSAT solvers.
@@ -42,13 +44,21 @@ abstract class PartialWeightedMaxSATSolver() {
     minUNSATResult = None
   }
 
-  def addHardConstraint(fm: Formula[PL])
+  def addHardConstraint(fm: Formula[PL]) {
+    addHardConstraint(CNFUtil.toImmutableCNF(fm))
+  }
+
+  def addHardConstraint(clauses: Traversable[ClauseLike[PL, PLLiteral]]) {
+    clauses.foreach(addHardConstraint)
+  }
+
+  def addHardConstraint(clause: ClauseLike[PL, PLLiteral])
 
   def markHardConstraints()
 
   def undoHardConstraints()
 
-  def solveMinUNSAT(softClauses: List[ImmutablePLClause], weights: List[Long]) = {
+  def solveMinUNSAT(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]) = {
     if (!areHardConstraintsSatisfiable())
       minUNSATResult = None
     else
@@ -65,7 +75,7 @@ abstract class PartialWeightedMaxSATSolver() {
    * @param weights
    * @return
    */
-  protected def solveMinUNSATImpl(softClauses: List[ImmutablePLClause], weights: List[Long]): Option[Long]
+  protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long]
 
   protected def areHardConstraintsSatisfiable(): Boolean
 }
