@@ -37,19 +37,18 @@ import org.warthog.generic.parsers.DIMACSReader
  * Tests for the picosat bindings
  */
 class PicosatTest extends Specification {
-
-  val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
-  val prover = new Picosat
-  var resultValue0: Int = _
-  var resultValue1: Int = _
-  var model: Option[Model] = _
-
   /*
    * By default, tests are executed concurrently. JNI/JNA, however, is able to load _only one_ instance of
    * (lib)picosat.{so,dylib,dll} per JVM so concurrently accessing the picosat INSTANCE will result in double
    * instantiation errors and unexpected behaviour.
    */
   args(sequential = true)
+
+  val (x, y, z) = (PLAtom("x"), PLAtom("y"), PLAtom("z"))
+  val prover = new Picosat
+  var resultValue0: Int = _
+  var resultValue1: Int = _
+  var model: Option[Model] = _
 
   private def getFileString(folder: String, file: String) =
     List("src", "test", "resources", folder, file).mkString(File.separator)
