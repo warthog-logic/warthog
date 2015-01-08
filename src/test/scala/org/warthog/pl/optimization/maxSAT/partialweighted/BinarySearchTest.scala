@@ -84,4 +84,7 @@ class BinarySearchTest extends Specification {
   testWCNFDIMACSFile("partialWeighted" + fs + "simple", "oneVariableFormula.wcnf", solver, Some(0))
   testWCNFDIMACSFile("partialWeighted" + fs + "simple", "oneVariableOneClauseFormulaSoft.wcnf", solver, Some(0))
   testWCNFDIMACSFile("partialWeighted" + fs + "simple", "threeEmptyClauses.wcnf", solver, None)
+
+  testWCNFDIMACSFile("partial" + fs + "randomVertexCover", "edges00040_vertices00010.wcnf", solver, Some(8))
+  testWCNFDIMACSFile("partial" + fs + "randomVertexCover", "edges00150_vertices00020.wcnf", solver, Some(16))
 }
