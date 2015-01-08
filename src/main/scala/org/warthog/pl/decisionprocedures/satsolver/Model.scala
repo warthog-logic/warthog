@@ -35,5 +35,12 @@ case class Model(positiveVariables: List[PLAtom], negativeVariables: List[PLAtom
 
   def toFormula = And(And(positiveVariables: _*), And(negativeVariables: _*))
 
-  override def toString = positiveVariables.mkString(",") + negativeVariables.map(l => "-" + l).mkString(",")
+  def filterNot(prefix: String) = {
+    new Model(
+      positiveVariables.filterNot(v => v.name.startsWith(prefix)),
+      negativeVariables.filterNot(v => v.name.startsWith(prefix))
+    )
+  }
+
+  override def toString = (positiveVariables.map(_.name) ++ negativeVariables.map(v => "-" + v.name)).mkString(",")
 }
