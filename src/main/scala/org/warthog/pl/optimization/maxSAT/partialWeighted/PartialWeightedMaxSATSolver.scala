@@ -61,11 +61,11 @@ abstract class PartialWeightedMaxSATSolver() {
 
   def undoHardConstraints()
 
-  def solveMinUNSAT(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]) = {
+  def solveMinUNSAT(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long] = {
     if (!areHardConstraintsSatisfiable())
       minUNSATResult = None
     else
-      minUNSATResult = solveMinUNSATImpl(softClauses, weights)
+      minUNSATResult = Some(solveMinUNSATImpl(softClauses, weights))
     minUNSATResult
   }
 
@@ -78,7 +78,7 @@ abstract class PartialWeightedMaxSATSolver() {
    * @param weights
    * @return
    */
-  protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long]
+  protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Long
 
   protected def areHardConstraintsSatisfiable(): Boolean
 

@@ -59,14 +59,14 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     satSolver.undo()
   }
 
-  override protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Option[Long] = {
+  override protected def solveMinUNSATImpl(softClauses: Traversable[ClauseLike[PL, PLLiteral]], weights: List[Long]): Long = {
     satSolver.mark() /* Mark to remove all added clauses after solving */
-    minUNSATResult = solveMinUNSATImplHelper(softClauses.map(c => new MutablePLClause(c.literals)).toList, weights)
+    val result = solveMinUNSATImplHelper(softClauses.map(c => new MutablePLClause(c.literals)).toList, weights)
     satSolver.undo()
-    minUNSATResult
+    result
   }
 
-  private def solveMinUNSATImplHelper(softClauses: List[MutablePLClause], weights: List[Long]): Option[Long] = {
+  private def solveMinUNSATImplHelper(softClauses: List[MutablePLClause], weights: List[Long]): Long = {
     // Adding blocking variables to each soft clause
     var blockingVarsIndex = 0
     val blockingVars = new Array[PLAtom](softClauses.size)
@@ -96,7 +96,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     model = Some(workingModel.
       filterNot(BinarySearch.BLOCKING_VARIABLE_PREFIX).
       filterNot(PBCtoSAT.DEFAULT_PREFIX))
-    Some(ub)
+    ub
   }
 
   override protected def areHardConstraintsSatisfiable() = {
