@@ -69,7 +69,7 @@ class BinarySearchTest extends Specification {
     }
   }
 
-  testWCNFDIMACSFile("partialWeighted" + fs + "simple", "emptyAndNotEMptyClauses.wcnf", solver, None)
+  testWCNFDIMACSFile("partialWeighted" + fs + "simple", "emptyAndNotEmptyClauses.wcnf", solver, None)
 
   testWCNFDIMACSFile("partialWeighted" + fs + "simple", "f01.wcnf", solver, Some(0))
   testWCNFDIMACSFile("partialWeighted" + fs + "simple", "f02.wcnf", solver, Some(0))
