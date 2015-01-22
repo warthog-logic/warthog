@@ -1,6 +1,0 @@
-c
-c A formula with one empty hard clause
-c Optimum: None
-c
-p wcnf 0 1 3
-3 0
