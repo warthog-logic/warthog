@@ -9,7 +9,7 @@ object ExampleInstances {
 
   // Simple formulas
   val dirPartialMaxSATSimple = dir_formula + fs + "partial" + fs + "simple"
-  val dirPartialWeightedMaxSATSimple = dir_formula + fs + "partialWeighted" + fs + "simple"
+  val dirPartialWeightedMaxSATSimple = dir_formula + fs + "partialweighted" + fs + "simple"
 
   // Literals
   val (u, v, w, x, y, z) = (PLLiteral("u", true), PLLiteral("v", true), PLLiteral("w", true),
