@@ -155,6 +155,7 @@ class WPM1(satSolver: Solver) extends PartialWeightedMaxSATSolver() {
         softUnsatCore += id
       satSolver.undo()
     }
+    satSolver.undo()
     softUnsatCore
   }
 
