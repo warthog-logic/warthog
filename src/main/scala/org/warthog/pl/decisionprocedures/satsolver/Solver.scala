@@ -36,6 +36,11 @@ import org.warthog.generic.datastructures.cnf.ClauseLike
  */
 trait Solver {
   /**
+   * Solver name
+   */
+  def name(): String
+
+  /**
    * Reset the solver
    */
   def reset()
