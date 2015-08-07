@@ -28,10 +28,12 @@ package org.warthog.pl.decisionprocedures
 import satsolver.{Model, Solver, sat}
 import org.specs2.mutable.Specification
 import org.warthog.pl.formulas.{PL, PLAtom}
-import org.warthog.generic.formulas.{Not, Formula, Verum, Falsum}
+import org.warthog.generic.formulas._
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import java.io.File
 import org.warthog.generic.parsers.DIMACSReader
+import org.warthog.pl.decisionprocedures.satsolver.Model
+import org.warthog.pl.formulas.PLAtom
 
 /**
  * Tests for the picosat bindings
@@ -180,14 +182,20 @@ class PicosatTest extends Specification {
 
   private def testDIMACSFile(fileName: String, expResult: Int) {
     val expText = if (expResult == Solver.SAT) "satisfiable" else "unsatisfiable"
+    val cnf = DIMACSReader.dimacs2PLClauses(getFileString("dimacs", fileName))
     "File " + fileName should {
       "be " + expText in {
         var resultVal = 0
         sat(prover) {
           (solver: Solver) => {
-            prover.add(DIMACSReader.dimacs2PLClauses(getFileString("dimacs", fileName)))
+            prover.add(cnf)
             resultVal = solver.sat()
+            model = solver.getModel()
           }
+        }
+        if (resultVal == Solver.SAT)                  {
+          println("pos " + model.get.positiveVariables.mkString(", "))
+          And(cnf.map(c => c.toFormula): _*).eval(model.get.toMap) must beTrue
         }
         resultVal must be equalTo expResult
       }
@@ -207,6 +215,7 @@ class PicosatTest extends Specification {
   testDIMACSFile("f09.cnf", Solver.UNSAT)
   testDIMACSFile("f10.cnf", Solver.UNSAT)
   testDIMACSFile("f11.cnf", Solver.UNSAT)
+  testDIMACSFile("f12.cnf", Solver.SAT)
 
   testDIMACSFile("oneClauseFormula.cnf", Solver.SAT)
   testDIMACSFile("oneEmptyClause.cnf", Solver.UNSAT)

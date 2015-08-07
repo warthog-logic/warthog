@@ -35,6 +35,8 @@ case class Model(positiveVariables: List[PLAtom], negativeVariables: List[PLAtom
 
   def toFormula = And(And(positiveVariables: _*), And(negativeVariables: _*))
 
+  def toMap: Map[PLAtom, Boolean] = (positiveVariables.map(l => (l, true)) ++ negativeVariables.map(l => (l, false))).toMap
+
   def filterNot(prefix: String) = {
     new Model(
       positiveVariables.filterNot(v => v.name.startsWith(prefix)),
