@@ -99,9 +99,7 @@ class BinarySearch(satSolver: Solver, pbcGenerator: PBCtoSAT) extends PartialWei
     ub
   }
 
-  override protected def areHardConstraintsSatisfiable() = {
-    satSolver.sat() == Solver.SAT
-  }
+  override protected def areHardConstraintsSatisfiable() = satSolver.sat() == Solver.SAT
 
   private def sat(clauses: Set[ImmutablePLClause] = Set.empty): Boolean = {
     satSolver.mark()
