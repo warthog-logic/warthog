@@ -29,7 +29,7 @@ import satsolver.impl.minisat.MiniSatJava
 import org.specs2.mutable.Specification
 import satsolver.{Model, Solver, sat}
 import org.warthog.pl.formulas.PLAtom
-import org.warthog.generic.formulas.{Not, Verum, Falsum}
+import org.warthog.generic.formulas.{And, Not, Verum, Falsum}
 import java.io.File
 import org.warthog.generic.parsers.DIMACSReader
 
@@ -175,14 +175,21 @@ class MiniSatJavaTest extends Specification {
 
   private def testDIMACSFile(fileName: String, expResult: Int) {
     val expText = if (expResult == Solver.SAT) "satisfiable" else "unsatisfiable"
+    val cnf = DIMACSReader.dimacs2PLClauses(getFileString("dimacs", fileName))
     "File " + fileName should {
       "be " + expText in {
         var resultVal = 0
         sat(prover) {
           (solver: Solver) => {
-            prover.add(DIMACSReader.dimacs2PLClauses(getFileString("dimacs", fileName)))
+            prover.add(cnf)
             resultVal = solver.sat()
+            model = solver.getModel()
           }
+        }
+        if (resultVal == Solver.SAT) {
+          println("pos " + model.get.positiveVariables.mkString(", "))
+          println("neg " + model.get.negativeVariables.mkString(", "))
+          And(cnf.map(c => c.toFormula): _*).eval(model.get.toMap) must beTrue
         }
         resultVal must be equalTo expResult
       }
@@ -202,6 +209,7 @@ class MiniSatJavaTest extends Specification {
   testDIMACSFile("f09.cnf", Solver.UNSAT)
   testDIMACSFile("f10.cnf", Solver.UNSAT)
   testDIMACSFile("f11.cnf", Solver.UNSAT)
+  testDIMACSFile("f12.cnf", Solver.SAT)
 
   testDIMACSFile("oneClauseFormula.cnf", Solver.SAT)
   testDIMACSFile("oneEmptyClause.cnf", Solver.UNSAT)
