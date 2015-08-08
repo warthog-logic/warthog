@@ -288,7 +288,7 @@ public class MSJCoreProver {
                 int next = pickBranchLit();
                 if (next == -1) {
                     for (int i = 0; i < vars.size(); i++)
-                        model.push(value(i) == LBool.TRUE);
+                        model.push(value(mkLit(i, false)) == LBool.TRUE);
                     cancelUntil(rootLevel);
                     return LBool.TRUE;
                 }
@@ -764,12 +764,8 @@ public class MSJCoreProver {
      */
     public List<Integer> getModel() {
         List<Integer> set = new LinkedList<Integer>();
-        Iterator<MSJVariable> it = vars.iterator();
-        while (it.hasNext()) {
-            MSJVariable var = it.next();
-            if (var.assignment() != LBool.UNDEF)
-                set.add(MSJCoreProver.mkLit(var.num(), var.assignment() == LBool.FALSE));
-        }
+        for (int i = 0; i < vars.size(); i++)
+            set.add(MSJCoreProver.mkLit(i, !model.get(i)));
         return set;
     }
 }
