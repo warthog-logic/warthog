@@ -33,6 +33,7 @@ import org.warthog.pl.decisionprocedures.satsolver.Solver
 import org.warthog.pl.decisionprocedures.satsolver.impl.picosat.Picosat
 import org.warthog.pl.generators.pbc.{BailleuxBoufkhadRoussel, BailleuxBoufkhadRousselTest}
 import org.warthog.pl.optimization.maxsat.MaxSATHelper
+import org.warthog.pl.decisionprocedures.satsolver.impl.minisat.MiniSatJava
 
 class BinarySearchTest extends Specification {
   /*
@@ -43,10 +44,14 @@ class BinarySearchTest extends Specification {
   args(sequential = true)
 
   val fs = System.getProperty("file.separator")
-  val solver = new BinarySearch(new Picosat(), BailleuxBoufkhadRoussel)
+  val solvers = List(new BinarySearch(new Picosat(), BailleuxBoufkhadRoussel), new BinarySearch(new MiniSatJava(), BailleuxBoufkhadRoussel))
 
   private def getFileString(folder: String, subFolder: String, file: String) =
     List("src", "test", "resources", folder, subFolder, file).mkString(File.separator)
+
+  private def test(subFolder: String, fileName: String, solvers: List[PartialWeightedMaxSATSolver], expResult: Option[Long]) {
+    solvers.foreach(testWCNFDIMACSFile(subFolder, fileName, _, expResult))
+  }
 
   private def testWCNFDIMACSFile(subFolder: String, fileName: String, solver: PartialWeightedMaxSATSolver, expResult: Option[Long]) {
     val expText = if (expResult.isEmpty) "no solution" else "solution " + expResult.get
@@ -69,28 +74,28 @@ class BinarySearchTest extends Specification {
     }
   }
 
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "emptyAndNotEmptyClauses.wcnf", solver, None)
+  test("partialweighted" + fs + "simple", "emptyAndNotEmptyClauses.wcnf", solvers, None)
 
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f01.wcnf", solver, Some(0))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f02.wcnf", solver, Some(0))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f03.wcnf", solver, Some(1))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f04.wcnf", solver, Some(8))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f05.wcnf", solver, Some(4))
+  test("partialweighted" + fs + "simple", "f01.wcnf", solvers, Some(0))
+  test("partialweighted" + fs + "simple", "f04.wcnf", solvers, Some(8))
+  test("partialweighted" + fs + "simple", "f02.wcnf", solvers, Some(0))
+  test("partialweighted" + fs + "simple", "f03.wcnf", solvers, Some(1))
+  test("partialweighted" + fs + "simple", "f05.wcnf", solvers, Some(4))
 
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f06.wcnf", solver, Some(1))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f07.wcnf", solver, Some(6))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f08.wcnf", solver, Some(40))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f09.wcnf", solver, None)
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f10.wcnf", solver, None)
+  test("partialweighted" + fs + "simple", "f06.wcnf", solvers, Some(1))
+  test("partialweighted" + fs + "simple", "f07.wcnf", solvers, Some(6))
+  test("partialweighted" + fs + "simple", "f08.wcnf", solvers, Some(40))
+  test("partialweighted" + fs + "simple", "f09.wcnf", solvers, None)
+  test("partialweighted" + fs + "simple", "f10.wcnf", solvers, None)
 
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "f11.wcnf", solver, Some(4))
+  test("partialweighted" + fs + "simple", "f11.wcnf", solvers, Some(4))
 
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "oneClauseFormulaSoft.wcnf", solver, Some(0))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "oneEmptyClauseSoft.wcnf", solver, Some(2))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "oneVariableFormula.wcnf", solver, Some(0))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "oneVariableOneClauseFormulaSoft.wcnf", solver, Some(0))
-  testWCNFDIMACSFile("partialweighted" + fs + "simple", "threeEmptyClauses.wcnf", solver, None)
+  test("partialweighted" + fs + "simple", "oneClauseFormulaSoft.wcnf", solvers, Some(0))
+  test("partialweighted" + fs + "simple", "oneEmptyClauseSoft.wcnf", solvers, Some(2))
+  test("partialweighted" + fs + "simple", "oneVariableFormula.wcnf", solvers, Some(0))
+  test("partialweighted" + fs + "simple", "oneVariableOneClauseFormulaSoft.wcnf", solvers, Some(0))
+  test("partialweighted" + fs + "simple", "threeEmptyClauses.wcnf", solvers, None)
 
-  testWCNFDIMACSFile("partial" + fs + "randomVertexCover", "edges00040_vertices00010.wcnf", solver, Some(8))
-  testWCNFDIMACSFile("partial" + fs + "randomVertexCover", "edges00150_vertices00020.wcnf", solver, Some(16))
+  test("partial" + fs + "randomVertexCover", "edges00040_vertices00010.wcnf", solvers, Some(8))
+  test("partial" + fs + "randomVertexCover", "edges00150_vertices00020.wcnf", solvers, Some(16))
 }
